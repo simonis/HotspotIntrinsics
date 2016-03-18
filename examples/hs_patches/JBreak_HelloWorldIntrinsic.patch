@@ -1,0 +1,350 @@
+# HG changeset patch
+# Parent dc073ee24dc637c0333e45d50092c05818062169
+JBreak: HelloWorld intrinsic
+
+diff -r dc073ee24dc6 src/cpu/x86/vm/assembler_x86.cpp
+--- a/src/cpu/x86/vm/assembler_x86.cpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/cpu/x86/vm/assembler_x86.cpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -3556,6 +3556,14 @@
+ }
+ #endif
+ 
++void Assembler::rdrandl(Register dst) {
++  assert(VM_Version::supports_rdrand(), "must support");
++  int encode = prefix_and_encode(dst->encoding());
++  emit_int8(0x0F);
++  emit_int8((unsigned char)0xC7);
++  emit_int8((unsigned char)(0xF0 | encode));
++}
++
+ void Assembler::prefetch_prefix(Address src) {
+   prefix(src);
+   emit_int8(0x0F);
+diff -r dc073ee24dc6 src/cpu/x86/vm/assembler_x86.hpp
+--- a/src/cpu/x86/vm/assembler_x86.hpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/cpu/x86/vm/assembler_x86.hpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -1583,6 +1583,8 @@
+   void popcntq(Register dst, Register src);
+ #endif
+ 
++  void rdrandl(Register dst);
++
+   // Prefetches (SSE, SSE2, 3DNOW only)
+ 
+   void prefetchnta(Address src);
+diff -r dc073ee24dc6 src/cpu/x86/vm/templateInterpreterGenerator_x86_64.cpp
+--- a/src/cpu/x86/vm/templateInterpreterGenerator_x86_64.cpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/cpu/x86/vm/templateInterpreterGenerator_x86_64.cpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -342,6 +342,29 @@
+ // Various method entries
+ //
+ 
++address TemplateInterpreterGenerator::generate_sayHello() {
++
++  // rbx,: Method*
++  // rcx: scratrch
++  // r13: sender sp
++  //
++  // stack: [ ret adr ] <-- rsp
++
++  address entry_point = __ pc();
++  const char *msg = "\x0d0\x09f\x0d1\x080\x0d0\x0b8\x0d0\x0b2\x0d0\x0b5\x0d1\x082 JBreak!\n";
++  __ mov64(c_rarg1, (long)stdout);
++  __ mov64(c_rarg0, (long)msg);
++  __ xorl(rax, rax);
++  __ call(RuntimeAddress(CAST_FROM_FN_PTR(address, fputs)));
++
++  __ pop(rax);
++  __ mov(rsp, r13);
++  __ jmp(rax);
++
++  return entry_point;
++}
++
++
+ address TemplateInterpreterGenerator::generate_math_entry(AbstractInterpreter::MethodKind kind) {
+ 
+   // rbx,: Method*
+diff -r dc073ee24dc6 src/cpu/x86/vm/vm_version_x86.cpp
+--- a/src/cpu/x86/vm/vm_version_x86.cpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/cpu/x86/vm/vm_version_x86.cpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -577,7 +577,7 @@
+   }
+ 
+   char buf[256];
+-  jio_snprintf(buf, sizeof(buf), "(%u cores per cpu, %u threads per core) family %d model %d stepping %d%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
++  jio_snprintf(buf, sizeof(buf), "(%u cores per cpu, %u threads per core) family %d model %d stepping %d%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
+                cores_per_cpu(), threads_per_core(),
+                cpu_family(), _model, _stepping,
+                (supports_cmov() ? ", cmov" : ""),
+@@ -591,6 +591,7 @@
+                (supports_sse4_1() ? ", sse4.1" : ""),
+                (supports_sse4_2() ? ", sse4.2" : ""),
+                (supports_popcnt() ? ", popcnt" : ""),
++               (supports_rdrand() ? ", rdrand" : ""),
+                (supports_avx()    ? ", avx" : ""),
+                (supports_avx2()   ? ", avx2" : ""),
+                (supports_aes()    ? ", aes" : ""),
+diff -r dc073ee24dc6 src/cpu/x86/vm/vm_version_x86.hpp
+--- a/src/cpu/x86/vm/vm_version_x86.hpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/cpu/x86/vm/vm_version_x86.hpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -87,7 +87,9 @@
+                         : 1,
+                osxsave  : 1,
+                avx      : 1,
+-                        : 3;
++                        : 1,
++               rdrand   : 1,
++                        : 1;
+     } bits;
+   };
+ 
+@@ -288,7 +290,8 @@
+ 
+ #define CPU_AVX512BW ((uint64_t)UCONST64(0x100000000)) // enums are limited to 31 bit
+ #define CPU_AVX512VL ((uint64_t)UCONST64(0x200000000)) // EVEX instructions with smaller vector length
+-#define CPU_SHA ((uint64_t)UCONST64(0x400000000))      // SHA instructions
++#define CPU_SHA      ((uint64_t)UCONST64(0x400000000)) // SHA instructions
++#define CPU_RDRAND   ((uint64_t)UCONST64(0x800000000)) // RDRAND instruction
+ 
+   enum Extended_Family {
+     // AMD
+@@ -461,6 +464,8 @@
+       result |= CPU_SSE4_2;
+     if (_cpuid_info.std_cpuid1_ecx.bits.popcnt != 0)
+       result |= CPU_POPCNT;
++    if (_cpuid_info.std_cpuid1_ecx.bits.rdrand != 0)
++      result |= CPU_RDRAND;
+     if (_cpuid_info.std_cpuid1_ecx.bits.avx != 0 &&
+         _cpuid_info.std_cpuid1_ecx.bits.osxsave != 0 &&
+         _cpuid_info.xem_xcr0_eax.bits.sse != 0 &&
+@@ -703,6 +708,7 @@
+   static bool supports_sse4_1()   { return (_features & CPU_SSE4_1) != 0; }
+   static bool supports_sse4_2()   { return (_features & CPU_SSE4_2) != 0; }
+   static bool supports_popcnt()   { return (_features & CPU_POPCNT) != 0; }
++  static bool supports_rdrand()   { return (_features & CPU_RDRAND) != 0; }
+   static bool supports_avx()      { return (_features & CPU_AVX) != 0; }
+   static bool supports_avx2()     { return (_features & CPU_AVX2) != 0; }
+   static bool supports_tsc()      { return (_features & CPU_TSC)    != 0; }
+diff -r dc073ee24dc6 src/cpu/x86/vm/x86.ad
+--- a/src/cpu/x86/vm/x86.ad	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/cpu/x86/vm/x86.ad	Fri Mar 18 06:39:07 2016 +0100
+@@ -1677,6 +1677,10 @@
+       if (VM_Version::supports_avx512dq() == false)
+         ret_value = false;
+       break;
++    case Op_RandI:
++      if (VM_Version::supports_rdrand() == false)
++        ret_value = false;
++      break;
+     case Op_AddReductionVL:
+       if (UseAVX < 3) // only EVEX : vector connectivity becomes an issue here
+         ret_value = false;
+@@ -10801,3 +10805,11 @@
+   ins_pipe( pipe_slow );
+ %}
+ 
++instruct randI(rRegI dst) %{
++  match(Set dst (RandI));
++
++  format %{ "RANDI    $dst\t# int" %}
++  ins_encode %{
++    __ rdrandl($dst$$Register);
++  %}
++%}
+diff -r dc073ee24dc6 src/share/vm/classfile/vmSymbols.hpp
+--- a/src/share/vm/classfile/vmSymbols.hpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/share/vm/classfile/vmSymbols.hpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -1318,7 +1318,16 @@
+   do_intrinsic(_putOrderedInt,            jdk_internal_misc_Unsafe,        putOrderedInt_name, putOrderedInt_signature,   F_RN)  \
+    do_name(     putOrderedInt_name,                              "putOrderedInt")                                       \
+    do_alias(    putOrderedInt_signature,                        /*(Ljava/lang/Object;JI)V*/ putInt_signature)           \
+-                                                                                                                        \
++                                                                                                                               \
++  /* support for JBreak */                                                                                                     \
++  do_class(     helloWorld,               "org/simonis/HelloWorld")                                                            \
++  do_intrinsic(_sayHello,                 helloWorld,                   sayHello_name, void_method_signature, F_S)             \
++   do_name(     sayHello_name,            "sayHello")                                                                          \
++                                                                                                                               \
++  do_class(     java_util_Random,         "java/util/Random")                                                                  \
++  do_intrinsic(_nextInt,                  java_util_Random,             nextInt_name, void_int_signature, F_R)                 \
++   do_name(     nextInt_name,                                           "nextInt")                                             \
++                                                                                                                              \
+   do_intrinsic(_getAndAddInt,             jdk_internal_misc_Unsafe,     getAndAddInt_name, getAndAddInt_signature, F_R)       \
+    do_name(     getAndAddInt_name,                                      "getAndAddInt")                                       \
+    do_signature(getAndAddInt_signature,                                 "(Ljava/lang/Object;JI)I" )                           \
+diff -r dc073ee24dc6 src/share/vm/interpreter/abstractInterpreter.cpp
+--- a/src/share/vm/interpreter/abstractInterpreter.cpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/share/vm/interpreter/abstractInterpreter.cpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -144,6 +144,11 @@
+   case vmIntrinsics::_doubleToRawLongBits: return java_lang_Double_doubleToRawLongBits;
+   }
+ 
++  if (JBreak) {
++    if (m->intrinsic_id() == vmIntrinsics::_sayHello) {
++      return HelloWorld_sayHello;
++    }
++  }
+ #endif // CC_INTERP
+ 
+   // Native method?
+@@ -251,6 +256,7 @@
+     case java_lang_math_sqrt    : tty->print("java_lang_math_sqrt"    ); break;
+     case java_lang_math_log     : tty->print("java_lang_math_log"     ); break;
+     case java_lang_math_log10   : tty->print("java_lang_math_log10"   ); break;
++    case HelloWorld_sayHello    : tty->print("HelloWorld_sayHello"  ); break;
+     case java_util_zip_CRC32_update           : tty->print("java_util_zip_CRC32_update"); break;
+     case java_util_zip_CRC32_updateBytes      : tty->print("java_util_zip_CRC32_updateBytes"); break;
+     case java_util_zip_CRC32_updateByteBuffer : tty->print("java_util_zip_CRC32_updateByteBuffer"); break;
+diff -r dc073ee24dc6 src/share/vm/interpreter/abstractInterpreter.hpp
+--- a/src/share/vm/interpreter/abstractInterpreter.hpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/share/vm/interpreter/abstractInterpreter.hpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -87,6 +87,7 @@
+     java_lang_Float_floatToRawIntBits,                          // implementation of java.lang.Float.floatToRawIntBits()
+     java_lang_Double_longBitsToDouble,                          // implementation of java.lang.Double.longBitsToDouble()
+     java_lang_Double_doubleToRawLongBits,                       // implementation of java.lang.Double.doubleToRawLongBits()
++    HelloWorld_sayHello,                                        // implementation of org.simonis.HelloWorld.sayHello()
+     number_of_method_entries,
+     invalid = -1
+   };
+diff -r dc073ee24dc6 src/share/vm/interpreter/templateInterpreterGenerator.cpp
+--- a/src/share/vm/interpreter/templateInterpreterGenerator.cpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/share/vm/interpreter/templateInterpreterGenerator.cpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -255,6 +255,9 @@
+       method_entry(java_lang_Double_longBitsToDouble);
+       method_entry(java_lang_Double_doubleToRawLongBits);
+ 
++      if (JBreak) {
++        method_entry(HelloWorld_sayHello);
++      }
+ #undef method_entry
+ 
+       // Bytecodes
+@@ -446,6 +449,8 @@
+                                            : // fall thru
+   case Interpreter::java_util_zip_CRC32C_updateDirectByteBuffer
+                                            : entry_point = generate_CRC32C_updateBytes_entry(kind); break;
++  case Interpreter::HelloWorld_sayHello
++                                           : entry_point = generate_sayHello(); break;
+ #ifdef IA32
+   // On x86_32 platforms, a special entry is generated for the following four methods.
+   // On other platforms the normal entry is used to enter these methods.
+diff -r dc073ee24dc6 src/share/vm/interpreter/templateInterpreterGenerator.hpp
+--- a/src/share/vm/interpreter/templateInterpreterGenerator.hpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/share/vm/interpreter/templateInterpreterGenerator.hpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -95,6 +95,7 @@
+   address generate_CRC32_update_entry();
+   address generate_CRC32_updateBytes_entry(AbstractInterpreter::MethodKind kind);
+   address generate_CRC32C_updateBytes_entry(AbstractInterpreter::MethodKind kind);
++  address generate_sayHello(void);
+ #ifdef IA32
+   address generate_Float_intBitsToFloat_entry();
+   address generate_Float_floatToRawIntBits_entry();
+diff -r dc073ee24dc6 src/share/vm/oops/method.cpp
+--- a/src/share/vm/oops/method.cpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/share/vm/oops/method.cpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -1329,6 +1329,10 @@
+   // exception: the AES intrinsics come from lib/ext/sunjce_provider.jar
+   // which does not use the class default class loader so we check for its loader here
+   const InstanceKlass* ik = InstanceKlass::cast(holder);
++  if (JBreak && ik->name()->equals("org/simonis/HelloWorld")) {
++    // check for org.simonis.HelloWorld
++    return vmSymbols::find_sid(ik->name());
++  }
+   if ((ik->class_loader() != NULL) && !SystemDictionary::is_ext_class_loader(ik->class_loader())) {
+     return vmSymbols::NO_SID;   // regardless of name, no intrinsics here
+   }
+diff -r dc073ee24dc6 src/share/vm/opto/c2compiler.cpp
+--- a/src/share/vm/opto/c2compiler.cpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/share/vm/opto/c2compiler.cpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -361,6 +361,9 @@
+   case vmIntrinsics::_getCallerClass:
+     if (SystemDictionary::reflect_CallerSensitive_klass() == NULL) return false;
+     break;
++  case vmIntrinsics::_nextInt:
++    if (!Matcher::match_rule_supported(Op_RandI)) return false;
++    break;
+   case vmIntrinsics::_hashCode:
+   case vmIntrinsics::_identityHashCode:
+   case vmIntrinsics::_getClass:
+diff -r dc073ee24dc6 src/share/vm/opto/classes.hpp
+--- a/src/share/vm/opto/classes.hpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/share/vm/opto/classes.hpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -347,3 +347,4 @@
+ macro(ExtractL)
+ macro(ExtractF)
+ macro(ExtractD)
++macro(RandI)
+diff -r dc073ee24dc6 src/share/vm/opto/intrinsicnode.hpp
+--- a/src/share/vm/opto/intrinsicnode.hpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/share/vm/opto/intrinsicnode.hpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -180,4 +180,12 @@
+   virtual const Type* Value(PhaseGVN* phase) const;
+ };
+ 
++class RandINode : public Node {
++public:
++  RandINode(Node *c) : Node(c) {}
++  virtual int Opcode() const;
++  const Type *bottom_type() const { return TypeInt::INT; }
++  virtual uint ideal_reg() const { return Op_RegI; }
++};
++
+ #endif // SHARE_VM_OPTO_INTRINSICNODE_HPP
+diff -r dc073ee24dc6 src/share/vm/opto/library_call.cpp
+--- a/src/share/vm/opto/library_call.cpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/share/vm/opto/library_call.cpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -223,6 +223,7 @@
+   bool inline_math_native(vmIntrinsics::ID id);
+   bool inline_trig(vmIntrinsics::ID id);
+   bool inline_math(vmIntrinsics::ID id);
++  bool inline_random(vmIntrinsics::ID id);
+   template <typename OverflowOp>
+   bool inline_math_overflow(Node* arg1, Node* arg2);
+   void inline_math_mathExact(Node* math, Node* test);
+@@ -504,6 +505,8 @@
+   case vmIntrinsics::_dlog10:
+   case vmIntrinsics::_dpow:                     return inline_math_native(intrinsic_id());
+ 
++  case vmIntrinsics::_nextInt:                  return inline_random(intrinsic_id());
++
+   case vmIntrinsics::_min:
+   case vmIntrinsics::_max:                      return inline_min_max(intrinsic_id());
+ 
+@@ -1674,6 +1677,21 @@
+   return n;
+ }
+ 
++//------------------------------inline_rand-----------------------------------
++// public int Random.nextInt()
++bool LibraryCallKit::inline_random(vmIntrinsics::ID id) {
++  Node* n = NULL;
++  switch (id) {
++  case vmIntrinsics::_nextInt:
++    if (!Matcher::match_rule_supported(Op_RandI)) return false;
++    n = new RandINode(control());
++    break;
++  default:  fatal_unexpected_iid(id);  break;
++  }
++  set_result(_gvn.transform(n));
++  return true;
++}
++
+ //------------------------------inline_math-----------------------------------
+ // public static double Math.abs(double)
+ // public static double Math.sqrt(double)
+diff -r dc073ee24dc6 src/share/vm/runtime/globals.hpp
+--- a/src/share/vm/runtime/globals.hpp	Mon Mar 14 12:35:52 2016 +0300
++++ b/src/share/vm/runtime/globals.hpp	Fri Mar 18 06:39:07 2016 +0100
+@@ -4162,7 +4162,10 @@
+   diagnostic(bool, CompilerDirectivesPrint, false,                          \
+              "Print compiler directives on installation.")                  \
+   diagnostic(int,  CompilerDirectivesLimit, 50,                             \
+-             "Limit on number of compiler directives.")
++             "Limit on number of compiler directives.")                     \
++                                                                            \
++  product(bool, JBreak, false,                                              \
++          "Enable some JBreak specific enhancements")
+ 
+ 
+ /*

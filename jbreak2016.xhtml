@@ -1,0 +1,993 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+  <head>
+    <meta charset="utf-8" />
+
+    <title>HotSpot Intrinsics</title>
+
+    <meta name="description" content="A short introduction to HotSpot Intrinsics" />
+    <meta name="author" content="Volker H. Simonis" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+
+    <link rel="stylesheet" href="reveal.js/css/reveal.css" />
+    <link rel="stylesheet" href="reveal.js/css/theme/jbreak2016.css" id="theme" />
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="reveal.js/lib/css/monokai_sublime.css" />
+
+  <style type="text/css">
+.scrollable {
+    bottom: 0px;
+    overflow-y: auto  !important;
+    overflow-x: hidden !important;
+}
+
+.reveal .big {
+    font-size: .8em;
+    line-height: 1.3em;
+}
+
+.reveal pre.console {
+    background-color: black;
+    color: #00ff00;
+}
+
+.reveal pre.noshadow {
+    border-radius: 0;
+    box-shadow: unset;
+}
+
+.reveal pre code {
+    max-height: 98%;
+}
+.bold {
+    font-weight: bold;
+}
+  </style>
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!--
+      Issue #1105: Keyboard shortcut to skip forward/back over fragments #1173
+      https://github.com/hakimel/reveal.js/pull/1173
+    -->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+
+        <section>
+          <h1>HotSpot Intrinsics<br/></h1>
+          <p>
+            <small>Volker Simonis [Фолкер Симонис], SAP / <a href="mailto:volker.simonis@gmail.com">volker.simonis@gmail.com</a></small>
+          </p>
+        </section>
+
+
+        <section>
+
+          <h2>Intrinsics</h2>
+
+          <blockquote>
+            <p style="text-align:justify">
+              &ldquo; ..an <span class="bold">intrinsic</span> function (a.k.a.
+              <span class="bold">builtin</span> function) is a function
+              available for use in a given programming language whose
+              implementation is handled specially by the compiler. Typically, it
+              substitutes a sequence of automatically generated instructions for
+              the original function call.. &rdquo;
+            </p>
+          </blockquote>
+
+          <blockquote>
+            <p style="text-align:justify">
+              &ldquo; ..the compiler has an intimate knowledge of the intrinsic
+              function and can therefore better integrate it and optimize it for
+              the situation.. &rdquo;
+            </p>
+            <footer>
+              <cite><a href="https://en.wikipedia.org/wiki/Intrinsic_function">Intrinsic function - Wikipedia</a></cite>
+            </footer>
+          </blockquote>
+
+        </section>
+
+
+        <section>
+
+          <h2>Intrinsics</h2>
+
+          <ul>
+            <li>Improve performance:<br/>
+              <pre class="big noshadow" data-trim="true">
+                <code class="java" data-trim="true">
+<![CDATA[
+GCC: bzero(), snprintf(), strndup(), log2(), ..     
+Java: Math.sqrt(), System.arraycopy(), ..
+]]>
+                </code>
+              </pre>
+            </li>
+            <li>Expose functionality not expressable in the language itself:<br/>
+              <pre class="big noshadow" data-trim="true">
+                <code class="java" data-trim="true">
+<![CDATA[
+GCC: _xbegin(), _xend(), ..  // Transactional Memory
+Java: Unsafe.allocateInstance(), Thread.onSpinWait(),
+]]>
+                </code>
+              </pre>
+            </li>
+            <li>Direct access to CPU instructions (assembler):<br/>
+              <pre class="big noshadow" data-trim="true">
+                <code class="java" data-trim="true">
+<![CDATA[
+MSVC: __movsq(), __mul128()                         
+Java: Unsafe.loadFence()
+]]>
+                </code>
+              </pre>
+            </li>
+          </ul>
+
+        </section>
+
+
+        <section>
+          <section>
+            <h2>The &ldquo;<code>HelloWorld</code>&rdquo; Intrinsic</h2>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="java" data-trim="true">
+<![CDATA[
+public class HelloWorld {
+
+  static public void sayHello() {
+      System.out.println("Привет JBreak!");
+  }
+
+  public static void main(String ... args) {
+
+    long start = System.nanoTime();
+    sayHello();
+    long stop = System.nanoTime();
+
+    System.out.format("%,9d%s%n", stop - start, "ns");
+  }
+}
+]]>
+              </code>
+            </pre>
+          </section>
+
+          <section>
+            <pre class="big console" data-trim="true">
+<![CDATA[
+$ java -Xint             org.simonis.HelloWorld
+Привет JBreak!
+6,968,398ns
+]]>
+            </pre>
+            <br/>
+            <pre class="big console" data-trim="true">
+<![CDATA[
+$ java -Xint -XX:+JBreak org.simonis.HelloWorld
+Привет JBreak
+  153,191ns
+]]>
+            </pre>
+          </section>
+        </section>
+
+
+        <section style="height: 100%;">
+
+          <section>
+            <h2>Observability - Bytecode Instrumentation</h2>
+
+            <ul>
+              <li>Allows dynamic changes of Java Bytecodes at runtime</li>
+              <li>Only addition of bytecodes to Java methods</li>
+              <li>Used by monitoring agents, profilers, coverage tools and event loggers</li>
+              <li>Implemented in <code>java.lang.instrument</code></li>
+              <li>Loaded into the VM with <code>-javaagent:jarpath[=options]</code></li>
+              <li>The agent implements "<code>premain(String args, Instrumentation inst)</code>"</li>
+            </ul>
+
+          </section>
+
+          <section style="height: 100%;">
+
+            <h2>The Java Instrumentation Agent</h2>
+
+            <pre class="big noshadow scrollable" style="height: 80%;" data-trim="true">
+              <code class="java" data-trim="true" data-noescape="true">
+<![CDATA[
+package org.simonis;
+
+import java.lang.instrument.ClassFileTransformer;
+import java.lang.instrument.IllegalClassFormatException;
+import java.lang.instrument.Instrumentation;
+import java.security.ProtectionDomain;
+
+import jdk.internal.org.objectweb.asm.ClassReader;
+import jdk.internal.org.objectweb.asm.ClassVisitor;
+import jdk.internal.org.objectweb.asm.ClassWriter;
+import jdk.internal.org.objectweb.asm.MethodVisitor;
+import jdk.internal.org.objectweb.asm.Opcodes;
+
+public class MethodInstrumentationAgent {
+
+  static String pattern;
+
+  public static void premain(String args, Instrumentation inst) {
+    inst.addTransformer(new MethodInstrumentorTransformer());
+    pattern = args;
+  }
+
+  static class MethodInstrumentorTransformer implements ClassFileTransformer {
+
+    @Override
+    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
+        ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+      ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+      MethodInstrumentorClassVisitor cv = new MethodInstrumentorClassVisitor(cw);
+      ClassReader cr = new ClassReader(classfileBuffer);
+      cr.accept(cv, 0);
+      return cw.toByteArray();
+    }
+
+  }
+
+  static class MethodInstrumentorClassVisitor extends ClassVisitor {
+    private String className;
+
+    public MethodInstrumentorClassVisitor(ClassVisitor cv) {
+      super(Opcodes.ASM5, cv);
+    }
+
+    @Override
+    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+      cv.visit(version, access, name, signature, superName, interfaces);
+      className = name;
+    }
+
+    @Override
+    public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+      MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
+      if (className.startsWith(pattern)) {
+        mv = new MethodInstrumentorMethodVisitor(mv, name + desc);
+      }
+      return mv;
+    }
+  }
+
+  static class MethodInstrumentorMethodVisitor extends MethodVisitor implements Opcodes {
+    private String methodName;
+
+    public MethodInstrumentorMethodVisitor(MethodVisitor mv, String name) {
+      super(Opcodes.ASM5, mv);
+      methodName = name;
+    }
+
+    @Override
+    public void visitCode() {
+      mv.visitCode();
+      mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+      mv.visitLdcInsn("-> " + methodName);
+      mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+    }
+
+    @Override
+    public void visitInsn(int opcode) {
+      if ((opcode >= IRETURN && opcode <= RETURN) || opcode == ATHROW) {
+        mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+        mv.visitLdcInsn("<- " + methodName);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+      }
+      mv.visitInsn(opcode);
+    }
+  }
+}
+]]>
+              </code>
+            </pre>
+          </section>
+
+          <section>
+
+            <p>The Manifest file:</p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="java" data-trim="true">
+<![CDATA[
+Manifest-VErsion: 1.0
+Premain-Class: org.simonis.MethodInstrumentationAgent
+]]>
+              </code>
+            </pre>
+
+            <p>Compile and create with:</p>
+
+            <pre class="big console" data-trim="true">
+<![CDATA[
+javac -XDignore.symbol.file=true org/simonis/MethodInstrumentationAgent.java
+jar cvfm MethodInstrumentationAgent.jar manifest.mf \
+                               org/simonis/MethodInstrumentationAgent*.class
+]]>
+            </pre>
+
+          </section>
+
+          <section>
+            <h2>Observability - Bytecode Instrumentation</h2>
+
+
+            <pre class="big console" data-trim="true">
+<![CDATA[
+$ java             -javaagent:MethodInstrumentationAgent.jar=org/simonis \
+                                                  org.simonis.HelloWorld
+-> main([Ljava/lang/String;)V
+-> sayHello()V
+Привет JBreak!
+<- sayHello()V
+  651,538ns
+<- main([Ljava/lang/String;)V
+]]>
+            </pre>
+            <br/>
+            <pre class="big console" data-trim="true">
+<![CDATA[
+$ java -XX:+JBreak -javaagent:MethodInstrumentationAgent.jar=org/simonis \
+                                                  org.simonis.HelloWorld
+-> main([Ljava/lang/String;)V
+Привет JBreak
+   51,750ns
+<- main([Ljava/lang/String;)V
+]]>
+            </pre>
+          </section>
+
+        </section>
+
+
+        <section style="height: 100%;">
+
+          <section>
+            <h2>Observability - JVMTI Agents</h2>
+
+            <ul>
+              <li>JVMTI is the Java Virtual Machine Tool Interface</li>
+              <li>Allows programs to inspect the state and control the execution of the VM</li>
+              <li>Used by debuggers and profilers</li>
+              <li>A native interface to the Java VM</li>
+              <li>JVMTI agents are loaded during VM initialization</li>
+              <li>They access the VM by calling JVMTI and JNI functions</li>
+            </ul>
+          </section>
+
+          <section style="height: 100%;">
+
+            <h2>A simple tracing JVMTI Agent</h2>
+
+            <pre class="big noshadow scrollable" style="height: 70%;" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+<![CDATA[
+#include <jvmti.h>
+#include <stdio.h>
+#include <string.h>
+
+const char* pattern = "";
+
+static void printMethod(jvmtiEnv* jvmti, jmethodID method, const char* prefix) {
+  char *name, *sig, *cl;
+  jclass javaClass;
+  jvmti->GetMethodDeclaringClass(method, &javaClass);
+  jvmti->GetClassSignature(javaClass, &cl, NULL);
+  ++cl; // Ignore leading 'L'
+  if (strstr(cl, pattern) == cl) {
+    jvmti->GetMethodName(method, &name, &sig, NULL);
+    cl[strlen(cl) - 1] = '\0'; // Strip trailing ';'
+    fprintf(stdout, "%s %s::%s%s\n", prefix, cl, name, sig);
+    fflush (NULL);
+    jvmti->Deallocate((unsigned char*) name);
+    jvmti->Deallocate((unsigned char*) sig);
+  }
+  jvmti->Deallocate((unsigned char*) --cl);
+}
+
+void JNICALL methodEntryCallback(jvmtiEnv* jvmti, JNIEnv* jni, jthread thread, jmethodID method) {
+  printMethod(jvmti, method, "->");
+}
+
+void JNICALL methodExitCallback(jvmtiEnv* jvmti, JNIEnv* jni, jthread thread, jmethodID method, jboolean except, jvalue ret_val) {
+  printMethod(jvmti, method, "<-");
+}
+
+extern "C"
+JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM* jvm, char* options, void* reserved) {
+  jvmtiEnv* jvmti = NULL;
+  jvmtiCapabilities capa;
+  jvmtiError error;
+
+  if (options) pattern = strdup(options); // Options may contain the pattern
+
+  jint result = jvm->GetEnv((void**) &jvmti, JVMTI_VERSION_1_1);
+  if (result != JNI_OK) {
+    fprintf(stderr, "Can't access JVMTI!\n");
+    return JNI_ERR;
+  }
+
+  memset(&capa, 0, sizeof(jvmtiCapabilities));
+  capa.can_generate_method_entry_events = 1;
+  capa.can_generate_method_exit_events = 1;
+  if (jvmti->AddCapabilities(&capa) != JVMTI_ERROR_NONE) {
+    fprintf(stderr, "Can't set capabilities!\n");
+    return JNI_ERR;
+  }
+  jvmtiEventCallbacks callbacks;
+  memset(&callbacks, 0, sizeof(jvmtiEventCallbacks));
+  callbacks.MethodEntry = methodEntryCallback;
+  callbacks.MethodExit = methodExitCallback;
+  if (jvmti->SetEventCallbacks(&callbacks, sizeof(jvmtiEventCallbacks)) != JVMTI_ERROR_NONE) {
+    fprintf(stderr, "Can't set event callbacks!\n");
+    return JNI_ERR;
+  }
+  if (jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_METHOD_ENTRY, NULL) != JVMTI_ERROR_NONE) {
+    fprintf(stderr, "Can't enable JVMTI_EVENT_METHOD_ENTRY!\n");
+    return JNI_ERR;
+  }
+  if (jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_METHOD_EXIT, NULL) != JVMTI_ERROR_NONE) {
+    fprintf(stderr, "Can't enable JVMTI_EVENT_METHOD_EXIT!\n");
+    return JNI_ERR;
+  }
+}
+]]>
+              </code>
+            </pre>
+            <pre>g++ -fPIC -shared -I &lt;JDK&gt;/include/ -I &lt;JDK&gt;/include/linux/ -o traceMethodAgent.so traceMethodAgent.cpp</pre>
+          </section>
+
+          <section>
+            <h2>Observability - JVMTI Agents</h2>
+
+            <pre class="big console" data-trim="true">
+<![CDATA[
+$ java -XX:-JBreak -agentpath:traceMethodAgent.so=org/simonis \
+                                       org.simonis.HelloWorld
+-> org/simonis/HelloWorld::main([Ljava/lang/String;)V
+-> org/simonis/HelloWorld::sayHello()V
+Привет JBreak!
+<- org/simonis/HelloWorld::sayHello()V
+24,256,161ns
+<- org/simonis/HelloWorld::main([Ljava/lang/String;)V
+]]>
+            </pre>
+            <br/>
+            <pre class="big console" data-trim="true">
+<![CDATA[
+$ java -XX:+JBreak -agentpath:traceMethodAgent.so=org/simonis \
+                                       org.simonis.HelloWorld
+-> org/simonis/HelloWorld::main([Ljava/lang/String;)V
+Привет JBreak
+  171,417ns
+<- org/simonis/HelloWorld::main([Ljava/lang/String;)V
+]]>
+            </pre>
+          </section>
+
+        </section>
+
+
+        <section style="height: 100%;">
+
+          <section>
+            <h2>Behavioral Changes</h2>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="java" data-trim="true">
+<![CDATA[
+static double compute(int count, double d) {
+  for (int i = 0; i < count; i++) {
+    d += Math.pow(Math.sin(d), Math.sqrt(d));
+  }
+  return d;
+}
+public static void main(String[] args) throws Exception {                
+  double seed = Double.parseDouble(args[0]);
+  int warmup = Integer.parseInt(args[1]);
+  int count = Integer.parseInt(args[2]);
+
+  for (int i = 0; i < 20_000; i++) {
+    compute(warmup, seed);
+  }
+  compute(count, seed);
+]]>
+              </code>
+            </pre>
+          </section>
+
+          <section>
+            <h2>TTS - Time To Safepoint</h2>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="java" data-trim="true">
+<![CDATA[
+public static void main(String[] args) throws Exception {
+  for (int i = 0; i < 20_000; i++) {
+    compute(warmup, seed);
+  }
+  new Thread() {
+    { setDaemon(true); }
+    public void run() {
+      while (true) {
+        try {
+          Thread.sleep(1_000);
+        } catch (InterruptedException e) {}                              
+        System.gc();
+      }
+    }
+  }.start();
+  compute(count, seed);
+]]>
+              </code>
+            </pre>
+          </section>
+
+        </section>
+
+
+        <section style="height: 100%;">
+          <h2>HotSpot Intrinsics</h2>
+
+          <p style="text-align:left">Defined in: <code>src/share/vm/classfile/vmSymbols.hpp</code></p>
+
+          <ul>
+            <li>Library intrinsics (~260)
+              <ul>
+                <li>Library methods replaced by assembly, IR or both</li>
+              </ul>
+            </li>
+            <li>Bytecode intrinsics (~40)
+              <ul>
+                <li>Late/always inlining candidates (e.g. <code>StringBuffer::*</code>, boxing/unboxing methods)</li>
+                <li>See: <code>Compile::should_delay_string_inlining()</code> in <code>doCall.cpp</code></li>
+                <li>See: <code>InlineTree::should_inline()</code> in <code>bytecodeInfo.cpp</code></li>
+              </ul>
+            </li>
+            <li>Only for system classes</li>
+            <li>Must be annotated with <code>jdk.internal.HotSpotIntrinsicCandidate</code> (since Java 9)
+              <ul>
+                <li>Checked by <code>-XX:+CheckIntrinsics</code></li>
+              </ul>
+            </li>
+          </ul>
+
+        </section>
+
+
+        <section style="height: 100%;">
+          <h2>Library Intrinsics</h2>
+
+          <ul>
+            <li>Interpreter:
+              <ul>
+                <li>Implements only few intrinsics (notably <code>Math</code> and <code>CRC32</code>)</li>
+                <li>Generates special entry points (see: <code>AbstractInterpreter::MethodKind()</code>)</li>
+              </ul>
+            </li>
+            <li>C1 (aka "client") JIT:
+              <ul>
+                <li>Mostly <code>Unsafe</code> and <code>Math</code> intrinsics (see <code>Compiler::is_intrinsic_supported()</code>)</li>
+                <li>See: <code>GraphBuilder::build_graph_for_intrinsic()</code></li>
+              </ul>
+            </li>
+            <li>C2 (aka "server") JIT:<ul>
+                <li>See <code>C2Compiler::is_intrinsic_supported()</code> for a complete list</li>
+                <li>See <code>LibraryCallKit::try_to_inline()</code> in <code>library_call.cpp</code></li>
+                <li>Create new "Intermediate Representation" (i.e. IR) nodes..<br/>
+                  ..and match these nodes with corresponding "Machine Nodes" in <code>.ad</code> file</li>
+                <li>Use <code>IdealKit</code>/<code>GraphKit</code> to mimic the functionality directly in IR<br/>
+                  (see <code>PhaseStringOpts</code> methods in <code>stringopts.hpp</code></li>
+              </ul>
+            </li>
+          </ul>
+
+        </section>
+
+
+        <section style="height: 100%;">
+          <h2>Controlling Intrinsics</h2>
+
+          <ul>
+            <li><code>-XX:+PrintCompilation -XX:+PrintInlining</code><br/>
+              <pre class="big noshadow" data-trim="true">
+                <code class="cpp" data-trim="true">
+<![CDATA[
+613    1    b        org.simonis.Loop::compute (29 bytes)
+                        @ 9   java.lang.Math::sin (5 bytes)   (intrinsic)    
+                        @ 13   java.lang.Math::sqrt (5 bytes)   (intrinsic)
+]]>
+                </code>
+              </pre>
+            </li>
+            <li><code>-XX:+CheckIntrinsics</code> (together with <code>@HotSpotIntrinsicCandidate</code>)><br/>
+              <pre class="big noshadow" data-trim="true">
+                <code class="cpp" data-trim="true">
+<![CDATA[
+Compiler intrinsic is defined for method [org.simonis.HelloWorld.sayHello()V],
+but the method is not annotated with @HotSpotIntrinsicCandidate. Exiting.
+]]>
+                </code>
+              </pre>
+            </li>
+            <li><code>-XX:DisableIntrinsic={_dsqrt, ...}</code> (use id from <code>vmSymbols.hpp</code>)</li>
+            <li><code>-XX:+PrintIntrinsics</code></li>
+            <li><code>-XX:+Use{AES,CRC32,GHASH,MathExact,...}Intrinsics</code></li>
+            <li><code>-XX:-InlineNatives</code>, <code>-XX:-Inline{Math, Class, Thread, ...}Natives</code><br/>
+              <code>-XX:-Inline{UnsafeOps, ArrayCopy, ObjectHash}</code></li>
+          </ul>
+
+        </section>
+
+
+        <section>
+
+          <h2>Native vs. Intrinsic methods</h2>
+
+          <ul>
+            <li>JVM state (safepoints)</li>
+            <li>Java vs. native calling conventions</li>
+            <li>Platform dependent (native implementation required!)</li>
+            <li>OK for 'expensive' calls like I/O</li>
+          </ul>
+
+        </section>
+
+
+        <section style="height: 100%;">
+
+          <section>
+
+            <h2>Implementing an Interpreter Intrinsics</h2>
+
+            <p style="text-align:left">Define in: <code>src/share/vm/classfile/vmSymbols.hpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+do_class(     helloWorld,    "org/simonis/HelloWorld")                      \
+do_intrinsic(_sayHello,      helloWorld, sayHello_name, sayHello_sign, F_S) \
+ do_name(     sayHello_name, "sayHello")                                    \  
+ do_signature(sayHello_sign, "()V")                                         \
+]]>
+              </code>
+            </pre>
+
+            <p style="text-align:left">Define in: <code>src/share/vm/interpreter/abstractInterpreter.hpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+class AbstractInterpreter: AllStatic {
+  enum MethodKind {
+    ...
+    HelloWorld_sayHello, // implementation of org.simonis.HelloWorld.sayHello()
+]]>
+              </code>
+            </pre>
+
+          </section>
+
+          <section>
+
+            <h2>Implementing an Interpreter Intrinsics</h2>
+
+            <p style="text-align:left">Map in: <code>src/share/vm/interpreter/abstractInterpreter.cpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+MethodKind AbstractInterpreter::method_kind(methodHandle m) {
+  ...
+  if (JBreak) {
+    if (m->intrinsic_id() == vmIntrinsics::_sayHello) {                       
+      return HelloWorld_sayHello;
+]]>
+              </code>
+            </pre>
+
+            <p style="text-align:left">Generate in: <code>src/share/vm/interpreter/templateInterpreterGenerator.cpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+address TemplateInterpreterGenerator::generate_method_entry(MethodKind kind) {
+  switch (kind) {
+  case Interpreter::HelloWorld_sayHello: entry_point = generate_sayHello();
+...
+  return entry_point;
+]]>
+              </code>
+            </pre>
+
+          </section>
+
+          <section>
+
+            <h2>Implementing an Interpreter Intrinsics</h2>
+
+            <p style="text-align:left">Implement in: <code>b/src/cpu/x86/vm/templateInterpreterGenerator_x86_64.cpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+#define __ _masm->
+address TemplateInterpreterGenerator::generate_sayHello() {
+  // r13: sender sp
+  // stack: [ ret adr ] <-- rsp
+  address entry_point = __ pc();
+  const char *msg = // "Привет JBreak!" in UTF-8
+    "\x0d0\x09f\x0d1\x080\x0d0\x0b8\x0d0\x0b2\x0d0\x0b5\x0d1\x082 JBreak!\n";
+  __ mov64(c_rarg1, (long)stdout);
+  __ mov64(c_rarg0, (long)msg);
+  __ call(RuntimeAddress(CAST_FROM_FN_PTR(address, fputs)));
+  __ pop(rax);
+  __ mov(rsp, r13);
+  __ jmp(rax);
+  return entry_point;
+}
+]]>
+              </code>
+            </pre>
+
+          </section>
+
+          <section>
+
+            <h2>Implementing an Interpreter Intrinsics</h2>
+
+            <p style="text-align:left">Enable in: <code>src/share/vm/oops/method.cpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+vmSymbols::SID Method::klass_id_for_intrinsics(const Klass* holder) {
+  // if loader is not the default loader (i.e., != NULL), we can't know the
+  // intrinsics because we are not loading from core libraries
+  const InstanceKlass* ik = InstanceKlass::cast(holder);
+  if (JBreak && ik->name()->equals("org/simonis/HelloWorld")) {
+    // check for org.simonis.HelloWorld
+    return vmSymbols::find_sid(ik->name());
+  }
+  if ((ik->class_loader() != NULL)) {
+    return vmSymbols::NO_SID;   // regardless of name, no intrinsics here
+  }
+  // see if the klass name is well-known:
+  Symbol* klass_name = ik->name();
+  return vmSymbols::find_sid(klass_name);
+}
+]]>
+              </code>
+            </pre>
+
+          </section>
+
+        </section>
+
+
+
+        <section style="height: 100%;">
+
+          <section>
+
+            <h2>Implementing a C2-JIT Intrinsic</h2>
+
+            <p style="text-align:left">Intrinsify: <code>java.util.Random.nextInt()</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="java" data-trim="true">
+<![CDATA[
+public class Random implements java.io.Serializable {
+  ...
+  @HotSpotIntrinsicCandidate                                                   
+  public int nextInt() {
+    return next(32);
+  }
+]]>
+              </code>
+            </pre>
+
+            <p style="text-align:left">Define in: <code>src/share/vm/classfile/vmSymbols.hpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+do_class(     java_util_Random, "java/util/Random")                           \
+do_intrinsic(_nextInt,          java_util_Random, nextInt_name, ni_sign, F_R) \
+ do_name(     nextInt_name,     "nextInt")                                    \
+ do_signature(ni_sign,          "()I")                                        \
+]]>
+              </code>
+            </pre>
+
+          </section>
+
+          <section>
+
+            <h2>Implementing a C2-JIT Intrinsic</h2>
+
+            <p style="text-align:left">Detect <code>rdrand</code> instruction in: <code>src/cpu/x86/vm/vm_version_x86.hpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+class VM_Version {
+  static uint64_t feature_flags() {
+    if (_cpuid_info.std_cpuid1_ecx.bits.rdrand != 0)
+      result |= CPU_RDRAND;
+
+  static bool supports_rdrand() { return (_features & CPU_RDRAND) != 0; }
+]]>
+              </code>
+            </pre>
+
+            <p style="text-align:left">Implement <code>rdrand</code> in: <code>src/cpu/x86/vm/assembler_x86.hpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+void Assembler::rdrandl(Register dst) {
+  int encode = prefix_and_encode(dst->encoding());                       
+  emit_int8(0x0F);
+  emit_int8((unsigned char)0xC7);
+  emit_int8((unsigned char)(0xF0 | encode));
+]]>
+              </code>
+            </pre>
+
+          </section>
+
+          <section>
+
+            <h2>Implementing a C2-JIT Intrinsic</h2>
+
+            <p style="text-align:left">Implement new IR-node in: <code>src/share/vm/opto/intrinsicnode.hpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+class RandINode : public Node {
+public:
+  RandINode(Node *c) : Node(c) {}
+  const Type *bottom_type() const { return TypeInt::INT; }               
+  virtual uint ideal_reg() const { return Op_RegI; }
+]]>
+              </code>
+            </pre>
+
+            <p style="text-align:left">And corresponding Machine-node in: <code>src/cpu/x86/vm/x86.ad</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+instruct randI(rRegI dst) %{
+  match(Set dst (RandI));
+  format %{ "RANDI    $dst\t# int" %}                                    
+  ins_encode %{
+    __ rdrandl($dst$$Register);
+  %}
+]]>
+              </code>
+            </pre>
+
+          </section>
+
+          <section>
+
+            <h2>Implementing a C2-JIT Intrinsic</h2>
+
+            <p style="text-align:left">Use it in: <code>src/share/vm/opto/library_call.cpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+bool LibraryCallKit::try_to_inline(int predicate) {
+  ...
+  switch (intrinsic_id()) {                                              
+  case vmIntrinsics::_nextInt: return inline_random(intrinsic_id());
+]]>
+              </code>
+            </pre>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+bool LibraryCallKit::inline_random(vmIntrinsics::ID id) {
+  Node* n = NULL;
+  switch (id) {
+  case vmIntrinsics::_nextInt:
+    if (!Matcher::match_rule_supported(Op_RandI)) return false;          
+    n = new RandINode(control());
+  ...
+  set_result(_gvn.transform(n));
+]]>
+              </code>
+            </pre>
+          </section>
+
+        </section>
+
+
+
+      </div>
+
+    </div>
+
+    <script src="reveal.js/lib/js/head.min.js"></script>
+    <script src="reveal.js/js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        //width: 1024,
+        //height: 768,
+        //width: 1280,
+        //height: 720,
+        width: 1366,
+        height: 768,
+        margin: 0.1,
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'reveal.js/plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
+
+<!--  LocalWords:  HotSpot scrollable px pre noshadow Volker Simonis builtin VM
+ -->
+<!--  LocalWords:  Observability Bytecode runtime bytecodes Ljava sayHello ns
+ -->
+<!--  LocalWords:  JBreak JVMTI JNI fPIC JDK traceMethodAgent cpp TTS Safepoint
+ -->
+<!--  LocalWords:  unboxing JIT JVM safepoints Intrinsify
+ -->
