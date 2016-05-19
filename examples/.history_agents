@@ -1,0 +1,6 @@
+java -XX:-JPoint -javaagent:bin/MethodInstrumentationAgent.jar=org/simonis org.simonis.HelloWorld 
+java -XX:+JPoint -javaagent:bin/MethodInstrumentationAgent.jar=org/simonis org.simonis.HelloWorld 
+java -XX:-JPoint -agentpath:jvmti/traceMethodAgent.so=org/simonis org.simonis.HelloWorld
+java -XX:+JPoint -agentpath:jvmti/traceMethodAgent.so=org/simonis org.simonis.HelloWorld
+java -XX:-JPoint -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y org.simonis.HelloWorld 
+java -XX:+JPoint -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y org.simonis.HelloWorld 

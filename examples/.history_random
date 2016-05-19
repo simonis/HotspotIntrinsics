@@ -1,0 +1,2 @@
+time java -XX:DisableIntrinsic=_nextInt org.simonis.Random 1000000
+time java org.simonis.Random 1000000

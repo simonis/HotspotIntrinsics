@@ -1,0 +1,2 @@
+java -Xint org.simonis.HelloWorld 
+java -Xint -XX:+JPoint org.simonis.HelloWorld 
