@@ -1,2 +1,3 @@
+javac -d . ../src/org/simonis/HelloWorld.java 
 java -Xint org.simonis.HelloWorld 
-java -Xint -XX:+JPoint org.simonis.HelloWorld 
+java -Xint -XX:+JEEConf org.simonis.HelloWorld 

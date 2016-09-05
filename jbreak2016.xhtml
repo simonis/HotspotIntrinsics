@@ -167,7 +167,7 @@ Java: Unsafe.loadFence()
 public class HelloWorld {
 
   public static void sayHello() {
-      System.out.println("Привет JPoint!");
+      System.out.println("Привет JEEConf!");
   }
 
   public static void main(String ... args) {
@@ -188,15 +188,15 @@ public class HelloWorld {
             <pre class="big console" data-trim="true">
 <![CDATA[
 $ java -Xint             org.simonis.HelloWorld
-Привет JPoint!
+Привет JEEConf!
 6,968,398ns
 ]]>
             </pre>
             <br/>
             <pre class="big console" data-trim="true">
 <![CDATA[
-$ java -Xint -XX:+JPoint org.simonis.HelloWorld
-Привет JPoint!
+$ java -Xint -XX:+JEEConf org.simonis.HelloWorld
+Привет JEEConf!
   153,191ns
 ]]>
             </pre>
@@ -353,7 +353,7 @@ $ java             -javaagent:MethodInstrumentationAgent.jar=org/simonis \
                                                   org.simonis.HelloWorld
 -> main([Ljava/lang/String;)V
 -> sayHello()V
-Привет JPoint!
+Привет JEEConf!
 <- sayHello()V
   651,538ns
 <- main([Ljava/lang/String;)V
@@ -362,10 +362,10 @@ $ java             -javaagent:MethodInstrumentationAgent.jar=org/simonis \
             <br/>
             <pre class="big console" data-trim="true">
 <![CDATA[
-$ java -XX:+JPoint -javaagent:MethodInstrumentationAgent.jar=org/simonis \
+$ java -XX:+JEEConf -javaagent:MethodInstrumentationAgent.jar=org/simonis \
                                                   org.simonis.HelloWorld
 -> main([Ljava/lang/String;)V
-Привет JPoint!
+Привет JEEConf!
    51,750ns
 <- main([Ljava/lang/String;)V
 ]]>
@@ -477,11 +477,11 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM* jvm, char* options, void* reserved) 
 
             <pre class="big console" data-trim="true">
 <![CDATA[
-$ java -XX:-JPoint -agentpath:traceMethodAgent.so=org/simonis \
+$ java -XX:-JEEConf -agentpath:traceMethodAgent.so=org/simonis \
                                        org.simonis.HelloWorld
 -> org/simonis/HelloWorld::main([Ljava/lang/String;)V
 -> org/simonis/HelloWorld::sayHello()V
-Привет JPoint!
+Привет JEEConf!
 <- org/simonis/HelloWorld::sayHello()V
 24,256,161ns
 <- org/simonis/HelloWorld::main([Ljava/lang/String;)V
@@ -490,10 +490,10 @@ $ java -XX:-JPoint -agentpath:traceMethodAgent.so=org/simonis \
             <br/>
             <pre class="big console" data-trim="true">
 <![CDATA[
-$ java -XX:+JPoint -agentpath:traceMethodAgent.so=org/simonis \
+$ java -XX:+JEEConf -agentpath:traceMethodAgent.so=org/simonis \
                                        org.simonis.HelloWorld
 -> org/simonis/HelloWorld::main([Ljava/lang/String;)V
-Привет JPoint!
+Привет JEEConf!
   171,417ns
 <- org/simonis/HelloWorld::main([Ljava/lang/String;)V
 ]]>
@@ -682,7 +682,7 @@ but the method is not annotated with @HotSpotIntrinsicCandidate. Exiting.
 <![CDATA[
 do_class(     helloWorld,    "org/simonis/HelloWorld")                      \
 do_intrinsic(_sayHello,      helloWorld, sayHello_name, sayHello_sign, F_S) \
- do_name(     sayHello_name, "sayHello")                                    \  
+ do_name(     sayHello_name, "sayHello")                                    \ 
  do_signature(sayHello_sign, "()V")                                         \
 ]]>
               </code>
@@ -714,7 +714,7 @@ class AbstractInterpreter: AllStatic {
 <![CDATA[
 MethodKind AbstractInterpreter::method_kind(methodHandle m) {
   ...
-  if (JPoint) {
+  if (JEEConf) {
     if (m->intrinsic_id() == vmIntrinsics::_sayHello) {                       
       return HelloWorld_sayHello;
 ]]>
@@ -751,8 +751,8 @@ address TemplateInterpreterGenerator::generate_sayHello() {
   // r13: sender sp
   // stack: [ ret adr ] <-- rsp
   address entry_point = __ pc();
-  const char *msg = // "Привет JPoint!" in UTF-8
-    "\x0d0\x09f\x0d1\x080\x0d0\x0b8\x0d0\x0b2\x0d0\x0b5\x0d1\x082 JPoint!\n";
+  const char *msg = // "Привет JEEConf!" in UTF-8
+    "\x0d0\x09f\x0d1\x080\x0d0\x0b8\x0d0\x0b2\x0d0\x0b5\x0d1\x082 JEEConf!\n";
   __ mov64(c_rarg1, (long)stdout);
   __ mov64(c_rarg0, (long)msg);
   __ call(RuntimeAddress(CAST_FROM_FN_PTR(address, fputs)));
@@ -780,7 +780,7 @@ vmSymbols::SID Method::klass_id_for_intrinsics(const Klass* holder) {
   // if loader is not the default loader (i.e., != NULL), we can't know the
   // intrinsics because we are not loading from core libraries
   const InstanceKlass* ik = InstanceKlass::cast(holder);
-  if (JPoint && ik->name()->equals("org/simonis/HelloWorld")) {
+  if (JEEConf && ik->name()->equals("org/simonis/HelloWorld")) {
     // check for org.simonis.HelloWorld
     return vmSymbols::find_sid(ik->name());
   }
@@ -827,10 +827,10 @@ public class Random implements java.io.Serializable {
             <pre class="big noshadow" data-trim="true">
               <code class="cpp" data-trim="true">
 <![CDATA[
-do_class(     java_util_Random, "java/util/Random")                           \
-do_intrinsic(_nextInt,          java_util_Random, nextInt_name, ni_sign, F_R) \
- do_name(     nextInt_name,     "nextInt")                                    \
- do_signature(ni_sign,          "()I")                                        \
+do_class(     java_util_Random, "java/util/Random")                          \
+do_intrinsic(_nextInt,          java_util_Random, nextInt_name, ni_sign, F_R)\
+ do_name(     nextInt_name,     "nextInt")                                   \
+ do_signature(ni_sign,          "()I")                                       \
 ]]>
               </code>
             </pre>
