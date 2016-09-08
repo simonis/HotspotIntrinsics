@@ -1,0 +1,10 @@
+f Line.<init>
+f   IntrinsicObjects.constructWithin("p1", line)
+f     IntrinsicObjectModel<Point>.constructWithin(line)
+f       IntrinsicObjectModel<Point>.instantiate(this, constructor, args...)
+f         AbstractIntrinsicObjectModel<Point>.constructElementWithin(line, constructor, args...)
+f           Point p = Constructor<Point>.newInstance(args)
+f             java.lang.reflect.Constructor.newInstance(args)
+                // Reflection magic -> new Point(args)
+f           AbstractIntrinsicObjectModel<Point>.directlyInitializeTargetField(line, p)
+f             java.lang.reflect.Field.set(line, p)

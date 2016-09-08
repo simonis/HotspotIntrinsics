@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><table class="calling_hirarchy">
+  <tr>
+    <td colspan="8" class="functionCall  indent_level_0">
+      <code>Line.&lt;init&gt;</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="9">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_1">
+    <code>IntrinsicObjects.constructWithin("p1", line)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="8">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_2">
+    <code>IntrinsicObjectModel&lt;Point&gt;.constructWithin(line)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="7">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_3">
+    <code>IntrinsicObjectModel&lt;Point&gt;.instantiate(this, constructor, args...)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="6">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_4">
+    <code>AbstractIntrinsicObjectModel&lt;Point&gt;.constructElementWithin(line, constructor, args...)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="5">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_5">
+    <code>Point p = Constructor&lt;Point&gt;.newInstance(args)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="2">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_6">
+      <code>java.lang.reflect.Constructor.newInstance(args)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="1">&nbsp;</td>
+    <td colspan="1" class="comment indent_level_7">
+      <code>// Reflection magic -&gt; new Point(args)</code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3" class="functionCall  indent_level_5">
+      <code>AbstractIntrinsicObjectModel&lt;Point&gt;.directlyInitializeTargetField(line, p)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="1">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_6">
+    <code>java.lang.reflect.Field.set(line, p)</code>
+    </td>
+  </tr>
+</table>

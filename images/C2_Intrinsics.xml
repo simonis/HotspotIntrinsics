@@ -1,0 +1,12 @@
+<calling_hirarchy>
+<call level='0' type='functionCall '><code>Line.&lt;init&gt;</code></call>
+<call level='1' type='functionCall '><code>IntrinsicObjects.constructWithin("p1", line)</code></call>
+<call level='2' type='functionCall '><code>IntrinsicObjectModel&lt;Point&gt;.constructWithin(line)</code></call>
+<call level='3' type='functionCall '><code>IntrinsicObjectModel&lt;Point&gt;.instantiate(this, constructor, args...)</code></call>
+<call level='4' type='functionCall '><code>AbstractIntrinsicObjectModel&lt;Point&gt;.constructElementWithin(line, constructor, args...)</code></call>
+<call level='5' type='functionCall '><code>Point p = Constructor&lt;Point&gt;.newInstance(args)</code></call>
+<call level='6' type='functionCall '><code>java.lang.reflect.Constructor.newInstance(args)</code></call>
+<call level='7'      type='comment'><code>// Reflection magic -&gt; new Point(args)</code></call>
+<call level='5' type='functionCall '><code>AbstractIntrinsicObjectModel&lt;Point&gt;.directlyInitializeTargetField(line, p)</code></call>
+<call level='6' type='functionCall '><code>java.lang.reflect.Field.set(line, p)</code></call>
+</calling_hirarchy>
