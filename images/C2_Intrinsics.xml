@@ -1,12 +1,15 @@
 <calling_hirarchy>
-<call level='0' type='functionCall '><code>Line.&lt;init&gt;</code></call>
-<call level='1' type='functionCall '><code>IntrinsicObjects.constructWithin("p1", line)</code></call>
-<call level='2' type='functionCall '><code>IntrinsicObjectModel&lt;Point&gt;.constructWithin(line)</code></call>
-<call level='3' type='functionCall '><code>IntrinsicObjectModel&lt;Point&gt;.instantiate(this, constructor, args...)</code></call>
-<call level='4' type='functionCall '><code>AbstractIntrinsicObjectModel&lt;Point&gt;.constructElementWithin(line, constructor, args...)</code></call>
-<call level='5' type='functionCall '><code>Point p = Constructor&lt;Point&gt;.newInstance(args)</code></call>
-<call level='6' type='functionCall '><code>java.lang.reflect.Constructor.newInstance(args)</code></call>
-<call level='7'      type='comment'><code>// Reflection magic -&gt; new Point(args)</code></call>
-<call level='5' type='functionCall '><code>AbstractIntrinsicObjectModel&lt;Point&gt;.directlyInitializeTargetField(line, p)</code></call>
-<call level='6' type='functionCall '><code>java.lang.reflect.Field.set(line, p)</code></call>
+<call level='0'                    ><code>CompileBroker::compiler_thread_loop()</code></call>
+<call level='1'                    ><code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code></call>
+<call level='2' type='functionCall '><code>C2Compiler::compile_method(target=0x7fffc4299130)</code></call>
+<call level='3' type='functionCall '><code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code></call>
+<call level='4' type='functionCall '><code>ParseGenerator::generate()</code></call>
+<call level='5' type='functionCall '><code>Parse::Parse(caller=0x7fffc440de00, parse_method=0x7fffc4299130)</code></call>
+<call level='6' type='functionCall '><code>Parse::do_all_blocks()</code></call>
+<call level='7' type='functionCall '><code>Parse::do_one_block()</code></call>
+<call level='8' type='functionCall '><code>Parse::do_one_bytecode()</code></call>
+<call level='9' type='functionCall '><code>Parse::do_call()</code></call>
+<call level='10' type='functionCall '><code>LibraryIntrinsic::generate()</code></call>
+<call level='11' type='functionCall '><code>LibraryCallKit::try_to_inline()</code></call>
+<call level='12' type='functionCall '><code>LibraryCallKit::inline_random(id=vmIntrinsics::_nextInt)</code></call>
 </calling_hirarchy>

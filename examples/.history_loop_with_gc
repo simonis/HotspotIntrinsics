@@ -1,2 +1,2 @@
-time java -verbose:gc -XX:-InlineMathNatives org.simonis.LoopWithGC 0 1 100000000
 time java -verbose:gc -XX:+InlineMathNatives org.simonis.LoopWithGC 0 1 100000000
+time java -verbose:gc -XX:-InlineMathNatives org.simonis.LoopWithGC 0 1 100000000

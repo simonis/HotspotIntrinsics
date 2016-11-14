@@ -1,3 +1,4 @@
-javac -d . ../src/org/simonis/HelloWorld.java 
+javac -d . ../src/org/simonis/HelloWorld.java
+emacs -nw -r -q ../src/org/simonis/HelloWorld.java
+java -Xint -XX:+JavaZone org.simonis.HelloWorld 
 java -Xint org.simonis.HelloWorld 
-java -Xint -XX:+JEEConf org.simonis.HelloWorld 

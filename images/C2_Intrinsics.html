@@ -1,60 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?><table class="calling_hirarchy">
   <tr>
-    <td colspan="8" class="functionCall  indent_level_0">
-      <code>Line.&lt;init&gt;</code>
+    <td colspan="13" class=" indent_level_0">
+      <code>CompileBroker::compiler_thread_loop()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="12">&nbsp;</td>
+    <td colspan="12" class=" indent_level_1">
+    <code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="11">&nbsp;</td>
+    <td colspan="11" class="functionCall  indent_level_2">
+    <code>C2Compiler::compile_method(target=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="10">&nbsp;</td>
+    <td colspan="10" class="functionCall  indent_level_3">
+    <code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code>
     </td>
   </tr>
   <tr>
     <td rowspan="9">&nbsp;</td>
-    <td colspan="7" class="functionCall  indent_level_1">
-    <code>IntrinsicObjects.constructWithin("p1", line)</code>
+    <td colspan="9" class="functionCall  indent_level_4">
+    <code>ParseGenerator::generate()</code>
     </td>
   </tr>
   <tr>
     <td rowspan="8">&nbsp;</td>
-    <td colspan="6" class="functionCall  indent_level_2">
-    <code>IntrinsicObjectModel&lt;Point&gt;.constructWithin(line)</code>
+    <td colspan="8" class="functionCall  indent_level_5">
+    <code>Parse::Parse(caller=0x7fffc440de00, parse_method=0x7fffc4299130)</code>
     </td>
   </tr>
   <tr>
     <td rowspan="7">&nbsp;</td>
-    <td colspan="5" class="functionCall  indent_level_3">
-    <code>IntrinsicObjectModel&lt;Point&gt;.instantiate(this, constructor, args...)</code>
+    <td colspan="7" class="functionCall  indent_level_6">
+    <code>Parse::do_all_blocks()</code>
     </td>
   </tr>
   <tr>
     <td rowspan="6">&nbsp;</td>
-    <td colspan="4" class="functionCall  indent_level_4">
-    <code>AbstractIntrinsicObjectModel&lt;Point&gt;.constructElementWithin(line, constructor, args...)</code>
+    <td colspan="6" class="functionCall  indent_level_7">
+    <code>Parse::do_one_block()</code>
     </td>
   </tr>
   <tr>
     <td rowspan="5">&nbsp;</td>
-    <td colspan="3" class="functionCall  indent_level_5">
-    <code>Point p = Constructor&lt;Point&gt;.newInstance(args)</code>
+    <td colspan="5" class="functionCall  indent_level_8">
+    <code>Parse::do_one_bytecode()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="4">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_9">
+    <code>Parse::do_call()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="3">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_10">
+    <code>LibraryIntrinsic::generate()</code>
     </td>
   </tr>
   <tr>
     <td rowspan="2">&nbsp;</td>
-    <td colspan="2" class="functionCall  indent_level_6">
-      <code>java.lang.reflect.Constructor.newInstance(args)</code>
+    <td colspan="2" class="functionCall  indent_level_11">
+    <code>LibraryCallKit::try_to_inline()</code>
     </td>
   </tr>
   <tr>
     <td rowspan="1">&nbsp;</td>
-    <td colspan="1" class="comment indent_level_7">
-      <code>// Reflection magic -&gt; new Point(args)</code>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="3" class="functionCall  indent_level_5">
-      <code>AbstractIntrinsicObjectModel&lt;Point&gt;.directlyInitializeTargetField(line, p)</code>
-    </td>
-  </tr>
-  <tr>
-    <td rowspan="1">&nbsp;</td>
-    <td colspan="2" class="functionCall  indent_level_6">
-    <code>java.lang.reflect.Field.set(line, p)</code>
+    <td colspan="1" class="functionCall  indent_level_12">
+    <code>LibraryCallKit::inline_random(id=vmIntrinsics::_nextInt)</code>
     </td>
   </tr>
 </table>

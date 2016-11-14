@@ -1,6 +1,6 @@
-java -XX:-JEEConf -javaagent:bin/MethodInstrumentationAgent.jar=org/simonis org.simonis.HelloWorld 
-java -XX:+JEEConf -javaagent:bin/MethodInstrumentationAgent.jar=org/simonis org.simonis.HelloWorld 
-java -XX:-JEEConf -agentpath:jvmti/traceMethodAgent.so=org/simonis org.simonis.HelloWorld
-java -XX:+JEEConf -agentpath:jvmti/traceMethodAgent.so=org/simonis org.simonis.HelloWorld
-java -XX:-JEEConf -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y org.simonis.HelloWorld 
-java -XX:+JEEConf -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y org.simonis.HelloWorld 
+java -XX:+JavaZone -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y org.simonis.HelloWorld 
+java -XX:-JavaZone -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y org.simonis.HelloWorld 
+java -XX:+JavaZone -agentpath:traceMethodAgent.so=org/simonis org.simonis.HelloWorld
+java -XX:-JavaZone -agentpath:traceMethodAgent.so=org/simonis org.simonis.HelloWorld
+java -XX:+JavaZone -javaagent:MethodInstrumentationAgent.jar=org/simonis --add-exports java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED org.simonis.HelloWorld 
+java -XX:-JavaZone -javaagent:MethodInstrumentationAgent.jar=org/simonis --add-exports java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED org.simonis.HelloWorld 

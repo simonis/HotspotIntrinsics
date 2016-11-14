@@ -4,7 +4,7 @@ import java.security.SecureRandom;
 
 public class Random {
 
-  private static final SecureRandom sr = new SecureRandom();
+  static final java.util.Random sr = new SecureRandom();
 
   static int foo() {
     return sr.nextInt();

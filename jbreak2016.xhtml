@@ -49,6 +49,117 @@
 .bold {
     font-weight: bold;
 }
+
+  table.calling_hirarchy {
+//    font-family: monospace, arial, helvetica, sans-serif;
+//    background-color: #ffffff;
+    font-size: smaller;
+    border-collapse: collapse;
+    margin: 0px auto;
+    padding: 2px;
+    width: auto;
+    overflow: auto;
+    border: none;
+  }
+
+  table.calling_hirarchy tr {
+    border: none;
+  }
+
+  table.calling_hirarchy td {
+    padding: 5px;
+//    font-family: monospace;
+  }
+
+  td.indent_level_0 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #a0a0a0;
+  }
+  td.indent_level_1 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #a8a8a8;
+  }
+  td.indent_level_2 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #b0b0b0;
+  }
+  td.indent_level_3 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #b8b8b8;
+  }
+  td.indent_level_4 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #c0c0c0;
+  }
+  td.indent_level_5 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #c8c8c8;
+  }
+  td.indent_level_6 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #d0d0d0;
+  }
+  td.indent_level_7 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #d8d8d8;
+  }
+  td.indent_level_8 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #e0e0e0;
+  }
+  td.indent_level_9 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #e8e8e8;
+  }
+  td.indent_level_10 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #f0f0f0;
+  }
+  td.indent_level_11 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #f8f8f8;
+  }
+  td.indent_level_12 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #ffffff;
+  }
+  td.functionCall {
+//    font-weight: bold;
+    color: darkblue;
+  }
+  td.javaCall {
+    font-weight: bold;
+    color: darkgreen;
+  }
+  td.comment {
+    font-style: italic;
+    color: maroon;
+  }
+  td.highlight {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #a0ffa0;
+  }
+  table.calling_hirarchy td[rowspan] {
+    border-style: none;
+    border-width: 0;
+    border-left: dotted;
+    border-left-width: 2px;
+  }
+
   </style>
 
     <!-- Printing and PDF exports -->
@@ -80,7 +191,7 @@
         <section>
           <h1>HotSpot Intrinsics<br/></h1>
           <p>
-            <small>Volker Simonis [Фолкер Симонис], SAP / <a href="mailto:volker.simonis@gmail.com">volker.simonis@gmail.com</a></small>
+            <small>Volker Simonis, SAP / <a href="mailto:volker.simonis@gmail.com">volker.simonis@gmail.com</a></small>
           </p>
         </section>
 
@@ -167,7 +278,7 @@ Java: Unsafe.loadFence()
 public class HelloWorld {
 
   public static void sayHello() {
-      System.out.println("Привет JEEConf!");
+      System.out.println("Hello JavaZone!");
   }
 
   public static void main(String ... args) {
@@ -188,15 +299,15 @@ public class HelloWorld {
             <pre class="big console" data-trim="true">
 <![CDATA[
 $ java -Xint             org.simonis.HelloWorld
-Привет JEEConf!
+Hello JavaZone!
 6,968,398ns
 ]]>
             </pre>
             <br/>
             <pre class="big console" data-trim="true">
 <![CDATA[
-$ java -Xint -XX:+JEEConf org.simonis.HelloWorld
-Привет JEEConf!
+$ java -Xint -XX:+JavaZone org.simonis.HelloWorld
+Hello JavaZone!
   153,191ns
 ]]>
             </pre>
@@ -353,7 +464,7 @@ $ java             -javaagent:MethodInstrumentationAgent.jar=org/simonis \
                                                   org.simonis.HelloWorld
 -> main([Ljava/lang/String;)V
 -> sayHello()V
-Привет JEEConf!
+Hello JavaZone!
 <- sayHello()V
   651,538ns
 <- main([Ljava/lang/String;)V
@@ -362,10 +473,10 @@ $ java             -javaagent:MethodInstrumentationAgent.jar=org/simonis \
             <br/>
             <pre class="big console" data-trim="true">
 <![CDATA[
-$ java -XX:+JEEConf -javaagent:MethodInstrumentationAgent.jar=org/simonis \
+$ java -XX:+JavaZone -javaagent:MethodInstrumentationAgent.jar=org/simonis \
                                                   org.simonis.HelloWorld
 -> main([Ljava/lang/String;)V
-Привет JEEConf!
+Hello JavaZone!
    51,750ns
 <- main([Ljava/lang/String;)V
 ]]>
@@ -477,11 +588,11 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM* jvm, char* options, void* reserved) 
 
             <pre class="big console" data-trim="true">
 <![CDATA[
-$ java -XX:-JEEConf -agentpath:traceMethodAgent.so=org/simonis \
+$ java -XX:-JavaZone -agentpath:traceMethodAgent.so=org/simonis \
                                        org.simonis.HelloWorld
 -> org/simonis/HelloWorld::main([Ljava/lang/String;)V
 -> org/simonis/HelloWorld::sayHello()V
-Привет JEEConf!
+Hello JavaZone!
 <- org/simonis/HelloWorld::sayHello()V
 24,256,161ns
 <- org/simonis/HelloWorld::main([Ljava/lang/String;)V
@@ -490,10 +601,10 @@ $ java -XX:-JEEConf -agentpath:traceMethodAgent.so=org/simonis \
             <br/>
             <pre class="big console" data-trim="true">
 <![CDATA[
-$ java -XX:+JEEConf -agentpath:traceMethodAgent.so=org/simonis \
+$ java -XX:+JavaZone -agentpath:traceMethodAgent.so=org/simonis \
                                        org.simonis.HelloWorld
 -> org/simonis/HelloWorld::main([Ljava/lang/String;)V
-Привет JEEConf!
+Hello JavaZone!
   171,417ns
 <- org/simonis/HelloWorld::main([Ljava/lang/String;)V
 ]]>
@@ -502,6 +613,11 @@ $ java -XX:+JEEConf -agentpath:traceMethodAgent.so=org/simonis \
 
         </section>
 
+
+        <section>
+          <h3 style="text-transform: none;">Intrinsics for Java methods don't take class redefinition into account</h3>
+          <h3 style="text-transform: none;"><a href="https://bugs.openjdk.java.net/browse/JDK-8013579">https://bugs.openjdk.java.net/browse/JDK-8013579</a></h3>
+        </section>
 
         <section style="height: 100%;">
 
@@ -695,6 +811,7 @@ do_intrinsic(_sayHello,      helloWorld, sayHello_name, sayHello_sign, F_S) \
 <![CDATA[
 class AbstractInterpreter: AllStatic {
   enum MethodKind {
+    java_lang_math_sin,  // implementation of java.lang.Math.sin(x)
     ...
     HelloWorld_sayHello, // implementation of org.simonis.HelloWorld.sayHello()
 ]]>
@@ -714,7 +831,7 @@ class AbstractInterpreter: AllStatic {
 <![CDATA[
 MethodKind AbstractInterpreter::method_kind(methodHandle m) {
   ...
-  if (JEEConf) {
+  if (JavaZone) {
     if (m->intrinsic_id() == vmIntrinsics::_sayHello) {                       
       return HelloWorld_sayHello;
 ]]>
@@ -741,7 +858,7 @@ address TemplateInterpreterGenerator::generate_method_entry(MethodKind kind) {
 
             <h2>Implementing an Interpreter Intrinsics</h2>
 
-            <p style="text-align:left">Implement in: <code>b/src/cpu/x86/vm/templateInterpreterGenerator_x86_64.cpp</code></p>
+            <p style="text-align:left">Implement in: <code>src/cpu/x86/vm/templateInterpreterGenerator_x86_64.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
               <code class="cpp" data-trim="true">
@@ -751,8 +868,7 @@ address TemplateInterpreterGenerator::generate_sayHello() {
   // r13: sender sp
   // stack: [ ret adr ] <-- rsp
   address entry_point = __ pc();
-  const char *msg = // "Привет JEEConf!" in UTF-8
-    "\x0d0\x09f\x0d1\x080\x0d0\x0b8\x0d0\x0b2\x0d0\x0b5\x0d1\x082 JEEConf!\n";
+  const char *msg = "Hello JavaZone!\n";
   __ mov64(c_rarg1, (long)stdout);
   __ mov64(c_rarg0, (long)msg);
   __ call(RuntimeAddress(CAST_FROM_FN_PTR(address, fputs)));
@@ -780,9 +896,9 @@ vmSymbols::SID Method::klass_id_for_intrinsics(const Klass* holder) {
   // if loader is not the default loader (i.e., != NULL), we can't know the
   // intrinsics because we are not loading from core libraries
   const InstanceKlass* ik = InstanceKlass::cast(holder);
-  if (JEEConf && ik->name()->equals("org/simonis/HelloWorld")) {
-    // check for org.simonis.HelloWorld
-    return vmSymbols::find_sid(ik->name());
+  if (JavaZone && ik->name()->equals("org/simonis/HelloWorld")) { // <----
+    // check for org.simonis.HelloWorld                           // <----
+    return vmSymbols::find_sid(ik->name());                       // <----
   }
   if ((ik->class_loader() != NULL)) {
     return vmSymbols::NO_SID;   // regardless of name, no intrinsics here
@@ -890,17 +1006,37 @@ public:
               </code>
             </pre>
 
-            <p style="text-align:left">And corresponding Machine-node in: <code>src/cpu/x86/vm/x86.ad</code></p>
+          </section>
+
+          <section>
+
+            <h2>Implementing a C2-JIT Intrinsic</h2>
+
+            <p style="text-align:left">And corresponding Machine-node and match rule in: <code>src/cpu/x86/vm/x86.ad</code></p>
 
             <pre class="big noshadow" data-trim="true">
               <code class="cpp" data-trim="true">
 <![CDATA[
 instruct randI(rRegI dst) %{
   match(Set dst (RandI));
-  format %{ "RANDI    $dst\t# int" %}                                    
+  format %{ "RANDI    $dst\t# int" %}                              
   ins_encode %{
     __ rdrandl($dst$$Register);
   %}
+]]>
+              </code>
+            </pre>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true">
+<![CDATA[
+const bool Matcher::match_rule_supported(int opcode) {
+  if (!has_match_rule(opcode)) return false;
+
+  switch (opcode) {
+  case Op_RandI: if (!VM_Version::supports_rdrand()) return false;
+  ...
+  return true;
 ]]>
               </code>
             </pre>
@@ -938,6 +1074,252 @@ bool LibraryCallKit::inline_random(vmIntrinsics::ID id) {
 ]]>
               </code>
             </pre>
+          </section>
+
+          <section>
+
+            <h2>Implementing a C2-JIT Intrinsic</h2>
+
+<table class="calling_hirarchy">
+  <tr>
+    <td colspan="13" class="functionCall  indent_level_0">
+      <code>CompileBroker::compiler_thread_loop()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="12">&nbsp;</td>
+    <td colspan="12" class="functionCall  indent_level_1">
+    <code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="11">&nbsp;</td>
+    <td colspan="11" class="functionCall  indent_level_2">
+    <code>C2Compiler::compile_method(target=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="10">&nbsp;</td>
+    <td colspan="10" class="functionCall  indent_level_3">
+    <code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="9">&nbsp;</td>
+    <td colspan="9" class="functionCall  indent_level_4">
+    <code>ParseGenerator::generate()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="8">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_5">
+    <code>Parse::Parse(caller=0x7fffc440de00, parse_method=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="7">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_6">
+    <code>Parse::do_all_blocks()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="6">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_7">
+    <code>Parse::do_one_block()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="5">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_8">
+    <code>Parse::do_one_bytecode()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="4">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_9">
+    <code>Parse::do_call()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="3">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_10">
+    <code>LibraryIntrinsic::generate()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="2">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_11">
+    <code>LibraryCallKit::try_to_inline()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="1">&nbsp;</td>
+    <td colspan="1" class="functionCall  indent_level_12">
+    <code>LibraryCallKit::inline_random(id=vmIntrinsics::_nextInt)</code>
+    </td>
+  </tr>
+</table>
+          </section>
+
+          <section>
+            <h2 style="text-transform: none;">Testing the new <code>Random.nextInt()</code> intrinsic</h2>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="java" data-trim="true">
+<![CDATA[
+public class Random {
+
+  static final java.util.Random sr = new SecureRandom();
+
+  static int foo() {
+    return sr.nextInt();
+  }
+  public static void main(String[] args) throws Exception {
+    int count = Integer.parseInt(args.length > 0 ? args[0] : "10");
+    int result = 0;
+    for (int i = 0; i < count; i++) {
+      result += foo();
+    }
+    System.out.println(result);
+  }
+}
+]]>
+              </code>
+            </pre>
+          </section>
+
+          <section>
+            <h2 style="text-transform: none;">Testing the new <code>Random.nextInt()</code> intrinsic</h2>
+
+            <pre  class="big console" data-trim="true">
+<![CDATA[
+{method}
+ - method holder:     'org/simonis/Random'
+ - name:              'foo'
+ - signature:         '()I'
+...
+000   B1: #     N1 <- BLOCK HEAD IS JUNK   Freq: 1
+000     # stack bang (96 bytes)
+        pushq   rbp     # Save rbp
+        subq    rsp, #16        # Create frame
+
+00c     RANDI    RAX    # int
+00f     addq    rsp, 16 # Destroy frame
+        popq   rbp
+        testl  rax, [rip + #offset_to_poll_page]        # Safepoint: poll for GC
+
+01a     ret
+]]>
+            </pre>
+          </section>
+
+        </section>
+
+        <section style="height: 100%;">
+
+          <section>
+            <h2 style="text-transform: none;"><code>System.arraycopy()</code></h2>
+
+            <p style="text-align:center">..if any of the following is true, an IndexOutOfBoundsException is thrown..</p>
+
+            <ul style="display:inline-block">
+              <li>The <code>srcPos</code> argument is negative.</li>
+              <li>The <code>destPos</code> argument is negative.</li>
+              <li style="font-weight: bold;">The <code>length</code> argument is negative.</li>
+              <li><code>srcPos+length</code> is greater than <code>src.length</code>.</li>
+              <li><code>destPos+length</code> is greater than <code>dest.length</code>.</li>
+            </ul>
+
+            <p>see <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/System.html#arraycopy-java.lang.Object-int-java.lang.Object-int-int-">
+                http://docs.oracle.com/javase/8/docs/api/java/lang/System.html#arraycopy</a></p>
+
+          </section>
+
+          <section>
+            <h2 style="text-transform: none;"><code>System.arraycopy()</code></h2>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="java" data-trim="true">
+<![CDATA[
+public class ArrayCopy0 {
+
+  public static boolean arraycopy(Object[] src, int length) {
+    try {
+      System.arraycopy(src, 0, new Object[8], 1, length);
+      return false;
+    } catch (IndexOutOfBoundsException e) {
+      return true;
+    }
+  }
+  public static void main(String args[]){
+    int count = args.length > 0 ? Integer.parseInt(args[0]) : 1;
+    Object[] src = new Object[8];
+    for (int x = 0; x < count; x++) {
+      if (!arraycopy(src, -1))
+        throw new RuntimeException("Expected IndexOutOfBoundsException...");
+]]>
+              </code>
+            </pre>
+          </section>
+
+          <section>
+            <h2 style="text-transform: none;"><code>System.arraycopy()</code></h2>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="java" data-trim="true">
+<![CDATA[
+public class ArrayCopy1 {
+
+  public static boolean arraycopy(Object[] src, int length) {
+    try {
+      System.arraycopy(src, 1, new Object[8], 1, length);
+      return false;
+    } catch (IndexOutOfBoundsException e) {
+      return true;
+    }
+  }
+  public static void main(String args[]){
+    int count = args.length > 0 ? Integer.parseInt(args[0]) : 1;
+    Object[] src = new Object[8];
+    for (int x = 0; x < count; x++) {
+      if (!arraycopy(src, -1))
+        throw new RuntimeException("Expected IndexOutOfBoundsException...");
+]]>
+              </code>
+            </pre>
+          </section>
+
+          <section>
+            <pre  style="top:-30px" class="big console" data-trim="true">
+<![CDATA[
+$ java org.simonis.ArrayCopy0 100000
+
+$ java org.simonis.ArrayCopy1 100000
+Exception in thread "main" java.lang.RuntimeException: \
+  Expected IndexOutOfBoundsException for System.arracopy(.., -1)
+	at org.simonis.ArrayCopy1.main(ArrayCopy1.java:19)
+
+$ java -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations \
+       org.simonis.ArrayCopy1 100000
+======== Connection graph for  org.simonis.ArrayCopy1::arraycopy
+JavaObject NoEscape(NoEscape) 40 AllocateArray = ArrayCopy1::arraycopy @ bci:4
+++++ Eliminated: 40 AllocateArray
+Exception in thread "main" java.lang.RuntimeException: \
+  Expected IndexOutOfBoundsException for System.arracopy(.., -1)
+	at org.simonis.ArrayCopy1.main(ArrayCopy1.java:19)
+
+$ java -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations \
+       -XX:-EliminateAllocations org.simonis.ArrayCopy1 100000
+======== Connection graph for  org.simonis.ArrayCopy1::arraycopy
+JavaObject NoEscape(NoEscape) 40 AllocateArray = ArrayCopy1::arraycopy @ bci:4
+
+]]>
+            </pre>
+          </section>
+
+          <section>
+            <h3 style="text-transform: none;">C2: ArrayCopy elimination skips required parameter checks</h3>
+            <h3 style="text-transform: none;"><a href="https://bugs.openjdk.java.net/browse/JDK-8159611">https://bugs.openjdk.java.net/browse/JDK-8159611</a></h3>
           </section>
 
         </section>
