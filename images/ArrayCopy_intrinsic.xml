@@ -1,0 +1,19 @@
+<calling_hirarchy>
+<call level='3' type='functionCall '><code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code></call>
+<call level='4' type='functionCall '><code>ParseGenerator::generate()</code></call>
+<call level='5' type='functionCall '><code>Parse::Parse(caller=0x7fffc440de00, parse_method=0x7fffc4299130)</code></call>
+<call level='6' type='functionCall '><code>Parse::do_all_blocks()</code></call>
+<call level='7' type='functionCall '><code>Parse::do_one_block()</code></call>
+<call level='8' type='functionCall '><code>Parse::do_one_bytecode()</code></call>
+<call level='9' type='functionCall '><code>Parse::do_call()</code></call>
+<call level='10' type='functionCall '><code>LibraryIntrinsic::generate()</code></call>
+<call level='11' type='functionCall '><code>LibraryCallKit::try_to_inline(id=vmIntrinsics::_arraycopy)</code></call>
+<call level='12' type='functionCall '><code>LibraryCallKit::inline_arraycopy()</code></call>
+<call level='4' type='functionCall '><code>Compile::optimze()</code></call>
+<call level='5' type='functionCall '><code>PhaseMacroExpand::eliminate_macro_nodes()</code></call>
+<call level='6' type='functionCall '><code>PhaseMacroExpand::eliminate_allocate_node(AllocateNode*, ...)</code></call>
+<call level='7' type='functionCall '><code>PhaseMacroExpand::process_users_of_allocation()</code></call>
+<call level='5' type='functionCall '><code>PhaseMacroExpand::expand_macro_nodes()</code></call>
+<call level='6' type='functionCall '><code>PhaseMacroExpand::expand_arraycopy_node(ArrayCopyNode*)</code></call>
+<call level='7' type='functionCall '><code>PhaseMacroExpand::generate_arraycopy(ArrayCopyNode*, AllocateNode*, ...)</code></call>
+</calling_hirarchy>

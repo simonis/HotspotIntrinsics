@@ -5,7 +5,7 @@ import java.text.NumberFormat;
 public class HelloWorld {
 
     public static void sayHello() {
-        System.out.println("Hello JavaZone!");
+        System.out.println("Hello JETConf!");
     }
     public static void main(String ... args) {
 

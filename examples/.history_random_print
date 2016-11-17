@@ -1,2 +1,6 @@
 java -XX:+PrintCompilation -XX:+PrintInlining -XX:CompileCommand="print,org.simonis.Random::foo" -XX:DisableIntrinsic=_nextInt org.simonis.Random 1000000 2>&1 | less
 java -XX:+PrintCompilation -XX:+PrintInlining -XX:CompileCommand="print,org.simonis.Random::foo" org.simonis.Random 1000000 2>&1 | less
+java -XX:CompileCommand="option org.simonis.Random::foo PrintAssembly" org.simonis.Random 1000000 2>&1 | less
+java -XX:CompileCommand="option org.simonis.Random::foo PrintOptoAssembly" org.simonis.Random 1000000 2>&1 | less
+java -XX:+PrintCompilation -XX:+PrintInlining -XX:DisableIntrinsic=_nextInt org.simonis.Random 1000000 2>&1 | less
+java -XX:+PrintCompilation -XX:+PrintInlining org.simonis.Random 1000000 2>&1 | less

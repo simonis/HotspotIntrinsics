@@ -269,9 +269,11 @@
 			if( element.hasAttribute( 'data-trim' ) && (element.getElementsByTagName( 'code' ).length > 0) && typeof element.innerHTML.trim === 'function' ) {
 		                element.innerHTML = element.innerHTML.trim();
 			}
-			else if( element.hasAttribute( 'data-trim' ) && typeof element.textContent.trim === 'function' ) {
+			else if( element.hasAttribute( 'text-trim' ) && typeof element.textContent.trim === 'function' ) {
 				// If there'S no nested <code> element, we intentionally use 'textContent' instead of
 				// 'innerHTML' here in order to trim away potential CDATA prefixes together with whitespace.
+			        // Unfortunately, this removes all the nested tags so use it only
+			        // for plain source code embedded into CDATA sections.
 				element.textContent = element.textContent.trim();
 			}
 		}

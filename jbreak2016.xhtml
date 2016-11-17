@@ -38,6 +38,10 @@
     color: #00ff00;
 }
 
+code.terminal .hljs-title {
+    color: #00ff00;
+}
+
 .reveal pre.noshadow {
     border-radius: 0;
     box-shadow: unset;
@@ -191,7 +195,7 @@
         <section>
           <h1>HotSpot Intrinsics<br/></h1>
           <p>
-            <small>Volker Simonis, SAP / <a href="mailto:volker.simonis@gmail.com">volker.simonis@gmail.com</a></small>
+            <small>Volker Simonis [Фолкер Симонис], SAP / <a href="mailto:volker.simonis@gmail.com">volker.simonis@gmail.com</a></small>
           </p>
         </section>
 
@@ -232,7 +236,7 @@
           <ul>
             <li>Improve performance:<br/>
               <pre class="big noshadow" data-trim="true">
-                <code class="java" data-trim="true">
+                <code class="java" text-trim="true">
 <![CDATA[
 GCC:  bzero(), snprintf(), strndup(), log2(), ..       
 Java: Math.sqrt(), System.arraycopy(), ..
@@ -242,7 +246,7 @@ Java: Math.sqrt(), System.arraycopy(), ..
             </li>
             <li>Expose functionality not expressable in the language itself:<br/>
               <pre class="big noshadow" data-trim="true">
-                <code class="java" data-trim="true">
+                <code class="java" text-trim="true">
 <![CDATA[
 GCC:  _xbegin(), _xend(), ..     // Transactional Memory
 Java: Unsafe.allocateInstance(),
@@ -253,7 +257,7 @@ Java: Unsafe.allocateInstance(),
             </li>
             <li>Direct access to CPU instructions (assembler):<br/>
               <pre class="big noshadow" data-trim="true">
-                <code class="java" data-trim="true">
+                <code class="java" text-trim="true">
 <![CDATA[
 MSVC: __movsq(), __mul128()                            
 Java: Unsafe.loadFence()
@@ -273,12 +277,12 @@ Java: Unsafe.loadFence()
             <h2>The &ldquo;<code>HelloWorld</code>&rdquo; Intrinsic</h2>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="java" data-trim="true">
+              <code class="java" text-trim="true">
 <![CDATA[
 public class HelloWorld {
 
   public static void sayHello() {
-      System.out.println("Hello JavaZone!");
+      System.out.println("Hello JETConf!");
   }
 
   public static void main(String ... args) {
@@ -296,20 +300,18 @@ public class HelloWorld {
           </section>
 
           <section>
-            <pre class="big console" data-trim="true">
-<![CDATA[
-$ java -Xint             org.simonis.HelloWorld
-Hello JavaZone!
-6,968,398ns
-]]>
-            </pre>
-            <br/>
-            <pre class="big console" data-trim="true">
-<![CDATA[
-$ java -Xint -XX:+JavaZone org.simonis.HelloWorld
-Hello JavaZone!
-  153,191ns
-]]>
+            <h2>The &ldquo;<code>HelloWorld</code>&rdquo; Intrinsic - DEMO</h2>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="terminal" data-trim="true" data-noescape="true">
+$ java -Xint              org.simonis.HelloWorld
+<span class="fragment">Hello JETConf!
+6,968,398ns</span>
+
+<span class="fragment">$ java -Xint -XX:+JETConf org.simonis.HelloWorld</span>
+<span class="fragment">Hello JETConf!
+  153,191ns</span>
+              </code>
             </pre>
           </section>
         </section>
@@ -336,7 +338,7 @@ Hello JavaZone!
             <h2>The Java Instrumentation Agent</h2>
 
             <pre class="big noshadow scrollable" style="height: 80%;" data-trim="true">
-              <code class="java" data-trim="true" data-noescape="true">
+              <code class="java" text-trim="true" data-noescape="true">
 <![CDATA[
 package org.simonis;
 
@@ -434,7 +436,7 @@ public class MethodInstrumentationAgent {
             <p>The Manifest file:</p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="java" data-trim="true">
+              <code class="java" text-trim="true">
 <![CDATA[
 Manifest-VErsion: 1.0
 Premain-Class: org.simonis.MethodInstrumentationAgent
@@ -444,12 +446,13 @@ Premain-Class: org.simonis.MethodInstrumentationAgent
 
             <p>Compile and create with:</p>
 
-            <pre class="big console" data-trim="true">
-<![CDATA[
-javac -XDignore.symbol.file=true org/simonis/MethodInstrumentationAgent.java
-jar cvfm MethodInstrumentationAgent.jar manifest.mf \
+            <pre class="big noshadow" data-trim="true">
+              <code class="terminal" data-trim="true" data-noescape="true">
+$ javac -XDignore.symbol.file=true org/simonis/MethodInstrumentationAgent.java
+
+$ jar cvfm MethodInstrumentationAgent.jar manifest.mf \
                                org/simonis/MethodInstrumentationAgent*.class
-]]>
+              </code>
             </pre>
 
           </section>
@@ -458,28 +461,24 @@ jar cvfm MethodInstrumentationAgent.jar manifest.mf \
             <h2>Observability - Bytecode Instrumentation</h2>
 
 
-            <pre class="big console" data-trim="true">
-<![CDATA[
-$ java             -javaagent:MethodInstrumentationAgent.jar=org/simonis \
-                                                  org.simonis.HelloWorld
--> main([Ljava/lang/String;)V
--> sayHello()V
-Hello JavaZone!
-<- sayHello()V
+            <pre class="big noshadow" data-trim="true">
+              <code class="terminal" data-trim="true" data-noescape="true">
+$ java              -javaagent:MethodInstrumentationAgent.jar=org/simonis \
+                                                   org.simonis.HelloWorld
+<span class="fragment">-&gt; main([Ljava/lang/String;)V
+-&gt; sayHello()V
+Hello JETConf!
+&lt;- sayHello()V
   651,538ns
-<- main([Ljava/lang/String;)V
-]]>
-            </pre>
-            <br/>
-            <pre class="big console" data-trim="true">
-<![CDATA[
-$ java -XX:+JavaZone -javaagent:MethodInstrumentationAgent.jar=org/simonis \
-                                                  org.simonis.HelloWorld
--> main([Ljava/lang/String;)V
-Hello JavaZone!
+&lt;- main([Ljava/lang/String;)V</span>
+
+<span class="fragment">$ java -XX:+JETConf -javaagent:MethodInstrumentationAgent.jar=org/simonis \
+                                                   org.simonis.HelloWorld</span>
+<span class="fragment">-&gt; main([Ljava/lang/String;)V
+Hello JETConf!
    51,750ns
-<- main([Ljava/lang/String;)V
-]]>
+&lt;- main([Ljava/lang/String;)V</span>
+              </code>
             </pre>
           </section>
 
@@ -505,9 +504,11 @@ Hello JavaZone!
 
             <h2>A simple tracing JVMTI Agent</h2>
 
-            <pre class="big noshadow scrollable" style="height: 70%;" data-trim="true">
-              <code class="cpp" data-trim="true" data-noescape="true">
+            <pre class="big noshadow scrollable" style="height: 80%;" data-trim="true">
+              <code class="cpp" text-trim="true" data-noescape="true">
 <![CDATA[
+// Build as follows:
+// g++ -fPIC -shared -I <JDK>/include/ -I <JDK>/include/linux/ -o traceMethodAgent.so traceMethodAgent.cpp
 #include <jvmti.h>
 #include <stdio.h>
 #include <string.h>
@@ -580,34 +581,29 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM* jvm, char* options, void* reserved) 
 ]]>
               </code>
             </pre>
-            <pre>g++ -fPIC -shared -I &lt;JDK&gt;/include/ -I &lt;JDK&gt;/include/linux/ -o traceMethodAgent.so traceMethodAgent.cpp</pre>
           </section>
 
           <section>
             <h2>Observability - JVMTI Agents</h2>
 
-            <pre class="big console" data-trim="true">
-<![CDATA[
-$ java -XX:-JavaZone -agentpath:traceMethodAgent.so=org/simonis \
-                                       org.simonis.HelloWorld
--> org/simonis/HelloWorld::main([Ljava/lang/String;)V
--> org/simonis/HelloWorld::sayHello()V
-Hello JavaZone!
-<- org/simonis/HelloWorld::sayHello()V
+            <pre class="big noshadow" data-trim="true">
+              <code class="terminal" data-trim="true" data-noescape="true">
+$ java -XX:-JETConf  -agentpath:traceMethodAgent.so=org/simonis \
+                                         org.simonis.HelloWorld
+<span class="fragment">-&gt; org/simonis/HelloWorld::main([Ljava/lang/String;)V
+-&gt; org/simonis/HelloWorld::sayHello()V
+Hello JETConf!
+&lt;- org/simonis/HelloWorld::sayHello()V
 24,256,161ns
-<- org/simonis/HelloWorld::main([Ljava/lang/String;)V
-]]>
-            </pre>
-            <br/>
-            <pre class="big console" data-trim="true">
-<![CDATA[
-$ java -XX:+JavaZone -agentpath:traceMethodAgent.so=org/simonis \
-                                       org.simonis.HelloWorld
--> org/simonis/HelloWorld::main([Ljava/lang/String;)V
-Hello JavaZone!
+&lt;- org/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
+
+<span class="fragment">$ java -XX:+JETConf -agentpath:traceMethodAgent.so=org/simonis \
+                                        org.simonis.HelloWorld</span>
+<span class="fragment">-&gt; org/simonis/HelloWorld::main([Ljava/lang/String;)V
+Hello JETConf!
   171,417ns
-<- org/simonis/HelloWorld::main([Ljava/lang/String;)V
-]]>
+&lt;- org/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
+              </code>
             </pre>
           </section>
 
@@ -615,64 +611,83 @@ Hello JavaZone!
 
 
         <section>
-          <h3 style="text-transform: none;">Intrinsics for Java methods don't take class redefinition into account</h3>
           <h3 style="text-transform: none;"><a href="https://bugs.openjdk.java.net/browse/JDK-8013579">https://bugs.openjdk.java.net/browse/JDK-8013579</a></h3>
+          <img class="plain" data-src="images/8013579_intrinsics_class_redef.png" alt="JDK-8013579: Intrinsics for Java methods don't take class redefinition into account"/>
         </section>
 
         <section style="height: 100%;">
 
           <section>
-            <h2>Behavioral Changes</h2>
+            <h2>DEMO - Math Intrinsics</h2>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="java" data-trim="true">
+              <code class="java" text-trim="true">
 <![CDATA[
 static double compute(int count, double d) {
   for (int i = 0; i < count; i++) {
-    d += Math.pow(Math.sin(d), Math.sqrt(d));
+    d += Math.pow(Math.sin(d), Math.sqrt(d)); // d += sin(d) ^ sqrt(d)
   }
   return d;
 }
-public static void main(String[] args) throws Exception {                
-  double seed = Double.parseDouble(args[0]);
-  int warmup = Integer.parseInt(args[1]);
-  int count = Integer.parseInt(args[2]);
+
+public static void main(String[] args) throws Exception {
+  double  seed = args.length;                 // Avoid constant folding
+  int    count = Integer.parseInt(args[0]);   // Iteration count for compute()
 
   for (int i = 0; i < 20_000; i++) {
-    compute(warmup, seed);
+    compute(1, seed);                         // JIT-compile compute()
   }
-  compute(count, seed);
+
+  compute(count, seed);                       // Call compute() with huge count
+}
 ]]>
               </code>
             </pre>
           </section>
 
+        </section>
+
+
+        <section style="height: 100%;">
+
           <section>
-            <h2>TTS - Time To Safepoint</h2>
+            <h2>Math Intrinsics &amp; Time To Safepoint (TTS)</h2>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="java" data-trim="true">
+              <code class="java" text-trim="true">
 <![CDATA[
 public static void main(String[] args) throws Exception {
-  for (int i = 0; i < 20_000; i++) {
-    compute(warmup, seed);
-  }
-  new Thread() {
-    { setDaemon(true); }
+  ...                                         // Same as before ...
+
+  new Thread() {                              // Create a new thread..
+    { setDaemon(true); }                      // ..and make it a daemon thread.
     public void run() {
       while (true) {
         try {
-          Thread.sleep(1_000);
-        } catch (InterruptedException e) {}                              
-        System.gc();
+          Thread.sleep(1_000);                // Every second..
+        } catch (InterruptedException e) {}
+        System.gc();                          // ..we trigger a GC.
       }
     }
-  }.start();
-  compute(count, seed);
+  }.start();                                  // Let it run concurrently.
+
+  compute(count, seed);                       // Call compute() with huge count
 ]]>
               </code>
             </pre>
           </section>
+
+
+          <section>
+            <h3 style="text-transform: none;"><code>-XX:+UseCountedLoopSafepoints</code><a href="https://bugs.openjdk.java.net/browse/JDK-6869327"> (JDK-6869327)</a></h3>
+            <img class="plain" data-src="images/6869327_counted_loop_safep.png" alt="JDK-6869327: Add new C2 flag to keep safepoints in counted loops"/>
+          </section>
+
+<!--
+6869327: Add new C2 flag to keep safepoints in counted loops.
+-XX:+UseCountedLoopSafepoints
+6869327_counted_loop_safep.png
+-->
 
         </section>
 
@@ -742,7 +757,7 @@ public static void main(String[] args) throws Exception {
           <ul>
             <li><code>-XX:+PrintCompilation -XX:+PrintInlining</code><br/>
               <pre class="big noshadow" data-trim="true">
-                <code class="cpp" data-trim="true">
+                <code class="cpp" text-trim="true">
 <![CDATA[
 613    1    b        org.simonis.Loop::compute (29 bytes)
                         @ 9   java.lang.Math::sin (5 bytes)   (intrinsic)    
@@ -753,7 +768,7 @@ public static void main(String[] args) throws Exception {
             </li>
             <li><code>-XX:+CheckIntrinsics</code> (together with <code>@HotSpotIntrinsicCandidate</code>)><br/>
               <pre class="big noshadow" data-trim="true">
-                <code class="cpp" data-trim="true">
+                <code class="cpp" text-trim="true">
 <![CDATA[
 Compiler intrinsic is defined for method [org.simonis.HelloWorld.sayHello()V],
 but the method is not annotated with @HotSpotIntrinsicCandidate. Exiting.
@@ -794,7 +809,7 @@ but the method is not annotated with @HotSpotIntrinsicCandidate. Exiting.
             <p style="text-align:left">Define in: <code>src/share/vm/classfile/vmSymbols.hpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 do_class(     helloWorld,    "org/simonis/HelloWorld")                      \
 do_intrinsic(_sayHello,      helloWorld, sayHello_name, sayHello_sign, F_S) \
@@ -807,10 +822,11 @@ do_intrinsic(_sayHello,      helloWorld, sayHello_name, sayHello_sign, F_S) \
             <p style="text-align:left">Define in: <code>src/share/vm/interpreter/abstractInterpreter.hpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 class AbstractInterpreter: AllStatic {
   enum MethodKind {
+    zerolocals,          // normal method (needs locals initialization)
     java_lang_math_sin,  // implementation of java.lang.Math.sin(x)
     ...
     HelloWorld_sayHello, // implementation of org.simonis.HelloWorld.sayHello()
@@ -827,11 +843,11 @@ class AbstractInterpreter: AllStatic {
             <p style="text-align:left">Map in: <code>src/share/vm/interpreter/abstractInterpreter.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 MethodKind AbstractInterpreter::method_kind(methodHandle m) {
   ...
-  if (JavaZone) {
+  if (JETConf) {
     if (m->intrinsic_id() == vmIntrinsics::_sayHello) {                       
       return HelloWorld_sayHello;
 ]]>
@@ -841,7 +857,7 @@ MethodKind AbstractInterpreter::method_kind(methodHandle m) {
             <p style="text-align:left">Generate in: <code>src/share/vm/interpreter/templateInterpreterGenerator.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 address TemplateInterpreterGenerator::generate_method_entry(MethodKind kind) {
   switch (kind) {
@@ -861,14 +877,14 @@ address TemplateInterpreterGenerator::generate_method_entry(MethodKind kind) {
             <p style="text-align:left">Implement in: <code>src/cpu/x86/vm/templateInterpreterGenerator_x86_64.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 #define __ _masm->
 address TemplateInterpreterGenerator::generate_sayHello() {
   // r13: sender sp
   // stack: [ ret adr ] <-- rsp
   address entry_point = __ pc();
-  const char *msg = "Hello JavaZone!\n";
+  const char *msg = "Hello JETConf!\n";
   __ mov64(c_rarg1, (long)stdout);
   __ mov64(c_rarg0, (long)msg);
   __ call(RuntimeAddress(CAST_FROM_FN_PTR(address, fputs)));
@@ -890,13 +906,13 @@ address TemplateInterpreterGenerator::generate_sayHello() {
             <p style="text-align:left">Enable in: <code>src/share/vm/oops/method.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 vmSymbols::SID Method::klass_id_for_intrinsics(const Klass* holder) {
   // if loader is not the default loader (i.e., != NULL), we can't know the
   // intrinsics because we are not loading from core libraries
   const InstanceKlass* ik = InstanceKlass::cast(holder);
-  if (JavaZone && ik->name()->equals("org/simonis/HelloWorld")) { // <----
+  if (JETConf && ik->name()->equals("org/simonis/HelloWorld")) {  // <----
     // check for org.simonis.HelloWorld                           // <----
     return vmSymbols::find_sid(ik->name());                       // <----
   }
@@ -926,7 +942,7 @@ vmSymbols::SID Method::klass_id_for_intrinsics(const Klass* holder) {
             <p style="text-align:left">Intrinsify: <code>java.util.Random.nextInt()</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="java" data-trim="true">
+              <code class="java" text-trim="true">
 <![CDATA[
 public class Random implements java.io.Serializable {
   ...
@@ -941,7 +957,7 @@ public class Random implements java.io.Serializable {
             <p style="text-align:left">Define in: <code>src/share/vm/classfile/vmSymbols.hpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 do_class(     java_util_Random, "java/util/Random")                          \
 do_intrinsic(_nextInt,          java_util_Random, nextInt_name, ni_sign, F_R)\
@@ -960,7 +976,7 @@ do_intrinsic(_nextInt,          java_util_Random, nextInt_name, ni_sign, F_R)\
             <p style="text-align:left">Detect <code>rdrand</code> instruction in: <code>src/cpu/x86/vm/vm_version_x86.hpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 class VM_Version {
   static uint64_t feature_flags() {
@@ -975,7 +991,7 @@ class VM_Version {
             <p style="text-align:left">Implement <code>rdrand</code> in: <code>src/cpu/x86/vm/assembler_x86.hpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 void Assembler::rdrandl(Register dst) {
   int encode = prefix_and_encode(dst->encoding());                       
@@ -995,7 +1011,7 @@ void Assembler::rdrandl(Register dst) {
             <p style="text-align:left">Implement new IR-node in: <code>src/share/vm/opto/intrinsicnode.hpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 class RandINode : public Node {
 public:
@@ -1015,7 +1031,7 @@ public:
             <p style="text-align:left">And corresponding Machine-node and match rule in: <code>src/cpu/x86/vm/x86.ad</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 instruct randI(rRegI dst) %{
   match(Set dst (RandI));
@@ -1028,7 +1044,7 @@ instruct randI(rRegI dst) %{
             </pre>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 const bool Matcher::match_rule_supported(int opcode) {
   if (!has_match_rule(opcode)) return false;
@@ -1050,7 +1066,7 @@ const bool Matcher::match_rule_supported(int opcode) {
             <p style="text-align:left">Use it in: <code>src/share/vm/opto/library_call.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 bool LibraryCallKit::try_to_inline(int predicate) {
   ...
@@ -1061,7 +1077,7 @@ bool LibraryCallKit::try_to_inline(int predicate) {
             </pre>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
 bool LibraryCallKit::inline_random(vmIntrinsics::ID id) {
   Node* n = NULL;
@@ -1149,23 +1165,23 @@ bool LibraryCallKit::inline_random(vmIntrinsics::ID id) {
   <tr>
     <td rowspan="2">&nbsp;</td>
     <td colspan="2" class="functionCall  indent_level_11">
-    <code>LibraryCallKit::try_to_inline()</code>
+    <code>LibraryCallKit::try_to_inline(id=vmIntrinsics::_nextInt)</code>
     </td>
   </tr>
   <tr>
     <td rowspan="1">&nbsp;</td>
     <td colspan="1" class="functionCall  indent_level_12">
-    <code>LibraryCallKit::inline_random(id=vmIntrinsics::_nextInt)</code>
+    <code>LibraryCallKit::inline_random()</code>
     </td>
   </tr>
 </table>
           </section>
 
           <section>
-            <h2 style="text-transform: none;">Testing the new <code>Random.nextInt()</code> intrinsic</h2>
+            <h2><code style="text-transform: none;">Random.nextInt()</code> - DEMO</h2>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="java" data-trim="true">
+              <code class="java" text-trim="true">
 <![CDATA[
 public class Random {
 
@@ -1189,27 +1205,73 @@ public class Random {
           </section>
 
           <section>
-            <h2 style="text-transform: none;">Testing the new <code>Random.nextInt()</code> intrinsic</h2>
+            <h2><code style="text-transform: none;">Random.nextInt()</code> - DEMO</h2>
 
-            <pre  class="big console" data-trim="true">
-<![CDATA[
-{method}
- - method holder:     'org/simonis/Random'
- - name:              'foo'
- - signature:         '()I'
+            <pre class="big noshadow" data-trim="true">
+              <code class="terminal" data-trim="true" data-noescape="true">
+$ time java org.simonis.Random 1000000
+<span class="fragment">-886841403
+
+real	0m2.228s
+user	0m2.144s
+sys	0m0.088s</span>
+
+<span class="fragment">$ time java -XX:DisableIntrinsic=_nextInt org.simonis.Random 1000000</span>
+<span class="fragment">695536079
+
+real	0m3.187s
+user	0m2.708s
+sys	0m0.472s</span>
+              </code>
+            </pre>
+          </section>
+
+          <section>
+            <pre class="big noshadow" data-trim="true">
+              <code class="terminal" data-trim="true" data-noescape="true">
+$ java -XX:+PrintCompilation -XX:+PrintInlining org.simonis.Random 10000
+<span class="fragment">...
+ org.simonis.Random::foo (7 bytes)
+   @ 3   java.util.Random::nextInt (7 bytes)   (intrinsic)</span>
+
+<span class="fragment">$ java -XX:+PrintCompilation -XX:+PrintInlining -XX:DisableIntrinsic=_nextInt \
+                                                     org.simonis.Random 10000</span>
+<span class="fragment">...
+ org.simonis.Random::foo (7 bytes)
+   @ 3 java.util.Random::nextInt (7 bytes) inline (hot)
+     @ 3 java.security.SecureRandom::next (61 bytes) inline (hot)
+       @ 17 java.security.SecureRandom::nextBytes (9 bytes) inline (hot)
+         @ 5 java.security.SecureRandomSpi::engineNextBytes (0 bytes) virtual call
 ...
-000   B1: #     N1 <- BLOCK HEAD IS JUNK   Freq: 1
+ sun.security.provider.NativePRNG::engineNextBytes (8 bytes)
+   @ 4 sun.security.provider.NativePRNG$RandomIO::access$400 (6 bytes) inline (hot)
+     @ 2 sun.security.provider.NativePRNG$RandomIO::implNextBytes (162 bytes) already compiled into a big method</span>
+              </code>
+            </pre>
+          </section>
+
+          <section>
+            <pre class="big noshadow" data-trim="true">
+              <code class="terminal" data-trim="true" data-noescape="true">
+$ java -XX:CompileCommand="option org.simonis.Random::foo PrintOptoAssembly" \
+                                                   org.simonis.Random 10000
+<span class="fragment">000   B1: #     N1 &lt;- BLOCK HEAD IS JUNK   Freq: 1
 000     # stack bang (96 bytes)
-        pushq   rbp     # Save rbp
+        pushq   rbp             # Save rbp
         subq    rsp, #16        # Create frame
 
-00c     RANDI    RAX    # int
-00f     addq    rsp, 16 # Destroy frame
-        popq   rbp
-        testl  rax, [rip + #offset_to_poll_page]        # Safepoint: poll for GC
+00c     <mark>RANDI    RAX</mark>            # int</span>
 
-01a     ret
-]]>
+<span class="fragment">$ java -XX:CompileCommand="option org.simonis.Random::foo PrintAssembly" \
+                                                   org.simonis.Random 10000</span>
+<span class="fragment"> ;; B1: #       N1 &lt;- BLOCK HEAD IS JUNK   Freq: 1
+8c0: mov    %eax,-0x16000(%rsp)
+8c7: push   %rbp
+8c8: sub    $0x10,%rsp         ;*synchronization entry
+                               ; - org.simonis.Random::foo@-1 (line 10)
+8cc: <mark>rdrand %eax</mark>               ;*invokevirtual nextInt {reexecute=0 rethrow=0..
+                               ; - org.simonis.Random::foo@3 (line 10)</span>
+              </code>
             </pre>
           </section>
 
@@ -1218,8 +1280,8 @@ public class Random {
         <section style="height: 100%;">
 
           <section>
-            <h2 style="text-transform: none;"><code>System.arraycopy()</code></h2>
-
+            <h2 style="text-transform: none;"><code>System.arraycopy() - Bug</code></h2>
+<!--
             <p style="text-align:center">..if any of the following is true, an IndexOutOfBoundsException is thrown..</p>
 
             <ul style="display:inline-block">
@@ -1229,6 +1291,8 @@ public class Random {
               <li><code>srcPos+length</code> is greater than <code>src.length</code>.</li>
               <li><code>destPos+length</code> is greater than <code>dest.length</code>.</li>
             </ul>
+-->
+            <img width="100%" class="plain" data-src="images/System_arracopy_IOOBE.png" alt="System.arraycopy() API Definition"/>
 
             <p>see <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/System.html#arraycopy-java.lang.Object-int-java.lang.Object-int-int-">
                 http://docs.oracle.com/javase/8/docs/api/java/lang/System.html#arraycopy</a></p>
@@ -1236,39 +1300,12 @@ public class Random {
           </section>
 
           <section>
-            <h2 style="text-transform: none;"><code>System.arraycopy()</code></h2>
+            <h2 style="text-transform: none;"><code>System.arraycopy() - Bug</code></h2>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="java" data-trim="true">
+              <code class="java" text-trim="true">
 <![CDATA[
-public class ArrayCopy0 {
-
-  public static boolean arraycopy(Object[] src, int length) {
-    try {
-      System.arraycopy(src, 0, new Object[8], 1, length);
-      return false;
-    } catch (IndexOutOfBoundsException e) {
-      return true;
-    }
-  }
-  public static void main(String args[]){
-    int count = args.length > 0 ? Integer.parseInt(args[0]) : 1;
-    Object[] src = new Object[8];
-    for (int x = 0; x < count; x++) {
-      if (!arraycopy(src, -1))
-        throw new RuntimeException("Expected IndexOutOfBoundsException...");
-]]>
-              </code>
-            </pre>
-          </section>
-
-          <section>
-            <h2 style="text-transform: none;"><code>System.arraycopy()</code></h2>
-
-            <pre class="big noshadow" data-trim="true">
-              <code class="java" data-trim="true">
-<![CDATA[
-public class ArrayCopy1 {
+public class ArrayCopy {
 
   public static boolean arraycopy(Object[] src, int length) {
     try {
@@ -1278,48 +1315,265 @@ public class ArrayCopy1 {
       return true;
     }
   }
+
   public static void main(String args[]){
-    int count = args.length > 0 ? Integer.parseInt(args[0]) : 1;
-    Object[] src = new Object[8];
+    int count = Integer.parseInt(args[0]);
+
     for (int x = 0; x < count; x++) {
-      if (!arraycopy(src, -1))
+      if (arraycopy(new Object[8], -1) == false)
         throw new RuntimeException("Expected IndexOutOfBoundsException...");
 ]]>
               </code>
             </pre>
           </section>
 
-          <section>
-            <pre  style="top:-30px" class="big console" data-trim="true">
+          <section style="padding: 0; height: 100%;">
+            <pre class="big noshadow" style="height:100%; margin: 0;" data-trim="true">
+              <code class="terminal" data-trim="true" data-noescape="true">
+$ java org.simonis.ArrayCopy 1000
+
+<span class="fragment">$ java org.simonis.ArrayCopy 100000</span>
+<span class="fragment">Exception in thread "main" java.lang.RuntimeException: \
+  Expected IndexOutOfBoundsException for System.arracopy(.., -1)
+	at org.simonis.ArrayCopy.main(ArrayCopy.java:19)</span>
+
+<span class="fragment">$ java -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations \
+                                                   org.simonis.ArrayCopy 100000</span>
+<span class="fragment">======== Connection graph for  org.simonis.ArrayCopy::arraycopy
+JavaObject NoEscape(NoEscape) <mark>40 AllocateArray</mark> = ArrayCopy::arraycopy @ bci:4
+++++ <mark>Eliminated: 40 AllocateArray</mark>
+Exception in thread "main" java.lang.RuntimeException: \
+  Expected IndexOutOfBoundsException for System.arracopy(.., -1)
+	at org.simonis.ArrayCopy.main(ArrayCopy.java:19)</span>
+
+<span class="fragment">$ java -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations \
+       -XX:-EliminateAllocations                   org.simonis.ArrayCopy 100000</span>
+<span class="fragment">======== Connection graph for  org.simonis.ArrayCopy::arraycopy
+JavaObject NoEscape(NoEscape) <mark>40 AllocateArray</mark> = ArrayCopy::arraycopy @ bci:4</span>
+              </code>
+            </pre>
+          </section>
+
+          <section style="padding: 0; height: 100%;">
+<table class="calling_hirarchy">
+  <tr>
+    <td colspan="10" class="functionCall  indent_level_3">
+      <code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="16">&nbsp;</td>
+    <td colspan="9" class="functionCall  indent_level_4">
+    <code>ParseGenerator::generate()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="8">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_5">
+      <code>Parse::Parse(caller=0x7fffc440de00, parse_method=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="7">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_6">
+      <code>Parse::do_all_blocks()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="6">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_7">
+      <code>Parse::do_one_block()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="5">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_8">
+      <code>Parse::do_one_bytecode()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="4">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_9">
+      <code>Parse::do_call()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="3">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_10">
+      <code>LibraryIntrinsic::generate()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="2">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_11">
+      <code>LibraryCallKit::try_to_inline(id=vmIntrinsics::_arraycopy)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="1">&nbsp;</td>
+    <td colspan="1" class="functionCall  indent_level_12">
+      <code><mark>LibraryCallKit::inline_arraycopy()</mark></code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="9" class="functionCall  indent_level_4">
+      <code>Compile::optimze()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="6">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_5">
+    <code>PhaseMacroExpand::eliminate_macro_nodes()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="2">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_6">
+      <code>PhaseMacroExpand::eliminate_allocate_node(AllocateNode*, ...)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="1">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_7">
+      <code><mark>PhaseMacroExpand::process_users_of_allocation()</mark></code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="8" class="functionCall  indent_level_5">
+      <code>PhaseMacroExpand::expand_macro_nodes()</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="2">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_6">
+    <code>PhaseMacroExpand::expand_arraycopy_node(ArrayCopyNode*)</code>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="1">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_7">
+    <code><mark>PhaseMacroExpand::generate_arraycopy(ArrayCopyNode*, AllocateNode*, ...)</mark></code>
+    </td>
+  </tr>
+</table>
+          </section>
+
+<!--
+
+// ==============================inline_arraycopy=======================
+// public static native void java.lang.System.arraycopy(Object src,  int  srcPos,
+//                                                      Object dest, int destPos,
+//                                                      int length);
+bool LibraryCallKit::inline_arraycopy() {
+  ...
+  // The following tests must be performed
+  // (1) src and dest are arrays.
+  // (2) src and dest arrays must have elements of the same BasicType
+  // (3) src and dest must not be null.
+  // (4) src_offset must not be negative.
+  // (5) dest_offset must not be negative.
+  // (6) length must not be negative.
+  // (7) src_offset + length must not exceed length of src.
+  // (8) dest_offset + length must not exceed length of dest.
+  // (9) each element of an oop array must be assignable
+  ...
+    // (5) dest_offset must not be negative.
+    generate_negative_guard(dest_offset, slow_region);
+
+    // (7) src_offset + length must not exceed length of src.
+    generate_limit_guard(src_offset, length, load_array_length(src), slow_region);
+  ...
+  ArrayCopyNode* ac = ArrayCopyNode::make(...)
+
+
+// Process users of eliminated allocation.
+void PhaseMacroExpand::process_users_of_allocation(CallNode *alloc) {
+  ...
+  if (use->is_ArrayCopy()) {
+    // Disconnect ArrayCopy node
+
+
+Node* PhaseMacroExpand::generate_arraycopy(ArrayCopyNode *ac, AllocateArrayNode* alloc,
+  ...
+    // (6) length must not be negative.
+    generate_negative_guard(&local_ctrl, copy_length, slow_region);
+
+
+-->
+
+          <section style="padding: 0; height: 100%;">
+
+            <p style="text-align:left; margin: 0;"><code>src/share/vm/opto/library_call.cpp</code></p>
+
+            <pre class="big noshadow" style="height:100%; margin: 0;" data-trim="true">
+              <code class="cpp" text-trim="true">
 <![CDATA[
-$ java org.simonis.ArrayCopy0 100000
+// System.arraycopy(Object src,int srcPos,Object dest,int destPos,int length);
+bool LibraryCallKit::inline_arraycopy() {
+  ...
+  // The following tests must be performed
+  // (1) src and dest are arrays.
+  // (2) src and dest arrays must have elements of the same BasicType
+  // (3) src and dest must not be null.
+  // (4) src_offset must not be negative.
+  // (5) dest_offset must not be negative.
+  // (6) length must not be negative.
+  // (7) src_offset + length must not exceed length of src.
+  ...
+    // (5) dest_offset must not be negative.
+    generate_negative_guard(dest_offset, slow_region);
 
-$ java org.simonis.ArrayCopy1 100000
-Exception in thread "main" java.lang.RuntimeException: \
-  Expected IndexOutOfBoundsException for System.arracopy(.., -1)
-	at org.simonis.ArrayCopy1.main(ArrayCopy1.java:19)
-
-$ java -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations \
-       org.simonis.ArrayCopy1 100000
-======== Connection graph for  org.simonis.ArrayCopy1::arraycopy
-JavaObject NoEscape(NoEscape) 40 AllocateArray = ArrayCopy1::arraycopy @ bci:4
-++++ Eliminated: 40 AllocateArray
-Exception in thread "main" java.lang.RuntimeException: \
-  Expected IndexOutOfBoundsException for System.arracopy(.., -1)
-	at org.simonis.ArrayCopy1.main(ArrayCopy1.java:19)
-
-$ java -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations \
-       -XX:-EliminateAllocations org.simonis.ArrayCopy1 100000
-======== Connection graph for  org.simonis.ArrayCopy1::arraycopy
-JavaObject NoEscape(NoEscape) 40 AllocateArray = ArrayCopy1::arraycopy @ bci:4
+    // (7) src_offset + length must not exceed length of src.
+    generate_limit_guard(src_offset, length, load_array_length(src), slow_reg);
+  ...
+  ArrayCopyNode* ac = ArrayCopyNode::make(...)
 
 ]]>
+              </code>
+            </pre>
+          </section>
+
+
+          <section style="padding: 0; height: 100%;">
+
+            <p style="text-align:left; margin: 0;"><code>src/share/vm/opto/macro.cpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" text-trim="true">
+<![CDATA[
+// Process users of eliminated allocation.
+void PhaseMacroExpand::process_users_of_allocation(CallNode *alloc) {           
+  ...
+  if (use->is_ArrayCopy()) {
+    // Disconnect ArrayCopy node
+    ArrayCopyNode* ac = use->as_ArrayCopy();
+    ...
+    // Disconnect src right away: it can help find new opportunities ...
+    Node* src = ac->in(ArrayCopyNode::Src);
+]]>
+              </code>
+            </pre>
+
+            <p style="text-align:left"><code>src/share/vm/opto/macroArrayCopy.cpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" text-trim="true">
+<![CDATA[
+// This routine is used from several intrinsics:  System.arraycopy,
+// Object.clone (the array subcase), and Arrays.copyOf[Range].
+Node* PhaseMacroExpand::generate_arraycopy(ArrayCopyNode *ac, AllocateArrayNode*
+  ...
+  // (6) length must not be negative.
+  generate_negative_guard(&local_ctrl, copy_length, slow_region);
+
+]]>
+              </code>
             </pre>
           </section>
 
           <section>
-            <h3 style="text-transform: none;">C2: ArrayCopy elimination skips required parameter checks</h3>
             <h3 style="text-transform: none;"><a href="https://bugs.openjdk.java.net/browse/JDK-8159611">https://bugs.openjdk.java.net/browse/JDK-8159611</a></h3>
+            <img class="plain" data-src="images/8159611_ArrayCopy.png" alt="JDK-8159611: C2: ArrayCopy elimination skips required parameter checks"/>
           </section>
 
         </section>
@@ -1365,7 +1619,27 @@ JavaObject NoEscape(NoEscape) 40 AllocateArray = ArrayCopy1::arraycopy @ bci:4
           { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
           { src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
           { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-          { src: 'reveal.js/plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'reveal.js/plugin/highlight/highlight_9.7.0.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() {
+
+hljs.registerLanguage('terminal', function(hljs) {
+  return {
+    contains: [
+      hljs.C_LINE_COMMENT_MODE,
+      {
+        className: 'title',
+        lexemes: /[$()>_a-zA-Z0-9]+/,
+        keywords: "$ (gdb)",
+        begin: /^\$ |\(gdb\)/,
+        end: /[^\\]\n/,
+	contains: [
+          hljs.COMMENT('//', '$', { endsParent: true })
+	]
+      }
+    ]
+  }
+});
+
+hljs.initHighlightingOnLoad(); } },
           { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
           { src: 'reveal.js/plugin/notes/notes.js', async: true }
         ]

@@ -1,6 +1,6 @@
 <calling_hirarchy>
-<call level='0'                    ><code>CompileBroker::compiler_thread_loop()</code></call>
-<call level='1'                    ><code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code></call>
+<call level='0' type='functionCall '><code>CompileBroker::compiler_thread_loop()</code></call>
+<call level='1' type='functionCall '><code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code></call>
 <call level='2' type='functionCall '><code>C2Compiler::compile_method(target=0x7fffc4299130)</code></call>
 <call level='3' type='functionCall '><code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code></call>
 <call level='4' type='functionCall '><code>ParseGenerator::generate()</code></call>
@@ -10,6 +10,6 @@
 <call level='8' type='functionCall '><code>Parse::do_one_bytecode()</code></call>
 <call level='9' type='functionCall '><code>Parse::do_call()</code></call>
 <call level='10' type='functionCall '><code>LibraryIntrinsic::generate()</code></call>
-<call level='11' type='functionCall '><code>LibraryCallKit::try_to_inline()</code></call>
-<call level='12' type='functionCall '><code>LibraryCallKit::inline_random(id=vmIntrinsics::_nextInt)</code></call>
+<call level='11' type='functionCall '><code>LibraryCallKit::try_to_inline(id=vmIntrinsics::_nextInt)</code></call>
+<call level='12' type='functionCall '><code>LibraryCallKit::inline_random()</code></call>
 </calling_hirarchy>
