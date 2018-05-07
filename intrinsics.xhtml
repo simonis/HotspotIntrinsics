@@ -16,10 +16,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
 
     <link rel="stylesheet" href="reveal.js/css/reveal.css" />
-    <link rel="stylesheet" href="reveal.js/css/theme/jbreak2016.css" id="theme" />
-
+    <link rel="stylesheet" href="reveal.js/css/theme/joker2017.css" id="theme" />
     <!-- Code syntax highlighting -->
     <link rel="stylesheet" href="reveal.js/lib/css/monokai_sublime.css" />
+    <!-- Local overrides -->
+    <link rel="stylesheet" href="css/local.css" />
 
   <style type="text/css">
 .scrollable {
@@ -1628,7 +1629,7 @@ Node* PhaseMacroExpand::generate_arraycopy(ArrayCopyNode *ac, AllocateArrayNode*
           { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
           { src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
           { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-          { src: 'reveal.js/plugin/highlight/highlight_9.7.0.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() {
+          { src: 'reveal.js/plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() {
 
 hljs.registerLanguage('terminal', function(hljs) {
   return {
@@ -1637,8 +1638,8 @@ hljs.registerLanguage('terminal', function(hljs) {
       {
         className: 'title',
         lexemes: /[$()>_a-zA-Z0-9]+/,
-        keywords: "$ (gdb)",
-        begin: /^\$ |\(gdb\)/,
+        keywords: "$ (gdb) hsdb>",
+        begin: /^\$ |\(gdb\)|hsdb> /,
         end: /[^\\]\n/,
 	contains: [
           hljs.COMMENT('//', '$', { endsParent: true })
@@ -1654,6 +1655,7 @@ hljs.initHighlightingOnLoad(); } },
         ]
       });
 
+      //Reveal.configure({ slideNumber: true });
     </script>
 
   </body>
