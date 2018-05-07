@@ -1,4 +1,4 @@
-package org.simonis;
+package io.simonis;
 
 import java.security.SecureRandom;
 

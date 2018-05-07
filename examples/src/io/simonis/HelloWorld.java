@@ -1,11 +1,11 @@
-package org.simonis;
+package io.simonis;
 
 import java.text.NumberFormat;
 
 public class HelloWorld {
 
     public static void sayHello() {
-        System.out.println("Hello JETConf!");
+        System.out.println("Hello JBreak!");
     }
     public static void main(String ... args) {
 

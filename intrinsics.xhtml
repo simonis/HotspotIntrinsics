@@ -195,8 +195,17 @@ code.terminal .hljs-title {
         <section>
           <h1>HotSpot Intrinsics<br/></h1>
           <p>
-            <small>Volker Simonis [Фолкер Симонис], SAP / <a href="mailto:volker.simonis@gmail.com">volker.simonis@gmail.com</a></small>
+            <small>Volker Simonis, SAP / <a href="mailto:volker.simonis@gmail.com">volker.simonis@gmail.com</a></small>
           </p>
+        </section>
+
+
+        <section>
+
+          <h3 style="text-transform: none;"><a href="https://github.com/simonis/HotspotIntrinsics">https://github.com/simonis/HotspotIntrinsics</a></h3>
+
+          <h3 style="text-transform: none;"><a href="https://simonis.github.io/HotspotIntrinsics">https://simonis.github.io/HotspotIntrinsics</a></h3>
+
         </section>
 
 
@@ -282,7 +291,7 @@ Java: Unsafe.loadFence()
 public class HelloWorld {
 
   public static void sayHello() {
-      System.out.println("Hello JETConf!");
+      System.out.println("Hello JBreak!");
   }
 
   public static void main(String ... args) {
@@ -304,12 +313,12 @@ public class HelloWorld {
 
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ java -Xint              org.simonis.HelloWorld
-<span class="fragment">Hello JETConf!
+$ java -Xint              io.simonis.HelloWorld
+<span class="fragment">Hello JBreak!
 6,968,398ns</span>
 
-<span class="fragment">$ java -Xint -XX:+JETConf org.simonis.HelloWorld</span>
-<span class="fragment">Hello JETConf!
+<span class="fragment">$ java -Xint -XX:+JBreak io.simonis.HelloWorld</span>
+<span class="fragment">Hello JBreak!
   153,191ns</span>
               </code>
             </pre>
@@ -340,7 +349,7 @@ $ java -Xint              org.simonis.HelloWorld
             <pre class="big noshadow scrollable" style="height: 80%;" data-trim="true">
               <code class="java" text-trim="true" data-noescape="true">
 <![CDATA[
-package org.simonis;
+package io.simonis;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -439,7 +448,7 @@ public class MethodInstrumentationAgent {
               <code class="java" text-trim="true">
 <![CDATA[
 Manifest-VErsion: 1.0
-Premain-Class: org.simonis.MethodInstrumentationAgent
+Premain-Class: io.simonis.MethodInstrumentationAgent
 ]]>
               </code>
             </pre>
@@ -448,10 +457,10 @@ Premain-Class: org.simonis.MethodInstrumentationAgent
 
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ javac -XDignore.symbol.file=true org/simonis/MethodInstrumentationAgent.java
+$ javac -XDignore.symbol.file=true io/simonis/MethodInstrumentationAgent.java
 
 $ jar cvfm MethodInstrumentationAgent.jar manifest.mf \
-                               org/simonis/MethodInstrumentationAgent*.class
+                               io/simonis/MethodInstrumentationAgent*.class
               </code>
             </pre>
 
@@ -463,19 +472,19 @@ $ jar cvfm MethodInstrumentationAgent.jar manifest.mf \
 
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ java              -javaagent:MethodInstrumentationAgent.jar=org/simonis \
-                                                   org.simonis.HelloWorld
+$ java              -javaagent:MethodInstrumentationAgent.jar=io/simonis \
+                                                   io.simonis.HelloWorld
 <span class="fragment">-&gt; main([Ljava/lang/String;)V
 -&gt; sayHello()V
-Hello JETConf!
+Hello JBreak!
 &lt;- sayHello()V
   651,538ns
 &lt;- main([Ljava/lang/String;)V</span>
 
-<span class="fragment">$ java -XX:+JETConf -javaagent:MethodInstrumentationAgent.jar=org/simonis \
-                                                   org.simonis.HelloWorld</span>
+<span class="fragment">$ java -XX:+JBreak -javaagent:MethodInstrumentationAgent.jar=io/simonis \
+                                                   io.simonis.HelloWorld</span>
 <span class="fragment">-&gt; main([Ljava/lang/String;)V
-Hello JETConf!
+Hello JBreak!
    51,750ns
 &lt;- main([Ljava/lang/String;)V</span>
               </code>
@@ -588,21 +597,21 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM* jvm, char* options, void* reserved) 
 
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ java -XX:-JETConf  -agentpath:traceMethodAgent.so=org/simonis \
-                                         org.simonis.HelloWorld
-<span class="fragment">-&gt; org/simonis/HelloWorld::main([Ljava/lang/String;)V
--&gt; org/simonis/HelloWorld::sayHello()V
-Hello JETConf!
-&lt;- org/simonis/HelloWorld::sayHello()V
+$ java -XX:-JBreak  -agentpath:traceMethodAgent.so=io/simonis \
+                                         io.simonis.HelloWorld
+<span class="fragment">-&gt; io/simonis/HelloWorld::main([Ljava/lang/String;)V
+-&gt; io/simonis/HelloWorld::sayHello()V
+Hello JBreak!
+&lt;- io/simonis/HelloWorld::sayHello()V
 24,256,161ns
-&lt;- org/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
+&lt;- io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
 
-<span class="fragment">$ java -XX:+JETConf -agentpath:traceMethodAgent.so=org/simonis \
-                                        org.simonis.HelloWorld</span>
-<span class="fragment">-&gt; org/simonis/HelloWorld::main([Ljava/lang/String;)V
-Hello JETConf!
+<span class="fragment">$ java -XX:+JBreak -agentpath:traceMethodAgent.so=io/simonis \
+                                        io.simonis.HelloWorld</span>
+<span class="fragment">-&gt; io/simonis/HelloWorld::main([Ljava/lang/String;)V
+Hello JBreak!
   171,417ns
-&lt;- org/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
+&lt;- io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
               </code>
             </pre>
           </section>
@@ -759,7 +768,7 @@ public static void main(String[] args) throws Exception {
               <pre class="big noshadow" data-trim="true">
                 <code class="cpp" text-trim="true">
 <![CDATA[
-613    1    b        org.simonis.Loop::compute (29 bytes)
+613    1    b        io.simonis.Loop::compute (29 bytes)
                         @ 9   java.lang.Math::sin (5 bytes)   (intrinsic)    
                         @ 13   java.lang.Math::sqrt (5 bytes)   (intrinsic)
 ]]>
@@ -770,7 +779,7 @@ public static void main(String[] args) throws Exception {
               <pre class="big noshadow" data-trim="true">
                 <code class="cpp" text-trim="true">
 <![CDATA[
-Compiler intrinsic is defined for method [org.simonis.HelloWorld.sayHello()V],
+Compiler intrinsic is defined for method [io.simonis.HelloWorld.sayHello()V],
 but the method is not annotated with @HotSpotIntrinsicCandidate. Exiting.
 ]]>
                 </code>
@@ -811,7 +820,7 @@ but the method is not annotated with @HotSpotIntrinsicCandidate. Exiting.
             <pre class="big noshadow" data-trim="true">
               <code class="cpp" text-trim="true">
 <![CDATA[
-do_class(     helloWorld,    "org/simonis/HelloWorld")                      \
+do_class(     helloWorld,    "io/simonis/HelloWorld")                      \
 do_intrinsic(_sayHello,      helloWorld, sayHello_name, sayHello_sign, F_S) \
  do_name(     sayHello_name, "sayHello")                                    \ 
  do_signature(sayHello_sign, "()V")                                         \
@@ -829,7 +838,7 @@ class AbstractInterpreter: AllStatic {
     zerolocals,          // normal method (needs locals initialization)
     java_lang_math_sin,  // implementation of java.lang.Math.sin(x)
     ...
-    HelloWorld_sayHello, // implementation of org.simonis.HelloWorld.sayHello()
+    HelloWorld_sayHello, // implementation of io.simonis.HelloWorld.sayHello()
 ]]>
               </code>
             </pre>
@@ -847,7 +856,7 @@ class AbstractInterpreter: AllStatic {
 <![CDATA[
 MethodKind AbstractInterpreter::method_kind(methodHandle m) {
   ...
-  if (JETConf) {
+  if (JBreak) {
     if (m->intrinsic_id() == vmIntrinsics::_sayHello) {                       
       return HelloWorld_sayHello;
 ]]>
@@ -884,7 +893,7 @@ address TemplateInterpreterGenerator::generate_sayHello() {
   // r13: sender sp
   // stack: [ ret adr ] <-- rsp
   address entry_point = __ pc();
-  const char *msg = "Hello JETConf!\n";
+  const char *msg = "Hello JBreak!\n";
   __ mov64(c_rarg1, (long)stdout);
   __ mov64(c_rarg0, (long)msg);
   __ call(RuntimeAddress(CAST_FROM_FN_PTR(address, fputs)));
@@ -912,8 +921,8 @@ vmSymbols::SID Method::klass_id_for_intrinsics(const Klass* holder) {
   // if loader is not the default loader (i.e., != NULL), we can't know the
   // intrinsics because we are not loading from core libraries
   const InstanceKlass* ik = InstanceKlass::cast(holder);
-  if (JETConf && ik->name()->equals("org/simonis/HelloWorld")) {  // <----
-    // check for org.simonis.HelloWorld                           // <----
+  if (JBreak && ik->name()->equals("io/simonis/HelloWorld")) {  // <----
+    // check for io.simonis.HelloWorld                           // <----
     return vmSymbols::find_sid(ik->name());                       // <----
   }
   if ((ik->class_loader() != NULL)) {
@@ -1209,14 +1218,14 @@ public class Random {
 
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ time java org.simonis.Random 1000000
+$ time java io.simonis.Random 1000000
 <span class="fragment">-886841403
 
 real	0m2.228s
 user	0m2.144s
 sys	0m0.088s</span>
 
-<span class="fragment">$ time java -XX:DisableIntrinsic=_nextInt org.simonis.Random 1000000</span>
+<span class="fragment">$ time java -XX:DisableIntrinsic=_nextInt io.simonis.Random 1000000</span>
 <span class="fragment">695536079
 
 real	0m3.187s
@@ -1229,15 +1238,15 @@ sys	0m0.472s</span>
           <section>
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ java -XX:+PrintCompilation -XX:+PrintInlining org.simonis.Random 10000
+$ java -XX:+PrintCompilation -XX:+PrintInlining io.simonis.Random 10000
 <span class="fragment">...
- org.simonis.Random::foo (7 bytes)
+ io.simonis.Random::foo (7 bytes)
    @ 3   java.util.Random::nextInt (7 bytes)   (intrinsic)</span>
 
 <span class="fragment">$ java -XX:+PrintCompilation -XX:+PrintInlining -XX:DisableIntrinsic=_nextInt \
-                                                     org.simonis.Random 10000</span>
+                                                     io.simonis.Random 10000</span>
 <span class="fragment">...
- org.simonis.Random::foo (7 bytes)
+ io.simonis.Random::foo (7 bytes)
    @ 3 java.util.Random::nextInt (7 bytes) inline (hot)
      @ 3 java.security.SecureRandom::next (61 bytes) inline (hot)
        @ 17 java.security.SecureRandom::nextBytes (9 bytes) inline (hot)
@@ -1253,8 +1262,8 @@ $ java -XX:+PrintCompilation -XX:+PrintInlining org.simonis.Random 10000
           <section>
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ java -XX:CompileCommand="option org.simonis.Random::foo PrintOptoAssembly" \
-                                                   org.simonis.Random 10000
+$ java -XX:CompileCommand="option io.simonis.Random::foo PrintOptoAssembly" \
+                                                   io.simonis.Random 10000
 <span class="fragment">000   B1: #     N1 &lt;- BLOCK HEAD IS JUNK   Freq: 1
 000     # stack bang (96 bytes)
         pushq   rbp             # Save rbp
@@ -1262,15 +1271,15 @@ $ java -XX:CompileCommand="option org.simonis.Random::foo PrintOptoAssembly" \
 
 00c     <mark>RANDI    RAX</mark>            # int</span>
 
-<span class="fragment">$ java -XX:CompileCommand="option org.simonis.Random::foo PrintAssembly" \
-                                                   org.simonis.Random 10000</span>
+<span class="fragment">$ java -XX:CompileCommand="option io.simonis.Random::foo PrintAssembly" \
+                                                   io.simonis.Random 10000</span>
 <span class="fragment"> ;; B1: #       N1 &lt;- BLOCK HEAD IS JUNK   Freq: 1
 8c0: mov    %eax,-0x16000(%rsp)
 8c7: push   %rbp
 8c8: sub    $0x10,%rsp         ;*synchronization entry
-                               ; - org.simonis.Random::foo@-1 (line 10)
+                               ; - io.simonis.Random::foo@-1 (line 10)
 8cc: <mark>rdrand %eax</mark>               ;*invokevirtual nextInt {reexecute=0 rethrow=0..
-                               ; - org.simonis.Random::foo@3 (line 10)</span>
+                               ; - io.simonis.Random::foo@3 (line 10)</span>
               </code>
             </pre>
           </section>
@@ -1330,25 +1339,25 @@ public class ArrayCopy {
           <section style="padding: 0; height: 100%;">
             <pre class="big noshadow" style="height:100%; margin: 0;" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ java org.simonis.ArrayCopy 1000
+$ java io.simonis.ArrayCopy 1000
 
-<span class="fragment">$ java org.simonis.ArrayCopy 100000</span>
+<span class="fragment">$ java io.simonis.ArrayCopy 100000</span>
 <span class="fragment">Exception in thread "main" java.lang.RuntimeException: \
   Expected IndexOutOfBoundsException for System.arracopy(.., -1)
-	at org.simonis.ArrayCopy.main(ArrayCopy.java:19)</span>
+	at io.simonis.ArrayCopy.main(ArrayCopy.java:19)</span>
 
 <span class="fragment">$ java -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations \
-                                                   org.simonis.ArrayCopy 100000</span>
-<span class="fragment">======== Connection graph for  org.simonis.ArrayCopy::arraycopy
+                                                   io.simonis.ArrayCopy 100000</span>
+<span class="fragment">======== Connection graph for  io.simonis.ArrayCopy::arraycopy
 JavaObject NoEscape(NoEscape) <mark>40 AllocateArray</mark> = ArrayCopy::arraycopy @ bci:4
 ++++ <mark>Eliminated: 40 AllocateArray</mark>
 Exception in thread "main" java.lang.RuntimeException: \
   Expected IndexOutOfBoundsException for System.arracopy(.., -1)
-	at org.simonis.ArrayCopy.main(ArrayCopy.java:19)</span>
+	at io.simonis.ArrayCopy.main(ArrayCopy.java:19)</span>
 
 <span class="fragment">$ java -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations \
-       -XX:-EliminateAllocations                   org.simonis.ArrayCopy 100000</span>
-<span class="fragment">======== Connection graph for  org.simonis.ArrayCopy::arraycopy
+       -XX:-EliminateAllocations                   io.simonis.ArrayCopy 100000</span>
+<span class="fragment">======== Connection graph for  io.simonis.ArrayCopy::arraycopy
 JavaObject NoEscape(NoEscape) <mark>40 AllocateArray</mark> = ArrayCopy::arraycopy @ bci:4</span>
               </code>
             </pre>
@@ -1580,9 +1589,9 @@ Node* PhaseMacroExpand::generate_arraycopy(ArrayCopyNode *ac, AllocateArrayNode*
 
         <section>
 
-          <h3 style="text-transform: none;"><a href="https://github.com/simonis/JBreak2016">https://github.com/simonis/JBreak2016</a></h3>
+          <h3 style="text-transform: none;"><a href="https://github.com/simonis/HotspotIntrinsics">https://github.com/simonis/HotspotIntrinsics</a></h3>
 
-          <h3 style="text-transform: none;"><a href="https://rawgit.com/simonis/JBreak2016/master/jbreak2016.xhtml">https://rawgit.com/simonis/JBreak2016/master/jbreak2016.xhtml</a></h3>
+          <h3 style="text-transform: none;"><a href="https://simonis.github.io/HotspotIntrinsics">https://simonis.github.io/HotspotIntrinsics</a></h3>
 
         </section>
 

@@ -1,1 +1,1 @@
-[ { match: "org/simonis/Random.foo", IGVPrintLevel: 4 } ]
+[ { match: "io/simonis/Random.foo", IGVPrintLevel: 4 } ]

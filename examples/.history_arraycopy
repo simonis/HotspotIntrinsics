@@ -1,7 +1,7 @@
-java -XX:+PrintCompilation -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations -XX:-EliminateAllocations -XX:CompileCommand="option org.simonis.ArrayCopy::arraycopy PrintOptoAssembly" org.simonis.ArrayCopy 99999 | less
-java -XX:+PrintCompilation -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations -XX:CompileCommand="option org.simonis.ArrayCopy::arraycopy PrintOptoAssembly" org.simonis.ArrayCopy 99999 | less
-java -XX:+PrintCompilation -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations -XX:-EliminateAllocations org.simonis.ArrayCopy 100000
-java -XX:+PrintCompilation -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations org.simonis.ArrayCopy 100000
-java -XX:+PrintCompilation org.simonis.ArrayCopy 100000
-java org.simonis.ArrayCopy 100000
-java org.simonis.ArrayCopy 1000
+java -XX:+PrintCompilation -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations -XX:-EliminateAllocations -XX:CompileCommand="option io.simonis.ArrayCopy::arraycopy PrintOptoAssembly" io.simonis.ArrayCopy 99999 | less
+java -XX:+PrintCompilation -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations -XX:CompileCommand="option io.simonis.ArrayCopy::arraycopy PrintOptoAssembly" io.simonis.ArrayCopy 99999 | less
+java -XX:+PrintCompilation -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations -XX:-EliminateAllocations io.simonis.ArrayCopy 100000
+java -XX:+PrintCompilation -XX:+PrintEscapeAnalysis -XX:+PrintEliminateAllocations io.simonis.ArrayCopy 100000
+java -XX:+PrintCompilation io.simonis.ArrayCopy 100000
+java io.simonis.ArrayCopy 100000
+java io.simonis.ArrayCopy 1000

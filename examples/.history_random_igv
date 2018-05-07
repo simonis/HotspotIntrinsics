@@ -1,3 +1,3 @@
 /share/OpenJDK/jdk9-hs-comp/hotspot/src/share/tools/IdealGraphVisualizer/my_igv.sh
-java -XX:+PrintCompilation -XX:+PrintInlining -XX:+PrintIdealGraph -XX:CompilerDirectivesFile=../comp_direct.txt org.simonis.Random 1000000 2>&1 | less
-java -XX:+PrintCompilation -XX:+PrintInlining -XX:+PrintIdealGraph -XX:CompilerDirectivesFile=../comp_direct.txt -XX:DisableIntrinsic=_nextInt org.simonis.Random 1000000 2>&1 | less
+java -XX:+PrintCompilation -XX:+PrintInlining -XX:+PrintIdealGraph -XX:CompilerDirectivesFile=../comp_direct.txt io.simonis.Random 1000000 2>&1 | less
+java -XX:+PrintCompilation -XX:+PrintInlining -XX:+PrintIdealGraph -XX:CompilerDirectivesFile=../comp_direct.txt -XX:DisableIntrinsic=_nextInt io.simonis.Random 1000000 2>&1 | less

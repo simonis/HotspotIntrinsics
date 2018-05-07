@@ -1,3 +1,3 @@
-time java -XX:DisableIntrinsic=_nextInt org.simonis.Random 1000000
-time java org.simonis.Random 1000000
-emacs -nw -r -q ../src/org/simonis/Random.java
+time java -XX:DisableIntrinsic=_nextInt io.simonis.Random 1000000
+time java io.simonis.Random 1000000
+emacs -nw -r -q ../src/io/simonis/Random.java

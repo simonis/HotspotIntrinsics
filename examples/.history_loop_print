@@ -1,2 +1,2 @@
-time java -XX:+PrintCompilation -XX:+PrintInlining -XX:-InlineMathNatives -XX:CompileCommand="print,org.simonis.Loop::compute" org.simonis.Loop 10000000 | less
-time java -XX:+PrintCompilation -XX:+PrintInlining -XX:CompileCommand="print,org.simonis.Loop::compute" org.simonis.Loop 10000000 | less
+time java -XX:+PrintCompilation -XX:+PrintInlining -XX:-InlineMathNatives -XX:CompileCommand="print,io.simonis.Loop::compute" io.simonis.Loop 10000000 | less
+time java -XX:+PrintCompilation -XX:+PrintInlining -XX:CompileCommand="print,io.simonis.Loop::compute" io.simonis.Loop 10000000 | less

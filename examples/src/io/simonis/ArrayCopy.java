@@ -1,10 +1,10 @@
-package org.simonis;
+package io.simonis;
 
-public class ArrayCopy0 {
+public class ArrayCopy {
 
   public static boolean arraycopy(Object[] src, int length) {
     try {
-      System.arraycopy(src, 0, new Object[8], 1, length);
+      System.arraycopy(src, 1, new Object[8], 1, length);
       return false;
     } catch (IndexOutOfBoundsException e) {
       return true;
@@ -12,10 +12,10 @@ public class ArrayCopy0 {
   }
 
   public static void main(String args[]){
-    int count = args.length > 0 ? Integer.parseInt(args[0]) : 1;
-    Object[] src = new Object[8];
+    int count = Integer.parseInt(args[0]);
+
     for (int x = 0; x < count; x++) {
-      if (!arraycopy(src, -1))
+      if (arraycopy(new Object[8], -1) == false)
         throw new RuntimeException("Expected IndexOutOfBoundsException for System.arracopy(.., -1)");
     }
   }
