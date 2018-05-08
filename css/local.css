@@ -1,0 +1,378 @@
+.scrollable {
+    bottom: 0px;
+    overflow-y: auto  !important;
+    overflow-x: hidden !important;
+}
+
+.reveal .slides > section.demo,
+.reveal .slides > section > section.demo {
+    padding: 0;
+}
+
+.reveal .big {
+    font-size: .7em;
+    line-height: 1.3em;
+}
+
+.reveal pre.console {
+    background-color: black;
+    color: #00ff00;
+}
+
+code.terminal .hljs-title {
+    color: #00ff00;
+}
+
+.reveal pre.noshadow {
+    border-radius: 0;
+    box-shadow: unset;
+}
+
+.reveal pre code {
+    max-height: 100%;
+}
+.bold {
+    font-weight: bold;
+}
+
+.reveal section img {
+    margin: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+
+.reveal .outline_white {
+    color: white;
+    text-shadow:
+        -2px -2px 0 #000,
+         2px -2px 0 #000,
+        -2px  2px 0 #000,
+         2px  2px 0 #000;
+    min-height: 1.1em;
+    text-align: center;
+}
+.reveal .outline_black {
+    color: black;
+    text-shadow:
+        -2px -2px 0 #fff,
+         2px -2px 0 #fff,
+        -2px  2px 0 #fff,
+         2px  2px 0 #fff;
+    min-height: 1.1em;
+    text-align: center;
+}
+
+.reveal .slide-number {
+    position: fixed;
+    display: block;
+    left: 15px;
+    bottom: 15px;
+    opacity: 0.9;
+    z-index: 31;
+    font-size: 14px;
+}
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+    text-transform: none;
+}
+
+.hljs-class .hljs-title {
+    /* fix "public static class Y extends X {" such that 'Y' will be formatted the same like 'X' */
+    color: #A6E22E;
+    font-style: italic;
+}
+
+mark {
+    color: black;
+    background-color: yellow;
+    border-radius: 10px;
+}
+mark.orange {
+    color: black;
+    background-color: orange;
+    border-radius: 10px;
+}
+mark.border {
+    color: inherit;
+    background-color: inherit;
+    border: 5px solid #1B91FF;
+    /* Use a negative margin with the same size as the border to avoid size changes of elemnts with borders or when the border is set dynamically by fragments */
+    margin: 0 -5px 0 -5px;
+    border-radius: 10px;
+}
+mark.border-no-top {
+    color: inherit;
+    background-color: inherit;
+    margin: 0 -5px 0 -5px;
+    border-style: solid;
+    border-color: #1B91FF;
+    border-width: 0px 5px 5px 5px;
+    border-radius: 0px 0px 10px 10px;
+}
+mark.border-no-bottom {
+    color: inherit;
+    background-color: inherit;
+    margin: 0 -5px 0 -5px;
+    border-style: solid;
+    border-color: #1B91FF;
+    border-width: 5px 5px 0px 5px;
+    border-radius: 10px 10px 0px 0px;
+}
+mark.border-no-bottom-top {
+    color: inherit;
+    background-color: inherit;
+    margin: 0 -5px 0 -5px;
+    border-style: solid;
+    border-color: #1B91FF;
+    border-width: 0px 5px 0px 5px;
+    border-radius: 0px 0px 0px 0px;
+}
+
+.reveal .slides section .fragment.highlight-border, .reveal .slides section .fragment.highlight-current-border {
+  opacity: 1;
+  visibility: visible;
+  /* Define a transparent border with the same size for inactive fragments such that we have no size changes when the fragments get displayed */
+  border-width: 5px 5px 5px 5px;
+  border-style: solid;
+  border-color: transparent;
+  /* Use a negative margin with the same size as the border to avoid size changes of elemnts with borders or when the border is set dynamically by fragments */
+  margin: -5px;
+}
+.reveal .slides section .fragment.highlight-border.visible {
+  border: 5px solid #1B91FF;
+  border-radius: 10px;
+  margin: 5px -5px 5px -5px;
+}
+.reveal .slides section .fragment.highlight-border.border-no-top.visible {
+  border-style: solid;
+  border-width: 5px;
+  border-color: transparent #1B91FF #1B91FF #1B91FF;
+  border-radius: 10px;
+  margin: 5px -5px 5px -5px;
+}
+.reveal .slides section .fragment.highlight-border.border-no-bottom.visible {
+  border-style: solid;
+  border-width: 5px;
+  border-color: #1B91FF #1B91FF transparent #1B91FF;
+  border-radius: 10px;
+  margin: 5px -5px 5px -5px;
+}
+.reveal .slides section .fragment.highlight-border.border-no-bottom-top.visible {
+  border-style: solid;
+  border-width: 5px;
+  border-color: transparent #1B91FF transparent #1B91FF;
+  border-radius: 10px;
+  margin: 5px -5px 5px -5px;
+}
+.reveal .slides section .fragment.highlight-current-border.current-fragment {
+  border: 5px solid #1B91FF;
+  border-radius: 10px;
+  margin: -5px;
+}
+.reveal .slides section .fragment.highlight-current-border.border-no-top.current-fragment {
+  border-style: solid;
+  border-color: transparent #1B91FF #1B91FF #1B91FF;
+  border-width: 5px;
+  border-radius: 0px 0px 10px 10px;
+  margin: -5px;
+}
+.reveal .slides section .fragment.highlight-current-border.border-no-bottom.current-fragment {
+  border-style: solid;
+  border-color: #1B91FF #1B91FF transparent #1B91FF;
+  border-width: 5px;
+  border-radius: 10px 10px 0px 0px;
+  margin: -5px;
+}
+.reveal .slides section .fragment.highlight-current-border.border-no-bottom-top.current-fragment {
+  border-style: solid;
+  border-color: transparent #1B91FF transparent #1B91FF;
+  border-width: 5px;
+  border-radius: 0px 0px 0px 0px;
+  margin: -5px;
+}
+
+
+  table.calling_hirarchy {
+/*    font-family: monospace, arial, helvetica, sans-serif; */
+/*    background-color: #ffffff; */
+    font-size: smaller;
+    border-collapse: collapse;
+    margin: 0px auto;
+    padding: 2px;
+    width: auto;
+    overflow: auto;
+    border: none;
+  }
+
+  table.calling_hirarchy tr {
+    border: none;
+  }
+
+  table.calling_hirarchy td {
+    padding: 4px;
+/*    font-family: monospace; */
+  }
+
+  td.indent_level_0 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #a0a0a0;
+  }
+  td.indent_level_1 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #a8a8a8;
+  }
+  td.indent_level_2 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #b0b0b0;
+  }
+  td.indent_level_3 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #b8b8b8;
+  }
+  td.indent_level_4 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #c0c0c0;
+  }
+  td.indent_level_5 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #c8c8c8;
+  }
+  td.indent_level_6 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #d0d0d0;
+  }
+  td.indent_level_7 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #d8d8d8;
+  }
+  td.indent_level_8 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #e0e0e0;
+  }
+  td.indent_level_9 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #e8e8e8;
+  }
+  td.indent_level_10 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #f0f0f0;
+  }
+  td.indent_level_11 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #f8f8f8;
+  }
+  td.indent_level_12 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #ffffff;
+  }
+  td.functionCall {
+/*    font-weight: bold; */
+    color: darkblue;
+  }
+  td.javaCall {
+    font-weight: bold;
+    color: darkgreen;
+  }
+  td.comment {
+    font-style: italic;
+    color: maroon;
+  }
+  td.highlight {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #a0ffa0;
+  }
+  table.calling_hirarchy td[rowspan] {
+    border-style: none;
+    border-width: 0;
+    border-left: dotted;
+    border-left-width: 2px;
+  }
+
+/* The Quiz (background) */
+.reveal .slides section .quiz {
+    display: none; /* Hidden by default */
+}
+
+.reveal .slides section .fragment.quiz {
+    display: none; /* Hidden by default */
+}
+
+.reveal .slides section .fragment.quiz.current-fragment {
+    display: block;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+}
+
+/* Quiz Content */
+.reveal .slides section .quiz-content {
+    display: inline-block;
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: auto;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+.reveal .slides section .quiz-header {
+    padding: 12px 12px;
+    background-color: #7571ff;
+/*  background-color: #5cb85c; */
+    color: white;
+}
+
+.reveal .slides section .quiz-header h2 {
+    margin: 0;
+}
+
+.reveal .slides section .quiz-body {
+    padding: 12px 16px;
+    color: #3f3f3f;
+}
+
+.reveal .slides section .quiz-body li:not(:last-child) {
+    margin-bottom: 15px;
+}
+
+.reveal .slides section .quiz-footer {
+    padding: 12px 16px;
+    background-color: #7571ff;
+/*  background-color: #5cb85c; */
+    color: white;
+}

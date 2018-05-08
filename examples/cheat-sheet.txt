@@ -1,0 +1,332 @@
+HelloWorld Intrinsic
+====================
+
+-> java -Xint io.simonis.HelloWorld
+Привет JBreak!
+6,968,398ns
+
+-> java -Xint -XX:+JBreak io.simonis.HelloWorld
+Привет JBreak
+  153,191ns
+
+
+Java Instrumentation Agent
+==========================
+
+->java -XX:-JBreak -XX:-CheckIntrinsics -javaagent:MethodInstrumentationAgent.jar=io/simonis io.simonis.HelloWorld 
+
+-> main([Ljava/lang/String;)V
+-> sayHello()V
+Привет JBreak!
+<- sayHello()V
+  620,480ns
+<- main([Ljava/lang/String;)V
+
+
+-> java -XX:+JBreak -XX:-CheckIntrinsics -javaagent:MethodInstrumentationAgent.jar=io/simonis io.simonis.HelloWorld 
+
+-> main([Ljava/lang/String;)V
+Привет JBreak
+  101,103ns
+<- main([Ljava/lang/String;)V
+
+
+JVMTI Agent
+===========
+
+-> java -XX:-JBreak -agentpath:jvmti/traceMethodAgent.so=io/simonis io.simonis.HelloWorld
+
+-> io/simonis/HelloWorld::main([Ljava/lang/String;)V
+-> io/simonis/HelloWorld::sayHello()V
+Привет JBreak!
+<- io/simonis/HelloWorld::sayHello()V
+1,403,766ns
+<- io/simonis/HelloWorld::main([Ljava/lang/String;)V
+
+
+-> java -XX:+JBreak -agentpath:jvmti/traceMethodAgent.so=io/simonis io.simonis.HelloWorld
+
+-> io/simonis/HelloWorld::main([Ljava/lang/String;)V
+Привет JBreak
+   39,359ns
+<- io/simonis/HelloWorld::main([Ljava/lang/String;)V
+
+
+Debugging
+=========
+
+-> java -XX:-JBreak -XX:-CheckIntrinsics -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y io.simonis.HelloWorld
+
+-> jdb -attach 8000
+Set uncaught java.lang.Throwable
+Set deferred uncaught java.lang.Throwable
+Initializing jdb ...
+
+VM Started: > No frames on the current call stack
+
+-> main[1] stop in io.simonis.HelloWorld.sayHello
+Deferring breakpoint io.simonis.HelloWorld.sayHello.
+It will be set after the class is loaded.
+-> main[1] run
+> Set deferred breakpoint io.simonis.HelloWorld.sayHello
+
+Breakpoint hit: "thread=main", io.simonis.HelloWorld.sayHello(), line=8 bci=0
+
+-> main[1] where
+  [1] io.simonis.HelloWorld.sayHello (HelloWorld.java:8)
+  [2] io.simonis.HelloWorld.main (HelloWorld.java:13)
+-> main[1] cont
+> 
+The application exited
+
+
+
+-> java -XX:+JBreak -XX:-CheckIntrinsics -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y io.simonis.HelloWorld
+
+-> jdb -attach 8000
+Set uncaught java.lang.Throwable
+Set deferred uncaught java.lang.Throwable
+Initializing jdb ...
+
+VM Started: > No frames on the current call stack
+
+-> main[1] stop in io.simonis.HelloWorld.sayHello
+Deferring breakpoint io.simonis.HelloWorld.sayHello.
+It will be set after the class is loaded.
+-> main[1] run
+> Set deferred breakpoint io.simonis.HelloWorld.sayHello
+
+The application exited
+
+
+Loop
+====
+
+-> export _JAVA_OPTIONS='-Xbatch -XX:+UseSerialGC -XX:-TieredCompilation -XX:-UseOnStackReplacement -XX:+UnlockDiagnosticVMOptions -XX:-CheckIntrinsics -XX:-LogVMOutput'
+
+-> java -XX:+PrintCompilation -XX:+PrintInlining io.simonis.Loop 0 1 10000000
+    613    1    b        io.simonis.Loop::compute (29 bytes)
+                            @ 9   java.lang.Math::sin (5 bytes)   (intrinsic)
+                            @ 13   java.lang.Math::sqrt (5 bytes)   (intrinsic)
+                            @ 16   java.lang.Math::pow (6 bytes)   (intrinsic)
+
+real	0m1.418s
+user	0m1.368s
+sys	0m0.064s
+
+
+-> java -XX:+PrintCompilation -XX:+PrintInlining -XX:-InlineMathNatives io.simonis.Loop 0 1 10000000
+
+    837    1    b        io.simonis.Loop::compute (29 bytes)
+                            @ 9   java.lang.Math::sin (5 bytes)   inline (hot)
+    844    1             io.simonis.Loop::compute (29 bytes)   made not entrant
+    851    2    b        io.simonis.Loop::compute (29 bytes)
+                            @ 9   java.lang.Math::sin (5 bytes)   inline (hot)
+                              @ 1   java.lang.StrictMath::sin (0 bytes)   native method
+                            @ 13   java.lang.Math::sqrt (5 bytes)   inline (hot)
+                              @ 1   java.lang.StrictMath::sqrt (0 bytes)   native method
+                            @ 16   java.lang.Math::pow (6 bytes)   inline (hot)
+                              @ 2   java.lang.StrictMath::pow (6 bytes)   inline (hot)
+    859    2             io.simonis.Loop::compute (29 bytes)   made not entrant
+    865    3    b        io.simonis.Loop::compute (29 bytes)
+                            @ 9   java.lang.Math::sin (5 bytes)   inline (hot)
+                              @ 1   java.lang.StrictMath::sin (0 bytes)   native method
+                            @ 13   java.lang.Math::sqrt (5 bytes)   inline (hot)
+                              @ 1   java.lang.StrictMath::sqrt (0 bytes)   native method
+                            @ 16   java.lang.Math::pow (6 bytes)   inline (hot)
+                              @ 2   java.lang.StrictMath::pow (6 bytes)   inline (hot)
+    921    4    b        java.lang.FdLibm::access$200 (6 bytes)
+                            @ 2   java.lang.FdLibm::__LO (17 bytes)   inline (hot)
+                              @ 1   java.lang.Double::doubleToRawLongBits (0 bytes)   native method
+                              @ 13   java.lang.Double::longBitsToDouble (0 bytes)   native method
+    935    5    b        java.lang.FdLibm::__LO (17 bytes)
+                            @ 1   java.lang.Double::doubleToRawLongBits (0 bytes)   native method
+                            @ 13   java.lang.Double::longBitsToDouble (0 bytes)   native method
+    952    6    b        java.lang.FdLibm::access$000 (5 bytes)
+                            @ 1   java.lang.FdLibm::__HI (11 bytes)   inline (hot)
+                              @ 1   java.lang.Double::doubleToRawLongBits (0 bytes)   native method
+    962    7    b        java.lang.FdLibm::__HI (11 bytes)
+                            @ 1   java.lang.Double::doubleToRawLongBits (0 bytes)   native method
+    965    8    b        java.lang.FdLibm::access$100 (6 bytes)
+                            @ 2   java.lang.FdLibm::__HI (20 bytes)   inline (hot)
+                              @ 1   java.lang.Double::doubleToRawLongBits (0 bytes)   native method
+                              @ 16   java.lang.Double::longBitsToDouble (0 bytes)   native method
+    970    9    b        java.lang.FdLibm::__HI (20 bytes)
+                            @ 1   java.lang.Double::doubleToRawLongBits (0 bytes)   native method
+                            @ 16   java.lang.Double::longBitsToDouble (0 bytes)   native method
+   1007   10     n       java.lang.StrictMath::sin (native)   (static)
+   1008   11     n       java.lang.StrictMath::sqrt (native)   (static)
+   1014   12    b        java.lang.FdLibm$Pow::compute (1533 bytes)
+   1152   13    b        java.lang.Double::isNaN (12 bytes)
+   1171   14    b        java.lang.FdLibm::access$300 (5 bytes)
+                            @ 1   java.lang.FdLibm::__LO (8 bytes)   inline (hot)
+                              @ 1   java.lang.Double::doubleToRawLongBits (0 bytes)   native method
+   1175   15    b        java.lang.FdLibm::__LO (8 bytes)
+                            @ 1   java.lang.Double::doubleToRawLongBits (0 bytes)   native method
+
+real	0m22.688s
+user	0m32.703s
+sys	0m0.156s
+
+
+-> java -XX:+PrintCompilation -XX:+PrintInlining -XX:-InlineMathNatives io.simonis.Loop 0 1 10000000
+
+real	0m4.645s
+user	0m4.597s
+sys	0m0.053s
+
+-> MathIntrinsics can not be switched off in the interpreter!!!
+
+
+-> java -XX:+PrintCompilation -XX:+PrintInlining -XX:CompileCommand="print,io.simonis.Loop::compute" io.simonis.Loop 0 1 10000000
+
+020   B3: #	B3 B4 <- B2 B3 	Loop: B3-B3 inner  Freq: 0,999702
+020   	movsd   XMM0, [rsp + #0]	# spill
+025   	call_leaf,runtime  dsin
+        No JVM State Info
+        # 
+032   	sqrtsd  XMM1, [RSP + #0 (32-bit)]
+037   	call_leaf,runtime  dpow
+        No JVM State Info
+        # 
+044   	movsd   XMM1, [rsp + #0]	# spill
+049   	vaddsd  XMM0, XMM1, XMM0
+04d   	movsd   [rsp + #0], XMM0	# spill
+052   	incl    RBX	# int
+054   	cmpl    RBX, R13
+057   	jl,s   B3	# loop end  P=0,499925 C=3350,000000
+
+
+-> java -XX:+PrintCompilation -XX:+PrintInlining -XX:CompileCommand="print,io.simonis.Loop::compute" -XX:-InlineMathNatives io.simonis.Loop 0 1 10000000
+
+
+020   B3: #	B9 B4 <- B2 B7 	Loop: B3-B7 inner  Freq: 0,9998
+020   	movsd   XMM0, [rsp + #8]	# spill
+      	nop 	# 1 bytes pad for loops and calls
+027   	call,static  java.lang.StrictMath::sin
+        # java.lang.Math::sin @ bci:1  L[0]=_ L[1]=_
+        # io.simonis.Loop::compute @ bci:9  L[0]=rsp + #0 L[1]=rsp + #8 L[2]=_ L[3]=RBP STK[0]=rsp + #8 STK[1]=_
+        # OopMap{off=44}
+02c
+02c   B4: #	B10 B5 <- B3  Freq: 0,99978
+        # Block is sole successor of call
+02c   	movsd   [rsp + #16], XMM0	# spill
+032   	movsd   XMM0, [rsp + #8]	# spill
+      	nop 	# 3 bytes pad for loops and calls
+03b   	call,static  java.lang.StrictMath::sqrt
+        # java.lang.Math::sqrt @ bci:1  L[0]=_ L[1]=_
+        # io.simonis.Loop::compute @ bci:13  L[0]=rsp + #0 L[1]=_ L[2]=_ L[3]=RBP STK[0]=rsp + #8 STK[1]=_ STK[2]=rsp + #16 STK[3]=_
+        # OopMap{off=64}
+040
+040   B5: #	B11 B6 <- B4  Freq: 0,99976
+        # Block is sole successor of call
+040   	movapd  XMM1, XMM0	# spill
+044   	movsd   XMM0, [rsp + #16]	# spill
+      	nop 	# 1 bytes pad for loops and calls
+04b   	call,static  java.lang.FdLibm$Pow::compute
+        # java.lang.StrictMath::pow @ bci:2  L[0]=_ L[1]=_ L[2]=_ L[3]=_
+        # java.lang.Math::pow @ bci:2  L[0]=_ L[1]=_ L[2]=_ L[3]=_
+        # io.simonis.Loop::compute @ bci:16  L[0]=rsp + #0 L[1]=_ L[2]=_ L[3]=RBP STK[0]=rsp + #8 STK[1]=_
+        # OopMap{off=80}
+050
+
+
+
+LoopWithGC
+==========
+
+-> time java -verbose:gc -XX:-InlineMathNatives io.simonis.LoopWithGC 0 1 100000000
+
+[0.102s][info][gc] Using Serial
+[1,573s][info][gc] GC(0) Pause Young (Allocation Failure) 33M->0M(121M) (1,547s, 1,573s) 25,355ms
+[1,840s][info][gc] GC(1) Pause Full (System.gc()) 9M->0M(121M) (1,726s, 1,840s) 114,372ms
+[2,523s][info][gc] GC(2) Pause Young (Allocation Failure) 33M->0M(121M) (2,504s, 2,523s) 18,430ms
+[3,040s][info][gc] GC(3) Pause Full (System.gc()) 16M->0M(121M) (2,841s, 3,040s) 198,274ms
+[3,713s][info][gc] GC(4) Pause Young (Allocation Failure) 33M->0M(121M) (3,696s, 3,713s) 17,054ms
+[4,253s][info][gc] GC(5) Pause Full (System.gc()) 16M->0M(121M) (4,044s, 4,253s) 209,235ms
+[4,920s][info][gc] GC(6) Pause Young (Allocation Failure) 33M->0M(121M) (4,902s, 4,920s) 17,571ms
+[5,481s][info][gc] GC(7) Pause Full (System.gc()) 17M->0M(121M) (5,261s, 5,481s) 220,454ms
+^C
+real	0m5.712s
+user	0m5.618s
+sys	0m0.082s
+
+-> time java -verbose:gc -XX:+InlineMathNatives io.simonis.LoopWithGC 0 1 100000000
+
+[0.100s][info][gc] Using Serial
+[7,829s][info][gc] GC(0) Pause Full (System.gc()) 1M->0M(121M) (7,793s, 7,829s) 35,795ms
+
+real	0m7.909s
+user	0m7.901s
+sys	0m0.086s
+
+
+Random
+======
+
+-> time java io.simonis.Random 1000000
+
+49437691
+
+real	0m1.616s
+user	0m1.551s
+sys	0m0.074s
+
+-> time java -XX:DisableIntrinsic=_nextInt io.simonis.Random 1000000
+1991919281
+
+real	0m3.032s
+user	0m2.443s
+sys	0m0.572s
+
+
+
+-> LD_LIBRARY_PATH=/share/OpenJDK/hsdis java -XX:+PrintCompilation -XX:+PrintInlining -XX:CompileCommand="print,io.simonis.Random::foo" io.simonis.Random 1000000 | less
+
+   1429   10    b        io.simonis.Random::foo (7 bytes)
+                            @ 3   java.util.Random::nextInt (7 bytes)   (intrinsic)
+
+ ;; B1: #       N1 <- BLOCK HEAD IS JUNK   Freq: 1
+  0x00007f1abd0f57e0: mov    %eax,-0x16000(%rsp)
+  0x00007f1abd0f57e7: push   %rbp
+  0x00007f1abd0f57e8: sub    $0x10,%rsp         ;*synchronization entry
+                                                ; - io.simonis.Random::foo@-1 (line 10)
+  0x00007f1abd0f57ec: rdrand %eax               ;*invokevirtual nextInt {reexecute=0 rethrow=0 return_oop=0}
+                                                ; - io.simonis.Random::foo@3 (line 10)
+  0x00007f1abd0f57ef: add    $0x10,%rsp
+  0x00007f1abd0f57f3: pop    %rbp
+  0x00007f1abd0f57f4: test   %eax,0x10480806(%rip)        # 0x00007f1acd576000
+                                                ;   {poll_return}
+  0x00007f1abd0f57fa: retq   
+
+
+-> LD_LIBRARY_PATH=/share/OpenJDK/hsdis java -XX:+PrintCompilation -XX:+PrintInlining -XX:CompileCommand="print,io.simonis.Random::foo" -XX:DisableIntrinsic=_nextInt io.simonis.Random 1000000 | less
+
+   1444   10    b        io.simonis.Random::foo (7 bytes)
+                            @ 3   java.util.Random::nextInt (7 bytes)   inline (hot)
+                              @ 3   java.security.SecureRandom::next (61 bytes)   inline (hot)
+                                @ 17   java.security.SecureRandom::nextBytes (9 bytes)   inline (hot)
+                                  @ 5   java.security.SecureRandomSpi::engineNextBytes (0 bytes)   virtual call
+
+...
+ ;; B3: #       B8 B4 <- B6 B2  Freq: 1
+  0x00007fb1fc2536f9: mov    %rax,%rbp          ;*synchronization entry
+                                                ; - java.security.SecureRandom::nextBytes@-1 (line 476)
+                                                ; - java.security.SecureRandom::next@17 (line 499)
+                                                ; - java.util.Random::nextInt@3 (line 329)
+                                                ; - io.simonis.Random::foo@3 (line 10)
+  0x00007fb1fc2536fc: movabs $0x83250988,%r10   ;   {oop(a 'java/security/SecureRandom')}
+  0x00007fb1fc253706: mov    0x2c(%r10),%r10d
+  0x00007fb1fc25370a: mov    %r10,%rsi
+  0x00007fb1fc25370d: push   %r10
+  0x00007fb1fc25370f: cmp    0xe3fe7a2(%rip),%r12        # 0x00007fb20a651eb8
+                                                ;   {external_word}
+  0x00007fb1fc253716: je     0x00007fb1fc253793
+  0x00007fb1fc25371c: mov    %rsp,-0x28(%rsp)
+  0x00007fb1fc253721: sub    $0x80,%rsp
+  0x00007fb1fc253728: mov    %rax,0x78(%rsp)
+  0x00007fb1fc25372d: mov    %rcx,0x70(%rsp)
+  0x00007fb1fc253732: mov    %rdx,0x68(%rsp)
+  0x00007fb1fc253737: mov    %rbx,0x60(%rsp)
+  0x00007fb1fc25373c: mov    %rbp,0x50(%rsp)
+...

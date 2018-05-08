@@ -186,6 +186,58 @@ code.terminal .hljs-title {
     -->
   </head>
 
+<!--
+;; indent block of text
+;; C-u <number> C-x <TAB>
+
+
+
+;; select this code and do 'M-x eval-region'
+(defun make-fragment (p1 p2)
+  "Wraps the selection into 'fragment' <span>s and quotes '&', '<' and '>'."
+  (interactive "r")
+  (setq inputStr (buffer-substring-no-properties p1 p2))
+  (setq inputStr (replace-regexp-in-string "&" "&amp;" inputStr))
+  (setq inputStr (replace-regexp-in-string "<" "&lt;" inputStr))
+  (setq inputStr (replace-regexp-in-string ">" "&gt;" inputStr))
+  (setq resultStr (concat "<span class=\"fragment\">" (concat inputStr "</span>")))
+  (delete-region p1 p2)
+  (insert resultStr)
+)
+(defun make-fragment-simple (p1 p2)
+  "Wraps the selection into 'fragment' <span>s without any quoting."
+  (interactive "r")
+  (setq inputStr (buffer-substring-no-properties p1 p2))
+  (setq resultStr (concat "<span class=\"fragment\">" (concat inputStr "</span>")))
+  (delete-region p1 p2)
+  (insert resultStr)
+)
+(defun quote-fragment (p1 p2)
+  "Quotes '&', '<' and '>'."
+  (interactive "r")
+  (setq inputStr (buffer-substring-no-properties p1 p2))
+  (setq inputStr (replace-regexp-in-string "&" "&amp;" inputStr))
+  (setq inputStr (replace-regexp-in-string "<" "&lt;" inputStr))
+  (setq inputStr (replace-regexp-in-string ">" "&gt;" inputStr))
+  (delete-region p1 p2)
+  (insert inputStr)
+)
+
+(global-set-key (kbd "C-f") 'make-fragment)
+(global-set-key (kbd "C-S-f") 'make-fragment-simple)
+(global-set-key (kbd "C-S-q") 'quote-fragment)
+;; revert key-binding
+;; (global-set-key (kbd "C-f") 'forward-char)
+;;
+;; use 'C-h k <keystroke>' to find out what <keystroke> is currently bound to
+
+;; (vhs) The following is required to make 'C-c C-t' insert <code> tags without
+;; newlines. 'sgml-tag-alist' is the "file-local" version of 'html-tag-alist'
+(add-to-list 'html-tag-alist '("code"))
+(add-to-list 'sgml-tag-alist '("code"))
+
+-->
+
   <body>
 
     <div class="reveal">
@@ -310,17 +362,27 @@ public class HelloWorld {
           </section>
 
           <section>
-            <h2>The &ldquo;<code>HelloWorld</code>&rdquo; Intrinsic - DEMO</h2>
 
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ java -Xint              io.simonis.HelloWorld
-<span class="fragment">Hello JBreak!
-6,968,398ns</span>
+$<span class="fragment"> javac io/simonis/HelloWorld.java
+$</span> <span class="fragment">java  io.simonis.HelloWorld
+Hello JBreak!
+1,368,398ns
 
-<span class="fragment">$ java -Xint -XX:+JBreak io.simonis.HelloWorld</span>
-<span class="fragment">Hello JBreak!
-  153,191ns</span>
+$</span> <span class="fragment">java <span class="fragment highlight-current-border">-XX:+JBreak</span> io.simonis.HelloWorld
+Hello JBreak!
+   <span class="fragment highlight-current-border">83,191ns</span>
+
+$</span> <span class="fragment">sed -i 's/<span class="fragment highlight-current-border">Hello JBreak</span>/<span class="fragment highlight-current-border">Hello World</span>/g' <span class="fragment highlight-current-border">io/simonis/HelloWorld.java</span>
+$</span> <span class="fragment">javac io/simonis/HelloWorld.java
+$</span> <span class="fragment">java  io.simonis.HelloWorld
+<span class="fragment highlight-current-border">Hello World!</span>
+1,483,216ns
+
+$</span> <span class="fragment">java <span class="fragment highlight-current-border">-XX:+JBreak</span> io.simonis.HelloWorld
+<span class="fragment highlight-current-border">Hello JBreak!</span>
+   82,514ns</span>
               </code>
             </pre>
           </section>
@@ -440,7 +502,7 @@ public class MethodInstrumentationAgent {
               </code>
             </pre>
           </section>
-
+<!---
           <section>
 
             <p>The Manifest file:</p>
@@ -460,34 +522,32 @@ Premain-Class: io.simonis.MethodInstrumentationAgent
               <code class="terminal" data-trim="true" data-noescape="true">
 $ javac -XDignore.symbol.file=true io/simonis/MethodInstrumentationAgent.java
 
-$ jar cvfm MethodInstrumentationAgent.jar manifest.mf \
-                               io/simonis/MethodInstrumentationAgent*.class
+$ jar cvfm MetInstAgent.jar manifest.mf \
+                            io/simonis/MethodInstrumentationAgent*.class
               </code>
             </pre>
 
           </section>
-
+-->
           <section>
             <h2>Observability - Bytecode Instrumentation</h2>
 
 
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ java              -javaagent:MethodInstrumentationAgent.jar=io/simonis \
-                                                   io.simonis.HelloWorld
-<span class="fragment">-&gt; main([Ljava/lang/String;)V
--&gt; sayHello()V
-Hello JBreak!
-&lt;- sayHello()V
-  651,538ns
-&lt;- main([Ljava/lang/String;)V</span>
+$ java <span class="fragment highlight-current-border">-javaagent:MetInstAgent.jar</span>=<span class="fragment highlight-current-border">io/simonis</span> io.simonis.HelloWorld
+<span class="fragment">-&gt; main([Ljava/lang/String;)V</span>
+<span class="fragment">-&gt; sayHello()V
+Hello JBreak!</span>
+<span class="fragment">&lt;- sayHello()V
+  651,538ns</span>
+<span class="fragment">&lt;- main([Ljava/lang/String;)V</span>
 
-<span class="fragment">$ java -XX:+JBreak -javaagent:MethodInstrumentationAgent.jar=io/simonis \
-                                                   io.simonis.HelloWorld</span>
+<span class="fragment">$ java <span class="fragment highlight-current-border">-XX:+JBreak</span> -javaagent:MetInstAgent.jar=io/simonis io.simonis.HelloWorld</span>
 <span class="fragment">-&gt; main([Ljava/lang/String;)V
 Hello JBreak!
-   51,750ns
-&lt;- main([Ljava/lang/String;)V</span>
+   51,750ns</span>
+<span class="fragment">&lt;- main([Ljava/lang/String;)V</span>
               </code>
             </pre>
           </section>
@@ -518,7 +578,7 @@ Hello JBreak!
               <code class="cpp" text-trim="true" data-noescape="true">
 <![CDATA[
 // Build as follows:
-// g++ -fPIC -shared -I <JDK>/include/ -I <JDK>/include/linux/ -o traceMethodAgent.so traceMethodAgent.cpp
+// g++ -fPIC -shared -I <JDK>/include/ -I <JDK>/include/linux/ -o trMethAgent.so traceMethodAgent.cpp
 #include <jvmti.h>
 #include <stdio.h>
 #include <string.h>
@@ -598,95 +658,106 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM* jvm, char* options, void* reserved) 
 
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ java -XX:-JBreak  -agentpath:traceMethodAgent.so=io/simonis \
-                                         io.simonis.HelloWorld
-<span class="fragment">-&gt; io/simonis/HelloWorld::main([Ljava/lang/String;)V
--&gt; io/simonis/HelloWorld::sayHello()V
-Hello JBreak!
-&lt;- io/simonis/HelloWorld::sayHello()V
-24,256,161ns
-&lt;- io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
+$ java <span class="fragment highlight-current-border">-agentpath:trMethAgent.so</span>=<span class="fragment highlight-current-border">io/simonis</span> io.simonis.HelloWorld
+<span class="fragment">-&gt; io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
+<span class="fragment">-&gt; io/simonis/HelloWorld::sayHello()V
+Hello JBreak!</span>
+<span class="fragment">&lt;- io/simonis/HelloWorld::sayHello()V
+24,256,161ns</span>
+<span class="fragment">&lt;- io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
 
-<span class="fragment">$ java -XX:+JBreak -agentpath:traceMethodAgent.so=io/simonis \
-                                        io.simonis.HelloWorld</span>
+<span class="fragment">$ java <span class="fragment highlight-current-border">-XX:+JBreak</span> -agentpath:trMethAgent.so=io/simonis io.simonis.HelloWorld</span>
 <span class="fragment">-&gt; io/simonis/HelloWorld::main([Ljava/lang/String;)V
 Hello JBreak!
-  171,417ns
-&lt;- io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
+  171,417ns</span>
+<span class="fragment">&lt;- io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
               </code>
             </pre>
           </section>
 
+          <section>
+            <h2><code>jdb</code> Demo</h2>
+          </section>
         </section>
 
 
-        <section>
-          <h3 style="text-transform: none;"><a href="https://bugs.openjdk.java.net/browse/JDK-8013579">https://bugs.openjdk.java.net/browse/JDK-8013579</a></h3>
-          <img class="plain" data-src="images/8013579_intrinsics_class_redef.png" alt="JDK-8013579: Intrinsics for Java methods don't take class redefinition into account"/>
+        <section class="demo">
+          <div width="100%" style="position: relative; margin: 0 0 0 0px;">
+            <div class="" style="position: static; width: 100%">
+              <a href="https://bugs.openjdk.java.net/browse/JDK-8013579">
+                <object data="images/8013579_intrinsics_class_redef_new.png" type="image/png"
+                        style="width: 90%;">&nbsp;</object>
+              </a>
+            </div>
+            <div class="fragment" data-fragment-index="1" style="position: absolute; left: 0; top: 0; width: 100%">
+              <a href="https://bugs.openjdk.java.net/browse/JDK-8013579">
+                <object data="images/8013579_intrinsics_class_redef_new_marked.png" type="image/png"
+                        style="width: 90%;">&nbsp;</object>
+              </a>
+            </div>
+          </div>
         </section>
 
         <section style="height: 100%;">
 
           <section>
-            <h2>DEMO - Math Intrinsics</h2>
+            <h2>Math Intrinsics</h2>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="java" text-trim="true">
-<![CDATA[
-static double compute(int count, double d) {
-  for (int i = 0; i < count; i++) {
-    d += Math.pow(Math.sin(d), Math.sqrt(d)); // d += sin(d) ^ sqrt(d)
+              <code class="java" data-trim="true" data-noescape="true">
+static double compute(int <span class="fragment highlight-current-border" data-fragment-index="1">count</span>, double <span class="fragment highlight-current-border" data-fragment-index="2">d</span>) {
+  for (int i = 0; i &lt; <span class="fragment highlight-current-border" data-fragment-index="1">count</span>; i++) {
+    <span class="fragment highlight-current-border" data-fragment-index="2">d</span> += Math.pow(Math.sin(<span class="fragment highlight-current-border" data-fragment-index="2">d</span>), Math.sqrt(<span class="fragment highlight-current-border" data-fragment-index="2">d</span>)); // d += sin(d) ^ sqrt(d)
   }
-  return d;
+  return <span class="fragment highlight-current-border" data-fragment-index="2">d</span>;
 }
 
 public static void main(String[] args) throws Exception {
-  double  seed = args.length;                 // Avoid constant folding
-  int    count = Integer.parseInt(args[0]);   // Iteration count for compute()
+  double  <span class="fragment highlight-current-border" data-fragment-index="3">seed</span> = args.length;                 // Avoid constant folding
+  int    <span class="fragment highlight-current-border" data-fragment-index="4">count</span> = Integer.parseInt(args[0]);   // Iteration count for compute()
 
-  for (int i = 0; i < 20_000; i++) {
-    compute(1, seed);                         // JIT-compile compute()
+  for (int i = 0; i &lt; 20_000; i++) {
+    <span class="fragment highlight-current-border" data-fragment-index="5">compute</span>(<span class="fragment highlight-current-border" data-fragment-index="5">1</span>, <span class="fragment highlight-current-border" data-fragment-index="3">seed</span>);                         // JIT-compile compute()
   }
 
-  compute(count, seed);                       // Call compute() with huge count
+  <span class="fragment highlight-current-border" data-fragment-index="6">compute</span>(<span class="fragment highlight-current-border" data-fragment-index="6">count</span>, <span class="fragment highlight-current-border" data-fragment-index="3">seed</span>);                       // Call compute() with huge count
 }
-]]>
               </code>
             </pre>
           </section>
 
-        </section>
-
-
-        <section style="height: 100%;">
+          <section>
+            <h2>DEMO</h2>
+          </section>
 
           <section>
             <h2>Math Intrinsics &amp; Time To Safepoint (TTS)</h2>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="java" text-trim="true">
-<![CDATA[
+              <code class="java" data-trim="true" data-noescape="true">
 public static void main(String[] args) throws Exception {
   ...                                         // Same as before ...
 
-  new Thread() {                              // Create a new thread..
+  <span class="fragment highlight-current-border">new Thread()</span> {                              // Create a new thread..
     { setDaemon(true); }                      // ..and make it a daemon thread.
     public void run() {
-      while (true) {
+      <span class="fragment highlight-current-border">while (true)</span> {
         try {
-          Thread.sleep(1_000);                // Every second..
+          <span class="fragment highlight-current-border">Thread.sleep(1_000)</span>;                // Every second..
         } catch (InterruptedException e) {}
-        System.gc();                          // ..we trigger a GC.
+        <span class="fragment highlight-current-border">System.gc()</span>;                          // ..we trigger a GC.
       }
     }
   }.start();                                  // Let it run concurrently.
 
-  compute(count, seed);                       // Call compute() with huge count
-]]>
+  <span class="fragment highlight-current-border">compute(count, seed)</span>;                       // Call compute() with huge count
               </code>
             </pre>
           </section>
 
+          <section>
+            <h2>DEMO</h2>
+          </section>
 
           <section>
             <h3 style="text-transform: none;"><code>-XX:+UseCountedLoopSafepoints</code><a href="https://bugs.openjdk.java.net/browse/JDK-6869327"> (JDK-6869327)</a></h3>
@@ -776,7 +847,7 @@ public static void main(String[] args) throws Exception {
                 </code>
               </pre>
             </li>
-            <li><code>-XX:+CheckIntrinsics</code> (together with <code>@HotSpotIntrinsicCandidate</code>)><br/>
+            <li class="fragment"><code>-XX:+CheckIntrinsics</code> (together with <code>@HotSpotIntrinsicCandidate</code>)><br/>
               <pre class="big noshadow" data-trim="true">
                 <code class="cpp" text-trim="true">
 <![CDATA[
@@ -786,10 +857,10 @@ but the method is not annotated with @HotSpotIntrinsicCandidate. Exiting.
                 </code>
               </pre>
             </li>
-            <li><code>-XX:DisableIntrinsic={_dsqrt, ...}</code> (use id from <code>vmSymbols.hpp</code>)</li>
-            <li><code>-XX:+PrintIntrinsics</code></li>
-            <li><code>-XX:+Use{AES,CRC32,GHASH,MathExact,...}Intrinsics</code></li>
-            <li><code>-XX:-InlineNatives</code>, <code>-XX:-Inline{Math, Class, Thread, ...}Natives</code><br/>
+            <li class="fragment"><code>-XX:DisableIntrinsic={_dsqrt, ...}</code> (use id from <code>vmSymbols.hpp</code>)</li>
+            <li class="fragment"><code>-XX:+PrintIntrinsics</code></li>
+            <li class="fragment"><code>-XX:+Use{AES,CRC32,GHASH,MathExact,...}Intrinsics</code></li>
+            <li class="fragment"><code>-XX:-InlineNatives</code>, <code>-XX:-Inline{Math, Class, Thread, ...}Natives</code><br/>
               <code>-XX:-Inline{UnsafeOps, ArrayCopy, ObjectHash}</code></li>
           </ul>
 
@@ -798,13 +869,18 @@ but the method is not annotated with @HotSpotIntrinsicCandidate. Exiting.
 
         <section>
 
-          <h2>Native vs. Intrinsic methods</h2>
+          <h2>Native (JNI) vs. Intrinsic methods</h2>
 
           <ul>
             <li>JVM state (safepoints)</li>
             <li>Java vs. native calling conventions</li>
-            <li>Platform dependent (native implementation required!)</li>
+            <li>Platform dependent (native implementation required!)
+              <ul>
+                <li>..for every platform!</li>
+              </ul>
+            </li>
             <li>OK for 'expensive' calls like I/O</li>
+            <li style="margin-top: 3ex;">NOTICE: a native JNI call differs from a native VM "leaf call"!</li>
           </ul>
 
         </section>
@@ -829,9 +905,9 @@ do_intrinsic(_sayHello,      helloWorld, sayHello_name, sayHello_sign, F_S) \
               </code>
             </pre>
 
-            <p style="text-align:left">Define in: <code>src/share/vm/interpreter/abstractInterpreter.hpp</code></p>
+            <p class="fragment" data-fragment-index="1" style="text-align:left">Define in: <code>src/share/vm/interpreter/abstractInterpreter.hpp</code></p>
 
-            <pre class="big noshadow" data-trim="true">
+            <pre class="big noshadow fragment" data-fragment-index="1" data-trim="true">
               <code class="cpp" text-trim="true">
 <![CDATA[
 class AbstractInterpreter: AllStatic {
@@ -864,9 +940,9 @@ MethodKind AbstractInterpreter::method_kind(methodHandle m) {
               </code>
             </pre>
 
-            <p style="text-align:left">Generate in: <code>src/share/vm/interpreter/templateInterpreterGenerator.cpp</code></p>
+            <p class="fragment" data-fragment-index="1" style="text-align:left">Generate in: <code>src/share/vm/interpreter/templateInterpreterGenerator.cpp</code></p>
 
-            <pre class="big noshadow" data-trim="true">
+            <pre class="big noshadow fragment" data-fragment-index="1" data-trim="true">
               <code class="cpp" text-trim="true">
 <![CDATA[
 address TemplateInterpreterGenerator::generate_method_entry(MethodKind kind) {
@@ -909,31 +985,29 @@ address TemplateInterpreterGenerator::generate_sayHello() {
 
           </section>
 
-          <section>
+          <section style="height: 100%;">
 
             <h2>Implementing an Interpreter Intrinsics</h2>
 
             <p style="text-align:left">Enable in: <code>src/share/vm/oops/method.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
+              <code class="cpp" data-trim="true" data-noescape="true">
 vmSymbols::SID Method::klass_id_for_intrinsics(const Klass* holder) {
   // if loader is not the default loader (i.e., != NULL), we can't know the
   // intrinsics because we are not loading from core libraries
   const InstanceKlass* ik = InstanceKlass::cast(holder);
-  if (JBreak && ik->name()->equals("io/simonis/HelloWorld")) {  // <----
-    // check for io.simonis.HelloWorld                           // <----
-    return vmSymbols::find_sid(ik->name());                       // <----
-  }
-  if ((ik->class_loader() != NULL)) {
+<span class="fragment"><mark class="border-no-bottom">  if (JBreak &amp;&amp; ik-&gt;name()-&gt;equals("io/simonis/HelloWorld")) {  // &lt;----  </mark>
+<mark class="border-no-bottom-top">    // check for io.simonis.HelloWorld                          // &lt;----  </mark>
+<mark class="border-no-bottom-top">    return vmSymbols::find_sid(ik-&gt;name());                     // &lt;----  </mark>
+<mark class="border-no-top">  }                                                             // &lt;----  </mark></span>
+  if ((ik-&gt;class_loader() != NULL)) {
     return vmSymbols::NO_SID;   // regardless of name, no intrinsics here
   }
   // see if the klass name is well-known:
-  Symbol* klass_name = ik->name();
+  Symbol* klass_name = ik-&gt;name();
   return vmSymbols::find_sid(klass_name);
 }
-]]>
               </code>
             </pre>
 
@@ -949,7 +1023,7 @@ vmSymbols::SID Method::klass_id_for_intrinsics(const Klass* holder) {
 
             <h2>Implementing a C2-JIT Intrinsic</h2>
 
-            <p style="text-align:left">Intrinsify: <code>java.util.Random.nextInt()</code></p>
+            <p style="text-align:left">Intrinsify: <code>java.util.Random.nextInt()</code> (by using Intel's <code>rdrand</code> instruction)</p>
 
             <pre class="big noshadow" data-trim="true">
               <code class="java" text-trim="true">
@@ -964,9 +1038,9 @@ public class Random implements java.io.Serializable {
               </code>
             </pre>
 
-            <p style="text-align:left">Define in: <code>src/share/vm/classfile/vmSymbols.hpp</code></p>
+            <p class="fragment" data-fragment-index="1" style="text-align:left">Define in: <code>src/share/vm/classfile/vmSymbols.hpp</code></p>
 
-            <pre class="big noshadow" data-trim="true">
+            <pre class="big noshadow fragment" data-fragment-index="1" data-trim="true">
               <code class="cpp" text-trim="true">
 <![CDATA[
 do_class(     java_util_Random, "java/util/Random")                          \
@@ -998,9 +1072,9 @@ class VM_Version {
               </code>
             </pre>
 
-            <p style="text-align:left">Implement <code>rdrand</code> in: <code>src/cpu/x86/vm/assembler_x86.hpp</code></p>
+            <p class="fragment" data-fragment-index="1" style="text-align:left">Implement <code>rdrand</code> in: <code>src/cpu/x86/vm/assembler_x86.hpp</code></p>
 
-            <pre class="big noshadow" data-trim="true">
+            <pre class="big noshadow fragment" data-fragment-index="1" data-trim="true">
               <code class="cpp" text-trim="true">
 <![CDATA[
 void Assembler::rdrandl(Register dst) {
@@ -1053,7 +1127,7 @@ instruct randI(rRegI dst) %{
               </code>
             </pre>
 
-            <pre class="big noshadow" data-trim="true">
+            <pre class="big noshadow fragment" data-fragment-index="1" data-trim="true">
               <code class="cpp" text-trim="true">
 <![CDATA[
 const bool Matcher::match_rule_supported(int opcode) {
@@ -1086,7 +1160,7 @@ bool LibraryCallKit::try_to_inline(int predicate) {
               </code>
             </pre>
 
-            <pre class="big noshadow" data-trim="true">
+            <pre class="big noshadow fragment" data-fragment-index="1" data-trim="true">
               <code class="cpp" text-trim="true">
 <![CDATA[
 bool LibraryCallKit::inline_random(vmIntrinsics::ID id) {
@@ -1621,6 +1695,7 @@ Node* PhaseMacroExpand::generate_arraycopy(ArrayCopyNode *ac, AllocateArrayNode*
         progress: true,
         history: true,
         center: true,
+        slideNumber: true,
 
         transition: 'none', // none/fade/slide/convex/concave/zoom
 

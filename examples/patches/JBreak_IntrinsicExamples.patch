@@ -4,7 +4,7 @@ JBreak: Intrinsic examples
 
 diff -r bd0a95bec96b src/hotspot/cpu/x86/assembler_x86.cpp
 --- a/src/hotspot/cpu/x86/assembler_x86.cpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/cpu/x86/assembler_x86.cpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/cpu/x86/assembler_x86.cpp	Tue May 08 23:50:22 2018 +0200
 @@ -3936,6 +3936,14 @@
  }
  #endif
@@ -22,7 +22,7 @@ diff -r bd0a95bec96b src/hotspot/cpu/x86/assembler_x86.cpp
    emit_int8(0x0F);
 diff -r bd0a95bec96b src/hotspot/cpu/x86/assembler_x86.hpp
 --- a/src/hotspot/cpu/x86/assembler_x86.hpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/cpu/x86/assembler_x86.hpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/cpu/x86/assembler_x86.hpp	Tue May 08 23:50:22 2018 +0200
 @@ -1640,6 +1640,8 @@
    void popcntq(Register dst, Register src);
  #endif
@@ -34,7 +34,7 @@ diff -r bd0a95bec96b src/hotspot/cpu/x86/assembler_x86.hpp
    void prefetchnta(Address src);
 diff -r bd0a95bec96b src/hotspot/cpu/x86/templateInterpreterGenerator_x86_64.cpp
 --- a/src/hotspot/cpu/x86/templateInterpreterGenerator_x86_64.cpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/cpu/x86/templateInterpreterGenerator_x86_64.cpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/cpu/x86/templateInterpreterGenerator_x86_64.cpp	Tue May 08 23:50:22 2018 +0200
 @@ -335,6 +335,29 @@
  // Various method entries
  //
@@ -67,7 +67,7 @@ diff -r bd0a95bec96b src/hotspot/cpu/x86/templateInterpreterGenerator_x86_64.cpp
    // rbx,: Method*
 diff -r bd0a95bec96b src/hotspot/cpu/x86/vm_version_x86.cpp
 --- a/src/hotspot/cpu/x86/vm_version_x86.cpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/cpu/x86/vm_version_x86.cpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/cpu/x86/vm_version_x86.cpp	Tue May 08 23:50:22 2018 +0200
 @@ -688,7 +688,7 @@
    }
  
@@ -87,7 +87,7 @@ diff -r bd0a95bec96b src/hotspot/cpu/x86/vm_version_x86.cpp
                 (supports_aes()    ? ", aes" : ""),
 diff -r bd0a95bec96b src/hotspot/cpu/x86/vm_version_x86.hpp
 --- a/src/hotspot/cpu/x86/vm_version_x86.hpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/cpu/x86/vm_version_x86.hpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/cpu/x86/vm_version_x86.hpp	Tue May 08 23:50:22 2018 +0200
 @@ -88,7 +88,9 @@
                          : 1,
                 osxsave  : 1,
@@ -126,7 +126,7 @@ diff -r bd0a95bec96b src/hotspot/cpu/x86/vm_version_x86.hpp
    static bool supports_tsc()      { return (_features & CPU_TSC)    != 0; }
 diff -r bd0a95bec96b src/hotspot/cpu/x86/x86.ad
 --- a/src/hotspot/cpu/x86/x86.ad	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/cpu/x86/x86.ad	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/cpu/x86/x86.ad	Tue May 08 23:50:22 2018 +0200
 @@ -1236,6 +1236,10 @@
        if (VM_Version::supports_avx512dq() == false)
          ret_value = false;
@@ -156,7 +156,7 @@ diff -r bd0a95bec96b src/hotspot/cpu/x86/x86.ad
  instruct vxor4B(vecS dst, vecS src) %{
 diff -r bd0a95bec96b src/hotspot/share/classfile/vmSymbols.hpp
 --- a/src/hotspot/share/classfile/vmSymbols.hpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/share/classfile/vmSymbols.hpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/share/classfile/vmSymbols.hpp	Tue May 08 23:50:22 2018 +0200
 @@ -1352,6 +1352,15 @@
     do_name(     getAndSetObject_name,                                   "getAndSetObject")                                    \
     do_signature(getAndSetObject_signature,                              "(Ljava/lang/Object;JLjava/lang/Object;)Ljava/lang/Object;" ) \
@@ -184,7 +184,7 @@ diff -r bd0a95bec96b src/hotspot/share/classfile/vmSymbols.hpp
      LAST_MH_SIG_POLY     = _linkToInterface,
 diff -r bd0a95bec96b src/hotspot/share/interpreter/abstractInterpreter.cpp
 --- a/src/hotspot/share/interpreter/abstractInterpreter.cpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/share/interpreter/abstractInterpreter.cpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/share/interpreter/abstractInterpreter.cpp	Tue May 08 23:50:22 2018 +0200
 @@ -138,6 +138,12 @@
      case vmIntrinsics::_doubleToRawLongBits: return java_lang_Double_doubleToRawLongBits;
      default:                                 break;
@@ -208,7 +208,7 @@ diff -r bd0a95bec96b src/hotspot/share/interpreter/abstractInterpreter.cpp
      case java_util_zip_CRC32_update           : tty->print("java_util_zip_CRC32_update"); break;
 diff -r bd0a95bec96b src/hotspot/share/interpreter/abstractInterpreter.hpp
 --- a/src/hotspot/share/interpreter/abstractInterpreter.hpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/share/interpreter/abstractInterpreter.hpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/share/interpreter/abstractInterpreter.hpp	Tue May 08 23:50:22 2018 +0200
 @@ -89,6 +89,7 @@
      java_lang_Float_floatToRawIntBits,                          // implementation of java.lang.Float.floatToRawIntBits()
      java_lang_Double_longBitsToDouble,                          // implementation of java.lang.Double.longBitsToDouble()
@@ -219,7 +219,7 @@ diff -r bd0a95bec96b src/hotspot/share/interpreter/abstractInterpreter.hpp
    };
 diff -r bd0a95bec96b src/hotspot/share/interpreter/templateInterpreterGenerator.cpp
 --- a/src/hotspot/share/interpreter/templateInterpreterGenerator.cpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/share/interpreter/templateInterpreterGenerator.cpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/share/interpreter/templateInterpreterGenerator.cpp	Tue May 08 23:50:22 2018 +0200
 @@ -227,6 +227,9 @@
    method_entry(java_lang_Double_longBitsToDouble);
    method_entry(java_lang_Double_doubleToRawLongBits);
@@ -241,7 +241,7 @@ diff -r bd0a95bec96b src/hotspot/share/interpreter/templateInterpreterGenerator.
    // On other platforms the normal entry is used to enter these methods.
 diff -r bd0a95bec96b src/hotspot/share/interpreter/templateInterpreterGenerator.hpp
 --- a/src/hotspot/share/interpreter/templateInterpreterGenerator.hpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/share/interpreter/templateInterpreterGenerator.hpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/share/interpreter/templateInterpreterGenerator.hpp	Tue May 08 23:50:22 2018 +0200
 @@ -94,6 +94,7 @@
    address generate_CRC32_update_entry();
    address generate_CRC32_updateBytes_entry(AbstractInterpreter::MethodKind kind);
@@ -252,7 +252,7 @@ diff -r bd0a95bec96b src/hotspot/share/interpreter/templateInterpreterGenerator.
    address generate_Float_floatToRawIntBits_entry();
 diff -r bd0a95bec96b src/hotspot/share/oops/method.cpp
 --- a/src/hotspot/share/oops/method.cpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/share/oops/method.cpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/share/oops/method.cpp	Tue May 08 23:50:22 2018 +0200
 @@ -1458,6 +1458,10 @@
    // exception: the AES intrinsics come from lib/ext/sunjce_provider.jar
    // which does not use the class default class loader so we check for its loader here
@@ -266,7 +266,7 @@ diff -r bd0a95bec96b src/hotspot/share/oops/method.cpp
    }
 diff -r bd0a95bec96b src/hotspot/share/opto/c2compiler.cpp
 --- a/src/hotspot/share/opto/c2compiler.cpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/share/opto/c2compiler.cpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/share/opto/c2compiler.cpp	Tue May 08 23:50:22 2018 +0200
 @@ -425,6 +425,9 @@
    case vmIntrinsics::_fmaF:
      if (!UseFMA || !Matcher::match_rule_supported(Op_FmaF)) return false;
@@ -279,7 +279,7 @@ diff -r bd0a95bec96b src/hotspot/share/opto/c2compiler.cpp
    case vmIntrinsics::_getClass:
 diff -r bd0a95bec96b src/hotspot/share/opto/classes.hpp
 --- a/src/hotspot/share/opto/classes.hpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/share/opto/classes.hpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/share/opto/classes.hpp	Tue May 08 23:50:22 2018 +0200
 @@ -369,3 +369,4 @@
  macro(ExtractL)
  macro(ExtractF)
@@ -287,7 +287,7 @@ diff -r bd0a95bec96b src/hotspot/share/opto/classes.hpp
 +macro(RandI)
 diff -r bd0a95bec96b src/hotspot/share/opto/intrinsicnode.hpp
 --- a/src/hotspot/share/opto/intrinsicnode.hpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/share/opto/intrinsicnode.hpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/share/opto/intrinsicnode.hpp	Tue May 08 23:50:22 2018 +0200
 @@ -180,4 +180,12 @@
    virtual const Type* Value(PhaseGVN* phase) const;
  };
@@ -303,7 +303,7 @@ diff -r bd0a95bec96b src/hotspot/share/opto/intrinsicnode.hpp
  #endif // SHARE_VM_OPTO_INTRINSICNODE_HPP
 diff -r bd0a95bec96b src/hotspot/share/opto/library_call.cpp
 --- a/src/hotspot/share/opto/library_call.cpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/share/opto/library_call.cpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/share/opto/library_call.cpp	Tue May 08 23:50:22 2018 +0200
 @@ -225,6 +225,7 @@
    bool runtime_math(const TypeFunc* call_type, address funcAddr, const char* funcName);
    bool inline_math_native(vmIntrinsics::ID id);
@@ -343,9 +343,23 @@ diff -r bd0a95bec96b src/hotspot/share/opto/library_call.cpp
  //------------------------------inline_math-----------------------------------
  // public static double Math.abs(double)
  // public static double Math.sqrt(double)
+diff -r bd0a95bec96b src/hotspot/share/runtime/arguments.cpp
+--- a/src/hotspot/share/runtime/arguments.cpp	Fri May 04 09:29:14 2018 +0200
++++ b/src/hotspot/share/runtime/arguments.cpp	Tue May 08 23:50:22 2018 +0200
+@@ -3513,8 +3513,8 @@
+     return JNI_ENOMEM;
+   }
+ 
+-  jio_fprintf(defaultStream::error_stream(),
+-              "Picked up %s: %s\n", name, buffer);
++  //jio_fprintf(defaultStream::error_stream(),
++  //            "Picked up %s: %s\n", name, buffer);
+ 
+   int retcode = parse_options_buffer(name, buffer, strlen(buffer), vm_args);
+ 
 diff -r bd0a95bec96b src/hotspot/share/runtime/globals.hpp
 --- a/src/hotspot/share/runtime/globals.hpp	Fri May 04 09:29:14 2018 +0200
-+++ b/src/hotspot/share/runtime/globals.hpp	Mon May 07 11:05:27 2018 +0200
++++ b/src/hotspot/share/runtime/globals.hpp	Tue May 08 23:50:22 2018 +0200
 @@ -2640,6 +2640,9 @@
    diagnostic(int,  CompilerDirectivesLimit, 50,                             \
               "Limit on number of compiler directives.")                     \
@@ -358,7 +372,7 @@ diff -r bd0a95bec96b src/hotspot/share/runtime/globals.hpp
            "to use as the backing store for Java Heap.")                     \
 diff -r bd0a95bec96b src/java.base/share/classes/java/util/Random.java
 --- a/src/java.base/share/classes/java/util/Random.java	Fri May 04 09:29:14 2018 +0200
-+++ b/src/java.base/share/classes/java/util/Random.java	Mon May 07 11:05:27 2018 +0200
++++ b/src/java.base/share/classes/java/util/Random.java	Tue May 08 23:50:22 2018 +0200
 @@ -34,6 +34,7 @@
  import java.util.stream.LongStream;
  import java.util.stream.StreamSupport;
