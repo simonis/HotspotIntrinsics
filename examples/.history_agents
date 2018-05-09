@@ -1,6 +1,6 @@
-java -XX:+JBreak -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y io.simonis.HelloWorld 
-java -XX:-JBreak -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y io.simonis.HelloWorld 
-java -XX:+JBreak -agentpath:traceMethodAgent.so=io/simonis io.simonis.HelloWorld
-java -XX:-JBreak -agentpath:traceMethodAgent.so=io/simonis io.simonis.HelloWorld
-java -XX:+JBreak -javaagent:MethodInstrumentationAgent.jar=io/simonis --add-exports java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED io.simonis.HelloWorld 
-java -XX:-JBreak -javaagent:MethodInstrumentationAgent.jar=io/simonis --add-exports java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED io.simonis.HelloWorld 
+java -XX:+GeeCON -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y io.simonis.HelloWorld 
+java -XX:-GeeCON -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y io.simonis.HelloWorld 
+java -XX:+GeeCON -agentpath:traceMethodAgent.so=io/simonis io.simonis.HelloWorld
+java -XX:-GeeCON -agentpath:traceMethodAgent.so=io/simonis io.simonis.HelloWorld
+java -XX:+GeeCON -javaagent:MethodInstrumentationAgent.jar=io/simonis --add-exports java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED io.simonis.HelloWorld 
+java -XX:-GeeCON -javaagent:MethodInstrumentationAgent.jar=io/simonis --add-exports java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED io.simonis.HelloWorld 

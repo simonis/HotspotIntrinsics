@@ -2,31 +2,31 @@ HelloWorld Intrinsic
 ====================
 
 -> java -Xint io.simonis.HelloWorld
-Привет JBreak!
+Привет GeeCON!
 6,968,398ns
 
--> java -Xint -XX:+JBreak io.simonis.HelloWorld
-Привет JBreak
+-> java -Xint -XX:+GeeCON io.simonis.HelloWorld
+Привет GeeCON
   153,191ns
 
 
 Java Instrumentation Agent
 ==========================
 
-->java -XX:-JBreak -XX:-CheckIntrinsics -javaagent:MethodInstrumentationAgent.jar=io/simonis io.simonis.HelloWorld 
+->java -XX:-GeeCON -XX:-CheckIntrinsics -javaagent:MethodInstrumentationAgent.jar=io/simonis io.simonis.HelloWorld 
 
 -> main([Ljava/lang/String;)V
 -> sayHello()V
-Привет JBreak!
+Привет GeeCON!
 <- sayHello()V
   620,480ns
 <- main([Ljava/lang/String;)V
 
 
--> java -XX:+JBreak -XX:-CheckIntrinsics -javaagent:MethodInstrumentationAgent.jar=io/simonis io.simonis.HelloWorld 
+-> java -XX:+GeeCON -XX:-CheckIntrinsics -javaagent:MethodInstrumentationAgent.jar=io/simonis io.simonis.HelloWorld 
 
 -> main([Ljava/lang/String;)V
-Привет JBreak
+Привет GeeCON
   101,103ns
 <- main([Ljava/lang/String;)V
 
@@ -34,20 +34,20 @@ Java Instrumentation Agent
 JVMTI Agent
 ===========
 
--> java -XX:-JBreak -agentpath:jvmti/traceMethodAgent.so=io/simonis io.simonis.HelloWorld
+-> java -XX:-GeeCON -agentpath:jvmti/traceMethodAgent.so=io/simonis io.simonis.HelloWorld
 
 -> io/simonis/HelloWorld::main([Ljava/lang/String;)V
 -> io/simonis/HelloWorld::sayHello()V
-Привет JBreak!
+Привет GeeCON!
 <- io/simonis/HelloWorld::sayHello()V
 1,403,766ns
 <- io/simonis/HelloWorld::main([Ljava/lang/String;)V
 
 
--> java -XX:+JBreak -agentpath:jvmti/traceMethodAgent.so=io/simonis io.simonis.HelloWorld
+-> java -XX:+GeeCON -agentpath:jvmti/traceMethodAgent.so=io/simonis io.simonis.HelloWorld
 
 -> io/simonis/HelloWorld::main([Ljava/lang/String;)V
-Привет JBreak
+Привет GeeCON
    39,359ns
 <- io/simonis/HelloWorld::main([Ljava/lang/String;)V
 
@@ -55,7 +55,7 @@ JVMTI Agent
 Debugging
 =========
 
--> java -XX:-JBreak -XX:-CheckIntrinsics -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y io.simonis.HelloWorld
+-> java -XX:-GeeCON -XX:-CheckIntrinsics -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y io.simonis.HelloWorld
 
 -> jdb -attach 8000
 Set uncaught java.lang.Throwable
@@ -81,7 +81,7 @@ The application exited
 
 
 
--> java -XX:+JBreak -XX:-CheckIntrinsics -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y io.simonis.HelloWorld
+-> java -XX:+GeeCON -XX:-CheckIntrinsics -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y io.simonis.HelloWorld
 
 -> jdb -attach 8000
 Set uncaught java.lang.Throwable
