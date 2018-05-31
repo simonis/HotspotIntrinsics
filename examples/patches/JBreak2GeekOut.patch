@@ -1,0 +1,78 @@
+# HG changeset patch
+# Parent c7093045d6a675575befd2c133fdb5db3ae3919c
+GeekOut: Intrinsic examples
+
+diff -r c7093045d6a6 src/hotspot/cpu/x86/templateInterpreterGenerator_x86_64.cpp
+--- a/src/hotspot/cpu/x86/templateInterpreterGenerator_x86_64.cpp	Mon May 07 18:30:17 2018 +0200
++++ b/src/hotspot/cpu/x86/templateInterpreterGenerator_x86_64.cpp	Mon May 07 18:58:53 2018 +0200
+@@ -344,7 +344,7 @@
+   // stack: [ ret adr ] <-- rsp
+ 
+   address entry_point = __ pc();
+-  const char *msg = "\x0d0\x09f\x0d1\x080\x0d0\x0b8\x0d0\x0b2\x0d0\x0b5\x0d1\x082 JBreak!\n";
++  const char *msg = "Hello GeekOut!\n";
+   __ mov64(c_rarg1, (long)stdout);
+   __ mov64(c_rarg0, (long)msg);
+   __ xorl(rax, rax);
+diff -r c7093045d6a6 src/hotspot/share/classfile/vmSymbols.hpp
+--- a/src/hotspot/share/classfile/vmSymbols.hpp	Mon May 07 18:30:17 2018 +0200
++++ b/src/hotspot/share/classfile/vmSymbols.hpp	Mon May 07 18:58:53 2018 +0200
+@@ -1352,7 +1352,7 @@
+    do_name(     getAndSetObject_name,                                   "getAndSetObject")                                    \
+    do_signature(getAndSetObject_signature,                              "(Ljava/lang/Object;JLjava/lang/Object;)Ljava/lang/Object;" ) \
+                                                                                                                                \
+-  /* support for JBreak */                                                                                                     \
++  /* support for GeekOut */                                                                                                   \
+   do_class(     java_util_Random,         "java/util/Random")                                                                  \
+   do_intrinsic(_nextInt,                  java_util_Random,             nextInt_name, void_int_signature, F_R)                 \
+    do_name(     nextInt_name,                                           "nextInt")                                             \
+diff -r c7093045d6a6 src/hotspot/share/interpreter/abstractInterpreter.cpp
+--- a/src/hotspot/share/interpreter/abstractInterpreter.cpp	Mon May 07 18:30:17 2018 +0200
++++ b/src/hotspot/share/interpreter/abstractInterpreter.cpp	Mon May 07 18:58:53 2018 +0200
+@@ -139,7 +139,7 @@
+     default:                                 break;
+   }
+ 
+-  if (JBreak) {
++  if (GeekOut) {
+     if (m->intrinsic_id() == vmIntrinsics::_sayHello) {
+       return HelloWorld_sayHello;
+     }
+diff -r c7093045d6a6 src/hotspot/share/interpreter/templateInterpreterGenerator.cpp
+--- a/src/hotspot/share/interpreter/templateInterpreterGenerator.cpp	Mon May 07 18:30:17 2018 +0200
++++ b/src/hotspot/share/interpreter/templateInterpreterGenerator.cpp	Mon May 07 18:58:53 2018 +0200
+@@ -227,7 +227,7 @@
+   method_entry(java_lang_Double_longBitsToDouble);
+   method_entry(java_lang_Double_doubleToRawLongBits);
+ 
+-      if (JBreak) {
++      if (GeekOut) {
+         method_entry(HelloWorld_sayHello);
+       }
+ #undef method_entry
+diff -r c7093045d6a6 src/hotspot/share/oops/method.cpp
+--- a/src/hotspot/share/oops/method.cpp	Mon May 07 18:30:17 2018 +0200
++++ b/src/hotspot/share/oops/method.cpp	Mon May 07 18:58:53 2018 +0200
+@@ -1458,7 +1458,7 @@
+   // exception: the AES intrinsics come from lib/ext/sunjce_provider.jar
+   // which does not use the class default class loader so we check for its loader here
+   const InstanceKlass* ik = InstanceKlass::cast(holder);
+-  if (JBreak && ik->name()->equals("io/simonis/HelloWorld")) {
++  if (GeekOut && ik->name()->equals("io/simonis/HelloWorld")) {
+     // check for io.simonis.HelloWorld
+     return vmSymbols::find_sid(ik->name());
+   }
+diff -r c7093045d6a6 src/hotspot/share/runtime/globals.hpp
+--- a/src/hotspot/share/runtime/globals.hpp	Mon May 07 18:30:17 2018 +0200
++++ b/src/hotspot/share/runtime/globals.hpp	Mon May 07 18:58:53 2018 +0200
+@@ -2640,8 +2640,8 @@
+   diagnostic(int,  CompilerDirectivesLimit, 50,                             \
+              "Limit on number of compiler directives.")                     \
+                                                                             \
+-  product(bool, JBreak, false,                                              \
+-          "Enable some JBreak specific features")                           \
++  product(bool, GeekOut, false,                                              \
++          "Enable some GeekOut specific features")                           \
+                                                                             \
+   product(ccstr, AllocateHeapAt, NULL,                                      \
+           "Path to the directoy where a temporary file will be created "    \
