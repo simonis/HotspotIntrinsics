@@ -344,7 +344,7 @@ Java: Unsafe.loadFence()
 public class HelloWorld {
 
   public static void sayHello() {
-      System.out.println("Hello JBreak!");
+      System.out.println("Hello GeekOut!");
   }
 
   public static void main(String ... args) {
@@ -367,21 +367,21 @@ public class HelloWorld {
               <code class="terminal" data-trim="true" data-noescape="true">
 $<span class="fragment"> javac io/simonis/HelloWorld.java
 $</span> <span class="fragment">java  io.simonis.HelloWorld
-Hello JBreak!
+Hello GeekOut!
 1,368,398ns
 
-$</span> <span class="fragment">java <span class="fragment highlight-current-border">-XX:+JBreak</span> io.simonis.HelloWorld
-Hello JBreak!
+$</span> <span class="fragment">java <span class="fragment highlight-current-border">-XX:+GeekOut</span> io.simonis.HelloWorld
+Hello GeekOut!
    <span class="fragment highlight-current-border">83,191ns</span>
 
-$</span> <span class="fragment">sed -i 's/<span class="fragment highlight-current-border">Hello JBreak</span>/<span class="fragment highlight-current-border">Hello World</span>/g' <span class="fragment highlight-current-border">io/simonis/HelloWorld.java</span>
+$</span> <span class="fragment">sed -i 's/<span class="fragment highlight-current-border">Hello GeekOut</span>/<span class="fragment highlight-current-border">Hello World</span>/g' <span class="fragment highlight-current-border">io/simonis/HelloWorld.java</span>
 $</span> <span class="fragment">javac io/simonis/HelloWorld.java
 $</span> <span class="fragment">java  io.simonis.HelloWorld
 <span class="fragment highlight-current-border">Hello World!</span>
 1,483,216ns
 
-$</span> <span class="fragment">java <span class="fragment highlight-current-border">-XX:+JBreak</span> io.simonis.HelloWorld
-<span class="fragment highlight-current-border">Hello JBreak!</span>
+$</span> <span class="fragment">java <span class="fragment highlight-current-border">-XX:+GeekOut</span> io.simonis.HelloWorld
+<span class="fragment highlight-current-border">Hello GeekOut!</span>
    82,514ns</span>
               </code>
             </pre>
@@ -538,14 +538,14 @@ $ jar cvfm MetInstAgent.jar manifest.mf \
 $ java <span class="fragment highlight-current-border">-javaagent:MetInstAgent.jar</span>=<span class="fragment highlight-current-border">io/simonis</span> io.simonis.HelloWorld
 <span class="fragment">-&gt; main([Ljava/lang/String;)V</span>
 <span class="fragment">-&gt; sayHello()V
-Hello JBreak!</span>
+Hello GeekOut!</span>
 <span class="fragment">&lt;- sayHello()V
   651,538ns</span>
 <span class="fragment">&lt;- main([Ljava/lang/String;)V</span>
 
-<span class="fragment">$ java <span class="fragment highlight-current-border">-XX:+JBreak</span> -javaagent:MetInstAgent.jar=io/simonis io.simonis.HelloWorld</span>
+<span class="fragment">$ java <span class="fragment highlight-current-border">-XX:+GeekOut</span> -javaagent:MetInstAgent.jar=io/simonis io.simonis.HelloWorld</span>
 <span class="fragment">-&gt; main([Ljava/lang/String;)V
-Hello JBreak!
+Hello GeekOut!
    51,750ns</span>
 <span class="fragment">&lt;- main([Ljava/lang/String;)V</span>
               </code>
@@ -661,14 +661,14 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM* jvm, char* options, void* reserved) 
 $ java <span class="fragment highlight-current-border">-agentpath:trMethAgent.so</span>=<span class="fragment highlight-current-border">io/simonis</span> io.simonis.HelloWorld
 <span class="fragment">-&gt; io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
 <span class="fragment">-&gt; io/simonis/HelloWorld::sayHello()V
-Hello JBreak!</span>
+Hello GeekOut!</span>
 <span class="fragment">&lt;- io/simonis/HelloWorld::sayHello()V
 24,256,161ns</span>
 <span class="fragment">&lt;- io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
 
-<span class="fragment">$ java <span class="fragment highlight-current-border">-XX:+JBreak</span> -agentpath:trMethAgent.so=io/simonis io.simonis.HelloWorld</span>
+<span class="fragment">$ java <span class="fragment highlight-current-border">-XX:+GeekOut</span> -agentpath:trMethAgent.so=io/simonis io.simonis.HelloWorld</span>
 <span class="fragment">-&gt; io/simonis/HelloWorld::main([Ljava/lang/String;)V
-Hello JBreak!
+Hello GeekOut!
   171,417ns</span>
 <span class="fragment">&lt;- io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
               </code>
@@ -933,7 +933,7 @@ class AbstractInterpreter: AllStatic {
 <![CDATA[
 MethodKind AbstractInterpreter::method_kind(methodHandle m) {
   ...
-  if (JBreak) {
+  if (GeekOut) {
     if (m->intrinsic_id() == vmIntrinsics::_sayHello) {                       
       return HelloWorld_sayHello;
 ]]>
@@ -970,7 +970,7 @@ address TemplateInterpreterGenerator::generate_sayHello() {
   // r13: sender sp
   // stack: [ ret adr ] <-- rsp
   address entry_point = __ pc();
-  const char *msg = "Hello JBreak!\n";
+  const char *msg = "Hello GeekOut!\n";
   __ mov64(c_rarg1, (long)stdout);
   __ mov64(c_rarg0, (long)msg);
   __ call(RuntimeAddress(CAST_FROM_FN_PTR(address, fputs)));
@@ -997,7 +997,7 @@ vmSymbols::SID Method::klass_id_for_intrinsics(const Klass* holder) {
   // if loader is not the default loader (i.e., != NULL), we can't know the
   // intrinsics because we are not loading from core libraries
   const InstanceKlass* ik = InstanceKlass::cast(holder);
-<span class="fragment"><mark class="border-no-bottom">  if (JBreak &amp;&amp; ik-&gt;name()-&gt;equals("io/simonis/HelloWorld")) {  // &lt;----  </mark>
+<span class="fragment"><mark class="border-no-bottom">  if (GeekOut &amp;&amp; ik-&gt;name()-&gt;equals("io/simonis/HelloWorld")) {  // &lt;----  </mark>
 <mark class="border-no-bottom-top">    // check for io.simonis.HelloWorld                          // &lt;----  </mark>
 <mark class="border-no-bottom-top">    return vmSymbols::find_sid(ik-&gt;name());                     // &lt;----  </mark>
 <mark class="border-no-top">  }                                                             // &lt;----  </mark></span>
@@ -1740,7 +1740,7 @@ hljs.initHighlightingOnLoad(); } },
  -->
 <!--  LocalWords:  Observability Bytecode runtime bytecodes Ljava sayHello ns
  -->
-<!--  LocalWords:  JBreak JVMTI JNI fPIC JDK traceMethodAgent cpp TTS Safepoint
+<!--  LocalWords:  GeekOut JVMTI JNI fPIC JDK traceMethodAgent cpp TTS Safepoint
  -->
 <!--  LocalWords:  unboxing JIT JVM safepoints Intrinsify
  -->
