@@ -1,0 +1,109 @@
+# HG changeset patch
+# Parent 9d8bc35a4d0889c2d48ac2a317a0966ae0357027
+Intrinsification of java.util.Random::nextInt() in C1
+
+diff -r 9d8bc35a4d08 -r 592c18aaca18 src/hotspot/cpu/x86/c1_LIRAssembler_x86.cpp
+--- a/src/hotspot/cpu/x86/c1_LIRAssembler_x86.cpp	Thu May 31 14:22:36 2018 +0200
++++ b/src/hotspot/cpu/x86/c1_LIRAssembler_x86.cpp	Wed Jun 06 09:24:19 2018 +0200
+@@ -3957,6 +3957,10 @@
+ #endif // _LP64
+ }
+ 
++void LIR_Assembler::next_int(LIR_Opr result_reg) {
++  assert(result_reg->is_register(), "check");
++  __ rdrandl(result_reg->as_register());
++}
+ 
+ void LIR_Assembler::peephole(LIR_List*) {
+   // do nothing for now
+diff -r 9d8bc35a4d08 -r 592c18aaca18 src/hotspot/cpu/x86/c1_LIRAssembler_x86.hpp
+--- a/src/hotspot/cpu/x86/c1_LIRAssembler_x86.hpp	Thu May 31 14:22:36 2018 +0200
++++ b/src/hotspot/cpu/x86/c1_LIRAssembler_x86.hpp	Wed Jun 06 09:24:19 2018 +0200
+@@ -62,4 +62,6 @@
+   void store_parameter(jobject c,   int offset_from_esp_in_words);
+   void store_parameter(Metadata* c, int offset_from_esp_in_words);
+ 
++  void next_int(LIR_Opr dst);
++
+ #endif // CPU_X86_VM_C1_LIRASSEMBLER_X86_HPP
+diff -r 9d8bc35a4d08 -r 592c18aaca18 src/hotspot/share/c1/c1_Compiler.cpp
+--- a/src/hotspot/share/c1/c1_Compiler.cpp	Thu May 31 14:22:36 2018 +0200
++++ b/src/hotspot/share/c1/c1_Compiler.cpp	Wed Jun 06 09:24:19 2018 +0200
+@@ -137,6 +137,9 @@
+   case vmIntrinsics::_onSpinWait:
+     if (!VM_Version::supports_on_spin_wait()) return false;
+     break;
++  case vmIntrinsics::_nextInt:
++    if (!VM_Version::supports_rdrand()) return false;
++    break;
+   case vmIntrinsics::_arraycopy:
+   case vmIntrinsics::_currentTimeMillis:
+   case vmIntrinsics::_nanoTime:
+diff -r 9d8bc35a4d08 -r 592c18aaca18 src/hotspot/share/c1/c1_LIR.cpp
+--- a/src/hotspot/share/c1/c1_LIR.cpp	Thu May 31 14:22:36 2018 +0200
++++ b/src/hotspot/share/c1/c1_LIR.cpp	Wed Jun 06 09:24:19 2018 +0200
+@@ -446,6 +446,7 @@
+     case lir_std_entry:                // may have result, info always invalid
+     case lir_osr_entry:                // may have result, info always invalid
+     case lir_get_thread:               // may have result, info always invalid
++    case lir_next_int:
+     {
+       assert(op->as_Op0() != NULL, "must be");
+       if (op->_info != NULL)           do_info(op->_info);
+@@ -1644,6 +1645,7 @@
+      case lir_label:                 s = "label";         break;
+      case lir_nop:                   s = "nop";           break;
+      case lir_on_spin_wait:          s = "on_spin_wait";  break;
++     case lir_next_int:              s = "next_int";      break;
+      case lir_backwardbranch_target: s = "backbranch";    break;
+      case lir_std_entry:             s = "std_entry";     break;
+      case lir_osr_entry:             s = "osr_entry";     break;
+diff -r 9d8bc35a4d08 -r 592c18aaca18 src/hotspot/share/c1/c1_LIR.hpp
+--- a/src/hotspot/share/c1/c1_LIR.hpp	Thu May 31 14:22:36 2018 +0200
++++ b/src/hotspot/share/c1/c1_LIR.hpp	Wed Jun 06 09:24:19 2018 +0200
+@@ -901,6 +901,7 @@
+       , lir_membar_storeload
+       , lir_get_thread
+       , lir_on_spin_wait
++      , lir_next_int
+   , end_op0
+   , begin_op1
+       , lir_fxch
+@@ -2071,6 +2072,8 @@
+ 
+   void on_spin_wait()                            { append(new LIR_Op0(lir_on_spin_wait)); }
+ 
++  void next_int(LIR_Opr result)                  { append(new LIR_Op0(lir_next_int, result)); }
++
+   void branch_destination(Label* lbl)            { append(new LIR_OpLabel(lbl)); }
+ 
+   void negate(LIR_Opr from, LIR_Opr to)          { append(new LIR_Op1(lir_neg, from, to)); }
+diff -r 9d8bc35a4d08 -r 592c18aaca18 src/hotspot/share/c1/c1_LIRAssembler.cpp
+--- a/src/hotspot/share/c1/c1_LIRAssembler.cpp	Thu May 31 14:22:36 2018 +0200
++++ b/src/hotspot/share/c1/c1_LIRAssembler.cpp	Wed Jun 06 09:24:19 2018 +0200
+@@ -683,7 +683,11 @@
+     case lir_on_spin_wait:
+       on_spin_wait();
+       break;
+-
++#if defined(X86)
++    case lir_next_int:
++      next_int(op->result_opr());
++      break;
++#endif
+     default:
+       ShouldNotReachHere();
+       break;
+diff -r 9d8bc35a4d08 -r 592c18aaca18 src/hotspot/share/c1/c1_LIRGenerator.cpp
+--- a/src/hotspot/share/c1/c1_LIRGenerator.cpp	Thu May 31 14:22:36 2018 +0200
++++ b/src/hotspot/share/c1/c1_LIRGenerator.cpp	Wed Jun 06 09:24:19 2018 +0200
+@@ -3049,6 +3049,9 @@
+   case vmIntrinsics::_onSpinWait:
+     __ on_spin_wait();
+     break;
++  case vmIntrinsics::_nextInt:
++    __ next_int(rlock_result(x));
++    break;
+   case vmIntrinsics::_Reference_get:
+     do_Reference_get(x);
+     break;
