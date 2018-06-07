@@ -165,6 +165,80 @@ code.terminal .hljs-title {
     border-left-width: 2px;
   }
 
+/* The Quiz (background) */
+.reveal .slides section .quiz {
+    display: none; /* Hidden by default */
+}
+
+.reveal .slides section .fragment.quiz {
+    display: none; /* Hidden by default */
+}
+
+.reveal .slides section .fragment.quiz.current-fragment {
+    display: block;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+}
+
+/* Quiz Content */
+.reveal .slides section .quiz-content {
+    display: inline-block;
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: auto;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+.reveal .slides section .quiz-header {
+    padding: 12px 12px;
+    background-color: #7571ff;
+/*  background-color: #5cb85c; */
+    color: white;
+}
+
+.reveal .slides section .quiz-header h2 {
+    margin: 0;
+}
+
+.reveal .slides section .quiz-body {
+    padding: 12px 16px;
+    color: #3f3f3f;
+}
+
+.reveal .slides section .quiz-body li:not(:last-child) {
+    margin-bottom: 15px;
+}
+
+.reveal .slides section .quiz-footer {
+    padding: 12px 16px;
+    background-color: #7571ff;
+/*  background-color: #5cb85c; */
+    color: white;
+}
   </style>
 
     <!-- Printing and PDF exports -->
@@ -204,6 +278,17 @@ code.terminal .hljs-title {
   (delete-region p1 p2)
   (insert resultStr)
 )
+(defun make-fragment-highlight-current-border (p1 p2)
+  "Wraps the selection into 'fragment highlight-current-border' <span>s and quotes '&', '<' and '>'."
+  (interactive "r")
+  (setq inputStr (buffer-substring-no-properties p1 p2))
+  (setq inputStr (replace-regexp-in-string "&" "&amp;" inputStr))
+  (setq inputStr (replace-regexp-in-string "<" "&lt;" inputStr))
+  (setq inputStr (replace-regexp-in-string ">" "&gt;" inputStr))
+  (setq resultStr (concat "<span class=\"fragment highlight-current-border\">" (concat inputStr "</span>")))
+  (delete-region p1 p2)
+  (insert resultStr)
+)
 (defun make-fragment-simple (p1 p2)
   "Wraps the selection into 'fragment' <span>s without any quoting."
   (interactive "r")
@@ -224,6 +309,7 @@ code.terminal .hljs-title {
 )
 
 (global-set-key (kbd "C-f") 'make-fragment)
+(global-set-key (kbd "C-ö") 'make-fragment-highlight-current-border)
 (global-set-key (kbd "C-S-f") 'make-fragment-simple)
 (global-set-key (kbd "C-S-q") 'quote-fragment)
 ;; revert key-binding
@@ -339,24 +425,23 @@ Java: Unsafe.loadFence()
             <h2>The &ldquo;<code>HelloWorld</code>&rdquo; Intrinsic</h2>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="java" text-trim="true">
-<![CDATA[
+              <code class="java" data-trim="true" data-noescape="true">
 public class HelloWorld {
 
-  public static void sayHello() {
-      System.out.println("Hello GeekOut!");
+  // Intrinsify if running with -XX:+GeekOut
+  public static void <span class="fragment highlight-current-border">sayHello()</span> {
+      System.out.println(<span class="fragment highlight-current-border">"Hello GeekOut!"</span>);
   }
 
   public static void main(String ... args) {
 
     long start = System.nanoTime();
-    sayHello();
+    <span class="fragment highlight-current-border">sayHello()</span>;
     long stop = System.nanoTime();
 
     System.out.format("%,9d%s%n", stop - start, "ns");
   }
 }
-]]>
               </code>
             </pre>
           </section>
@@ -368,7 +453,7 @@ public class HelloWorld {
 $<span class="fragment"> javac io/simonis/HelloWorld.java
 $</span> <span class="fragment">java  io.simonis.HelloWorld
 Hello GeekOut!
-1,368,398ns
+<span class="fragment highlight-current-border">1,368,398ns</span>
 
 $</span> <span class="fragment">java <span class="fragment highlight-current-border">-XX:+GeekOut</span> io.simonis.HelloWorld
 Hello GeekOut!
@@ -535,21 +620,40 @@ $ jar cvfm MetInstAgent.jar manifest.mf \
 
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ java <span class="fragment highlight-current-border">-javaagent:MetInstAgent.jar</span>=<span class="fragment highlight-current-border">io/simonis</span> io.simonis.HelloWorld
-<span class="fragment">-&gt; main([Ljava/lang/String;)V</span>
-<span class="fragment">-&gt; sayHello()V
+$ java <span class="fragment highlight-current-border" data-fragment-index="1">-javaagent:MetInstAgent.jar</span>=<span class="fragment highlight-current-border" data-fragment-index="2">io/simonis</span> io.simonis.HelloWorld
+<span class="fragment" data-fragment-index="3">-&gt; main([Ljava/lang/String;)V</span>
+<span class="fragment" data-fragment-index="4">-&gt; sayHello()V
 Hello GeekOut!</span>
-<span class="fragment">&lt;- sayHello()V
-  651,538ns</span>
-<span class="fragment">&lt;- main([Ljava/lang/String;)V</span>
+<span class="fragment" data-fragment-index="5">&lt;- sayHello()V
+  <span class="fragment highlight-border" data-fragment-index="11">651,538ns</span></span>
+<span class="fragment" data-fragment-index="6">&lt;- main([Ljava/lang/String;)V</span>
 
-<span class="fragment">$ java <span class="fragment highlight-current-border">-XX:+GeekOut</span> -javaagent:MetInstAgent.jar=io/simonis io.simonis.HelloWorld</span>
-<span class="fragment">-&gt; main([Ljava/lang/String;)V
+<span class="fragment" data-fragment-index="7">$ java <span class="fragment highlight-current-border" data-fragment-index="8">-XX:+GeekOut</span> -javaagent:MetInstAgent.jar=io/simonis io.simonis.HelloWorld</span>
+<span class="fragment" data-fragment-index="9">-&gt; main([Ljava/lang/String;)V
 Hello GeekOut!
    51,750ns</span>
-<span class="fragment">&lt;- main([Ljava/lang/String;)V</span>
+<span class="fragment" data-fragment-index="10">&lt;- main([Ljava/lang/String;)V</span>
               </code>
             </pre>
+
+<div class="quiz fragment" data-fragment-index="12">
+  <!-- Quiz content -->
+  <div class="quiz-content">
+    <div class="quiz-header">
+      <h2>Why is the instrumented code faster ?</h2>
+    </div>
+    <div class="quiz-body">
+      <table>
+        <tr><td>Without</td><td>instrumentation</td><td style="text-align:right"><b>1,368,398</b> ns</td></tr>
+        <tr><td>With   </td><td>instrumentation</td><td style="text-align:right">  <b>651,538</b> ns</td></tr>
+      </table>
+    </div>
+    <div class="quiz-footer">
+      &nbsp;
+    </div>
+  </div>
+</div>
+
           </section>
 
         </section>
@@ -658,19 +762,19 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM* jvm, char* options, void* reserved) 
 
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ java <span class="fragment highlight-current-border">-agentpath:trMethAgent.so</span>=<span class="fragment highlight-current-border">io/simonis</span> io.simonis.HelloWorld
-<span class="fragment">-&gt; io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
-<span class="fragment">-&gt; io/simonis/HelloWorld::sayHello()V
+$ java <span class="fragment highlight-current-border" data-fragment-index="1">-agentpath:trMethAgent.so</span>=<span class="fragment highlight-current-border" data-fragment-index="2">io/simonis</span> io.simonis.HelloWorld
+<span class="fragment" data-fragment-index="3">-&gt; io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
+<span class="fragment" data-fragment-index="4">-&gt; io/simonis/HelloWorld::sayHello()V
 Hello GeekOut!</span>
-<span class="fragment">&lt;- io/simonis/HelloWorld::sayHello()V
-24,256,161ns</span>
-<span class="fragment">&lt;- io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
+<span class="fragment" data-fragment-index="5">&lt;- io/simonis/HelloWorld::sayHello()V
+<span class="fragment highlight-current-border" data-fragment-index="11">24,256,161ns</span></span>
+<span class="fragment" data-fragment-index="6">&lt;- io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
 
-<span class="fragment">$ java <span class="fragment highlight-current-border">-XX:+GeekOut</span> -agentpath:trMethAgent.so=io/simonis io.simonis.HelloWorld</span>
-<span class="fragment">-&gt; io/simonis/HelloWorld::main([Ljava/lang/String;)V
+<span class="fragment" data-fragment-index="7">$ java <span class="fragment highlight-current-border" data-fragment-index="8">-XX:+GeekOut</span> -agentpath:trMethAgent.so=io/simonis io.simonis.HelloWorld</span>
+<span class="fragment" data-fragment-index="9">-&gt; io/simonis/HelloWorld::main([Ljava/lang/String;)V
 Hello GeekOut!
   171,417ns</span>
-<span class="fragment">&lt;- io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
+<span class="fragment" data-fragment-index="10">&lt;- io/simonis/HelloWorld::main([Ljava/lang/String;)V</span>
               </code>
             </pre>
           </section>
