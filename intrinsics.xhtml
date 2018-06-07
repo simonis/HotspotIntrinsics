@@ -322,6 +322,7 @@ code.terminal .hljs-title {
 (add-to-list 'html-tag-alist '("code"))
 (add-to-list 'sgml-tag-alist '("code"))
 
+;; Use 'M-x sgml-tags-invisible' to hide/display HTML/SGML tags
 -->
 
   <body>
@@ -780,7 +781,7 @@ Hello GeekOut!
           </section>
 
           <section>
-            <h2><code>jdb</code> Demo</h2>
+            <h1><code>jdb</code> Demo</h1>
           </section>
         </section>
 
@@ -831,7 +832,7 @@ public static void main(String[] args) throws Exception {
           </section>
 
           <section>
-            <h2>DEMO</h2>
+            <h1>Math Intrinsics Demo</h1>
           </section>
 
           <section>
@@ -860,12 +861,17 @@ public static void main(String[] args) throws Exception {
           </section>
 
           <section>
-            <h2>DEMO</h2>
+            <h1>Safepoint Demo</h1>
           </section>
 
           <section>
             <h3 style="text-transform: none;"><code>-XX:+UseCountedLoopSafepoints</code><a href="https://bugs.openjdk.java.net/browse/JDK-6869327"> (JDK-6869327)</a></h3>
             <img class="plain" data-src="images/6869327_counted_loop_safep.png" alt="JDK-6869327: Add new C2 flag to keep safepoints in counted loops"/>
+          </section>
+
+          <section>
+            <h2><a href="https://player.vimeo.com/video/221265923">GeekOut 2017: HotSpot Internals - Signals, Safepoints...</a></h2>
+            <a href="https://player.vimeo.com/video/221265923"><img class="plain" data-src="images/GeekOut2017_HotspotInternals.jpg" alt="GeekOut 2017: HotSpot Internals - Signals, Safepoints and NullPointers"/></a>
           </section>
 
 <!--
@@ -878,114 +884,120 @@ public static void main(String[] args) throws Exception {
 
 
         <section style="height: 100%;">
-          <h2>HotSpot Intrinsics</h2>
 
-          <p style="text-align:left">Defined in: <code>src/share/vm/classfile/vmSymbols.hpp</code></p>
+          <section style="height: 100%;">
+            <h2>HotSpot Intrinsics</h2>
 
-          <ul>
-            <li>Library intrinsics (~260)
-              <ul>
-                <li>Library methods replaced by assembly, IR or both</li>
-              </ul>
-            </li>
-            <li>Bytecode intrinsics (~40)
-              <ul>
-                <li>Late/always inlining candidates (e.g. <code>StringBuffer::*</code>, boxing/unboxing methods)</li>
-                <li>See: <code>Compile::should_delay_string_inlining()</code> in <code>doCall.cpp</code></li>
-                <li>See: <code>InlineTree::should_inline()</code> in <code>bytecodeInfo.cpp</code></li>
-              </ul>
-            </li>
-            <li><em>Only for system classes</em></li>
-            <li>Must be annotated with <code>jdk.internal.HotSpotIntrinsicCandidate</code> (since Java 9)
-              <ul>
-                <li>Checked by <code>-XX:+CheckIntrinsics</code></li>
-              </ul>
-            </li>
-          </ul>
+            <h3 class="fragment"><b style="color: red;">DISCLAIMER:</b> <b><em>Only for system classes</em></b> <b style="color: red;">!!!</b></h3>
 
-        </section>
+            <ul>
+              <span class="fragment"><li>Must be annotated with <code>jdk.internal.HotSpotIntrinsicCandidate</code> (since Java 9)
+                  <ul>
+                    <li>Checked by <code>-XX:+CheckIntrinsics</code> (on by default)<br/>&nbsp;</li>
+                  </ul>
+              </li></span>
+              <span class="fragment"><li>Defined in: <code>share/classfile/vmSymbols.hpp</code><br/>&nbsp;</li></span>
+              <span class="fragment"><li>Library intrinsics (~260)
+                  <ul>
+                    <li>Library methods replaced by assembly, IR or both<br/>&nbsp;</li>
+                  </ul>
+              </li></span>
+              <span class="fragment"><li>Bytecode intrinsics (~40)
+                  <ul>
+                    <li>Late/always inlining candidates (e.g. <code>StringBuffer::*</code>, boxing/unboxing methods)</li>
+                    <li>See: <code>Compile::should_delay_string_inlining()</code> in <code>doCall.cpp</code></li>
+                    <li>See: <code>InlineTree::should_inline()</code> in <code>bytecodeInfo.cpp</code></li>
+                  </ul>
+              </li></span>
+            </ul>
 
-
-        <section style="height: 100%;">
-          <h2>Library Intrinsics</h2>
-
-          <ul>
-            <li>Interpreter:
-              <ul>
-                <li>Implements only few intrinsics (notably <code>Math</code> and <code>CRC32</code>)</li>
-                <li>Generates special entry points (see: <code>AbstractInterpreter::MethodKind()</code>)</li>
-              </ul>
-            </li>
-            <li>C1 (aka "client") JIT:
-              <ul>
-                <li>Mostly <code>Unsafe</code> and <code>Math</code> intrinsics (see <code>Compiler::is_intrinsic_supported()</code>)</li>
-                <li>See: <code>GraphBuilder::build_graph_for_intrinsic()</code></li>
-              </ul>
-            </li>
-            <li>C2 (aka "server") JIT:<ul>
-                <li>See <code>C2Compiler::is_intrinsic_supported()</code> for a complete list</li>
-                <li>See <code>LibraryCallKit::try_to_inline()</code> in <code>library_call.cpp</code></li>
-                <li>Create new "Intermediate Representation" (i.e. IR) nodes..<br/>
-                  ..and match these nodes with corresponding "Machine Nodes" in <code>.ad</code> file</li>
-                <li>Use <code>IdealKit</code>/<code>GraphKit</code> to mimic the functionality directly in IR<br/>
-                  (see <code>PhaseStringOpts</code> methods in <code>stringopts.hpp</code></li>
-              </ul>
-            </li>
-          </ul>
-
-        </section>
+          </section>
 
 
-        <section style="height: 100%;">
-          <h2>Controlling Intrinsics</h2>
+          <section style="height: 100%;">
+            <h2>Library Intrinsics</h2>
 
-          <ul>
-            <li><code>-XX:+PrintCompilation -XX:+PrintInlining</code><br/>
-              <pre class="big noshadow" data-trim="true">
-                <code class="cpp" text-trim="true">
+            <ul>
+              <span class="fragment"><li>Interpreter:
+                <ul>
+                  <li>Implements only few intrinsics (notably <code>Math</code> and <code>CRC32</code>)</li>
+                  <li>Generates special entry points (see: <code>AbstractInterpreter::MethodKind()</code>)</li>
+                </ul>
+              </li></span>
+              <span class="fragment"><li>C1 (aka "client") JIT:
+                <ul>
+                  <li>Mostly <code>Unsafe</code> and <code>Math</code> intrinsics (see <code>Compiler::is_intrinsic_supported()</code>)</li>
+                  <li>See: <code>GraphBuilder::build_graph_for_intrinsic()</code></li>
+                </ul>
+              </li></span>
+              <span class="fragment"><li>C2 (aka "server") JIT:<ul>
+                  <li>See <code>C2Compiler::is_intrinsic_supported()</code> for a complete list</li>
+                  <li>See <code>LibraryCallKit::try_to_inline()</code> in <code>library_call.cpp</code></li>
+                  <li>Create new "Intermediate Representation" (i.e. IR) nodes..<br/>
+                    ..and match these nodes with corresponding "Machine Nodes" in <code>.ad</code> file</li>
+                  <li>Use <code>IdealKit</code>/<code>GraphKit</code> to mimic the functionality directly in IR<br/>
+                    (see <code>PhaseStringOpts</code> methods in <code>stringopts.hpp</code>)</li>
+                </ul>
+              </li></span>
+            </ul>
+
+          </section>
+
+
+          <section style="height: 100%;">
+            <h2>Controlling Intrinsics</h2>
+
+            <ul>
+              <li><code>-XX:+PrintCompilation -XX:+PrintInlining</code><br/>
+                <pre class="big noshadow" data-trim="true">
+                  <code class="cpp" text-trim="true">
 <![CDATA[
 613    1    b        io.simonis.Loop::compute (29 bytes)
                         @ 9   java.lang.Math::sin (5 bytes)   (intrinsic)    
                         @ 13   java.lang.Math::sqrt (5 bytes)   (intrinsic)
 ]]>
-                </code>
-              </pre>
-            </li>
-            <li class="fragment"><code>-XX:+CheckIntrinsics</code> (together with <code>@HotSpotIntrinsicCandidate</code>)><br/>
-              <pre class="big noshadow" data-trim="true">
-                <code class="cpp" text-trim="true">
+                  </code>
+                </pre>
+              </li>
+              <li class="fragment"><code>-XX:+CheckIntrinsics</code> (together with <code>@HotSpotIntrinsicCandidate</code>)><br/>
+                <pre class="big noshadow" data-trim="true">
+                  <code class="cpp" text-trim="true">
 <![CDATA[
 Compiler intrinsic is defined for method [io.simonis.HelloWorld.sayHello()V],
 but the method is not annotated with @HotSpotIntrinsicCandidate. Exiting.
 ]]>
-                </code>
-              </pre>
-            </li>
-            <li class="fragment"><code>-XX:DisableIntrinsic={_dsqrt, ...}</code> (use id from <code>vmSymbols.hpp</code>)</li>
-            <li class="fragment"><code>-XX:+PrintIntrinsics</code></li>
-            <li class="fragment"><code>-XX:+Use{AES,CRC32,GHASH,MathExact,...}Intrinsics</code></li>
-            <li class="fragment"><code>-XX:-InlineNatives</code>, <code>-XX:-Inline{Math, Class, Thread, ...}Natives</code><br/>
-              <code>-XX:-Inline{UnsafeOps, ArrayCopy, ObjectHash}</code></li>
-          </ul>
+                  </code>
+                </pre>
+              </li>
+              <li class="fragment"><code>-XX:DisableIntrinsic={_dsqrt, ...}</code> (use id from <code>vmSymbols.hpp</code>)</li>
+              <li class="fragment"><code>-XX:+PrintIntrinsics</code></li>
+              <li class="fragment"><code>-XX:+Use{AES,CRC32,GHASH,MathExact,...}Intrinsics</code></li>
+              <li class="fragment"><code>-XX:-InlineNatives</code>, <code>-XX:-Inline{Math, Class, Thread, ...}Natives</code><br/>
+                <code>-XX:-Inline{UnsafeOps, ArrayCopy, ObjectHash}</code></li>
+            </ul>
 
-        </section>
+          </section>
 
 
-        <section>
+          <section>
 
-          <h2>Native (JNI) vs. Intrinsic methods</h2>
+            <h2>Native (JNI) vs. Intrinsic methods</h2>
 
-          <ul>
-            <li>JVM state (safepoints)</li>
-            <li>Java vs. native calling conventions</li>
-            <li>Platform dependent (native implementation required!)
-              <ul>
-                <li>..for every platform!</li>
-              </ul>
-            </li>
-            <li>OK for 'expensive' calls like I/O</li>
-            <li style="margin-top: 3ex;">NOTICE: a native JNI call differs from a native VM "leaf call"!</li>
-          </ul>
+            <br/>
+
+            <ul>
+              <li>JVM state (safepoints)</li>
+              <li>Java vs. native calling conventions</li>
+              <li>Platform dependent (native implementation required!)
+                <ul>
+                  <li>..for every platform!</li>
+                </ul>
+              </li>
+              <li>OK for 'expensive' calls like I/O</li>
+              <li style="margin-top: 3ex;">NOTICE: a native JNI call differs from a native VM "leaf call"!</li>
+            </ul>
+
+          </section>
 
         </section>
 
@@ -994,33 +1006,29 @@ but the method is not annotated with @HotSpotIntrinsicCandidate. Exiting.
 
           <section>
 
-            <h2>Implementing an Interpreter Intrinsics</h2>
+            <h2>Implementing an Interpreter Intrinsic</h2>
 
-            <p style="text-align:left">Define in: <code>src/share/vm/classfile/vmSymbols.hpp</code></p>
+            <p style="text-align:left">Define in: <code>share/classfile/vmSymbols.hpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
-do_class(     helloWorld,    "io/simonis/HelloWorld")                      \
-do_intrinsic(_sayHello,      helloWorld, sayHello_name, sayHello_sign, F_S) \
+              <code class="cpp" data-trim="true" data-noescape="true">
+do_class(     helloWorld,    "io/simonis/HelloWorld")                       \
  do_name(     sayHello_name, "sayHello")                                    \ 
  do_signature(sayHello_sign, "()V")                                         \
-]]>
+do_intrinsic(<span class="fragment highlight-border" data-fragment-index="1">_sayHello</span>,      helloWorld, sayHello_name, sayHello_sign, F_S) \
               </code>
             </pre>
 
-            <p class="fragment" data-fragment-index="1" style="text-align:left">Define in: <code>src/share/vm/interpreter/abstractInterpreter.hpp</code></p>
+            <p class="fragment" data-fragment-index="2" style="text-align:left">Define in: <code>share/interpreter/abstractInterpreter.hpp</code></p>
 
-            <pre class="big noshadow fragment" data-fragment-index="1" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
+            <pre class="big noshadow fragment" data-fragment-index="2" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
 class AbstractInterpreter: AllStatic {
   enum MethodKind {
     zerolocals,          // normal method (needs locals initialization)
     java_lang_math_sin,  // implementation of java.lang.Math.sin(x)
     ...
-    HelloWorld_sayHello, // implementation of io.simonis.HelloWorld.sayHello()
-]]>
+    <span class="fragment highlight-border" data-fragment-index="3">HelloWorld_sayHello</span>, // implementation of io.simonis.HelloWorld.sayHello()
               </code>
             </pre>
 
@@ -1028,33 +1036,29 @@ class AbstractInterpreter: AllStatic {
 
           <section>
 
-            <h2>Implementing an Interpreter Intrinsics</h2>
+            <h2>Implementing an Interpreter Intrinsic</h2>
 
-            <p style="text-align:left">Map in: <code>src/share/vm/interpreter/abstractInterpreter.cpp</code></p>
+            <p style="text-align:left">Map in: <code>share/interpreter/abstractInterpreter.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
+              <code class="cpp" data-trim="true" data-noescape="true">
 MethodKind AbstractInterpreter::method_kind(methodHandle m) {
   ...
-  if (GeekOut) {
-    if (m->intrinsic_id() == vmIntrinsics::_sayHello) {                       
-      return HelloWorld_sayHello;
-]]>
+  if (<span class="fragment highlight-current-border" data-fragment-index="1">GeekOut</span>) {
+    if (<span class="fragment highlight-current-border" data-fragment-index="2">m-&gt;intrinsic_id() == vmIntrinsics::_sayHello</span>) {                       
+      return <span class="fragment highlight-current-border" data-fragment-index="3">HelloWorld_sayHello</span>;
               </code>
             </pre>
 
-            <p class="fragment" data-fragment-index="1" style="text-align:left">Generate in: <code>src/share/vm/interpreter/templateInterpreterGenerator.cpp</code></p>
+            <p class="fragment" data-fragment-index="4" style="text-align:left">Generate in: <code>share/interpreter/templateInterpreterGenerator.cpp</code></p>
 
-            <pre class="big noshadow fragment" data-fragment-index="1" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
+            <pre class="big noshadow fragment" data-fragment-index="4" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
 address TemplateInterpreterGenerator::generate_method_entry(MethodKind kind) {
   switch (kind) {
-  case Interpreter::HelloWorld_sayHello: entry_point = generate_sayHello();
+  case Interpreter::<span class="fragment highlight-current-border" data-fragment-index="5">HelloWorld_sayHello</span>: entry_point = <span class="fragment highlight-current-border" data-fragment-index="5">generate_sayHello()</span>;
 ...
   return entry_point;
-]]>
               </code>
             </pre>
 
@@ -1062,28 +1066,26 @@ address TemplateInterpreterGenerator::generate_method_entry(MethodKind kind) {
 
           <section>
 
-            <h2>Implementing an Interpreter Intrinsics</h2>
+            <h2>Implementing an Interpreter Intrinsic</h2>
 
-            <p style="text-align:left">Implement in: <code>src/cpu/x86/vm/templateInterpreterGenerator_x86_64.cpp</code></p>
+            <p style="text-align:left">Implement in: <code>cpu/x86/templateInterpreterGenerator_x86_64.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
-#define __ _masm->
-address TemplateInterpreterGenerator::generate_sayHello() {
+              <code class="cpp" data-trim="true" data-noescape="true">
+<span class="fragment highlight-current-border" data-fragment-index="2">#define __ _masm-&gt;</span>
+address TemplateInterpreterGenerator::<span class="fragment highlight-current-border" data-fragment-index="1">generate_sayHello()</span> {
   // r13: sender sp
-  // stack: [ ret adr ] <-- rsp
-  address entry_point = __ pc();
-  const char *msg = "Hello GeekOut!\n";
-  __ mov64(c_rarg1, (long)stdout);
-  __ mov64(c_rarg0, (long)msg);
-  __ call(RuntimeAddress(CAST_FROM_FN_PTR(address, fputs)));
+  // stack: [ ret adr ] &lt;-- rsp
+  <span class="fragment highlight-current-border" data-fragment-index="3">address entry_point = __ pc()</span>;
+  <span class="fragment highlight-current-border" data-fragment-index="4">const char *msg = "Hello GeekOut!\n"</span>;
+  <span class="fragment highlight-current-border" data-fragment-index="5">__ mov64(c_rarg0, (long)msg)</span>;
+  <span class="fragment highlight-current-border" data-fragment-index="6">__ mov64(c_rarg1, (long)stdout)</span>;
+  <span class="fragment highlight-current-border" data-fragment-index="7">__ call</span>(RuntimeAddress(CAST_FROM_FN_PTR(address, <span class="fragment highlight-current-border" data-fragment-index="7">fputs</span>)));
   __ pop(rax);
   __ mov(rsp, r13);
   __ jmp(rax);
-  return entry_point;
-}
-]]>
+  <span class="fragment highlight-current-border" data-fragment-index="3">return entry_point</span>;
+}<span class="fragment" data-fragment-index="8"></span>
               </code>
             </pre>
 
@@ -1091,30 +1093,116 @@ address TemplateInterpreterGenerator::generate_sayHello() {
 
           <section style="height: 100%;">
 
-            <h2>Implementing an Interpreter Intrinsics</h2>
+            <h2>Implementing an Interpreter Intrinsic</h2>
 
-            <p style="text-align:left">Enable in: <code>src/share/vm/oops/method.cpp</code></p>
+            <p style="text-align:left">Enable in: <code>share/oops/method.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
               <code class="cpp" data-trim="true" data-noescape="true">
-vmSymbols::SID Method::klass_id_for_intrinsics(const Klass* holder) {
-  // if loader is not the default loader (i.e., != NULL), we can't know the
+vmSymbols::SID <span class="fragment highlight-current-border" data-fragment-index="1">Method::klass_id_for_intrinsics</span>(const Klass* holder) {
+  // if loader is not the boot loader (i.e., != NULL), we can't know the
   // intrinsics because we are not loading from core libraries
   const InstanceKlass* ik = InstanceKlass::cast(holder);
-<span class="fragment"><mark class="border-no-bottom">  if (GeekOut &amp;&amp; ik-&gt;name()-&gt;equals("io/simonis/HelloWorld")) {  // &lt;----  </mark>
-<mark class="border-no-bottom-top">    // check for io.simonis.HelloWorld                          // &lt;----  </mark>
-<mark class="border-no-bottom-top">    return vmSymbols::find_sid(ik-&gt;name());                     // &lt;----  </mark>
-<mark class="border-no-top">  }                                                             // &lt;----  </mark></span>
-  if ((ik-&gt;class_loader() != NULL)) {
-    return vmSymbols::NO_SID;   // regardless of name, no intrinsics here
+<span class="fragment" data-fragment-index="5"><mark class="border-no-bottom">  if (<span class="fragment highlight-current-border" data-fragment-index="6">GeekOut</span> &amp;&amp; <span class="fragment highlight-current-border" data-fragment-index="6">ik-&gt;name()-&gt;equals("io/simonis/HelloWorld")</span>) {  // &lt;----  </mark>
+<mark class="border-no-bottom-top">    // check for io.simonis.HelloWorld                           // &lt;----  </mark>
+<mark class="border-no-bottom-top">    <span class="fragment highlight-current-border" data-fragment-index="7">return vmSymbols::find_sid(ik-&gt;name()</span>);                      // &lt;----  </mark>
+<mark class="border-no-top">  }                                                              // &lt;----  </mark></span>
+  if (<span class="fragment highlight-current-border" data-fragment-index="2">(ik-&gt;class_loader() != NULL)</span>) { // NULL == boot class loader
+    <span class="fragment highlight-current-border" data-fragment-index="3">return vmSymbols::NO_SID</span>;         // No intrinsics, regardless of name!
   }
   // see if the klass name is well-known:
   Symbol* klass_name = ik-&gt;name();
-  return vmSymbols::find_sid(klass_name);
-}
+  <span class="fragment highlight-current-border" data-fragment-index="4">return vmSymbols::find_sid(klass_name)</span>;
+}<span class="fragment" data-fragment-index="8"></span>
               </code>
             </pre>
 
+          </section>
+
+
+<!--
+
+classFileParser.cpp
+
+static void check_methods_for_intrinsics(const InstanceKlass* ik,
+                                         const Array<Method*>* methods) {
+  assert(ik != NULL, "invariant");
+  assert(methods != NULL, "invariant");
+
+  // Set up Method*::intrinsic_id as soon as we know the names of methods.
+  // (We used to do this lazily, but now we query it in Rewriter,
+  // which is eagerly done for every method, so we might as well do it now,
+  // when everything is fresh in memory.)
+  const vmSymbols::SID klass_id = Method::klass_id_for_intrinsics(ik);
+
+  if (klass_id != vmSymbols::NO_SID) {
+    for (int j = 0; j < methods->length(); ++j) {
+      Method* method = methods->at(j);
+      method->init_intrinsic_id();
+
+method.cpp
+
+void Method::link_method(const methodHandle& h_method, TRAPS) {
+  // If the code cache is full, we may reenter this function for the
+  // leftover methods that weren't linked.
+  if (is_shared()) {
+    address entry = Interpreter::entry_for_cds_method(h_method);
+    assert(entry != NULL && entry == _i2i_entry,
+           "should be correctly set during dump time");
+    if (adapter() != NULL) {
+      return;
+    }
+    assert(entry == _from_interpreted_entry,
+           "should be correctly set during dump time");
+  } else if (_i2i_entry != NULL) {
+    return;
+  }
+  assert( _code == NULL, "nothing compiled yet" );
+
+  // Setup interpreter entrypoint
+  assert(this == h_method(), "wrong h_method()" );
+
+  if (!is_shared()) {
+    assert(adapter() == NULL, "init'd to NULL");
+    address entry = Interpreter::entry_for_method(h_method);
+    assert(entry != NULL, "interpreter entry must be non-null");
+    // Sets both _i2i_entry and _from_interpreted_entry
+    set_interpreter_entry(entry);
+  }
+-->
+          <section>
+
+            <h2>Interpreter Intrinsic Initialization</h2>
+
+            <p style="text-align:left">At class loading: <code>share/classfile/classFileParser.cpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+void check_methods_for_intrinsics(InstanceKlass* ik, Array&lt;Method*&gt;* methods) {
+  const vmSymbols::SID <span class="fragment highlight-current-border" data-fragment-index="1">klass_id = Method::klass_id_for_intrinsics(ik)</span>;
+
+  if (<span class="fragment highlight-current-border" data-fragment-index="2">klass_id != vmSymbols::NO_SID</span>) {
+    for (<span class="fragment highlight-current-border" data-fragment-index="3">int j = 0; j &lt; methods->length(); ++j</span>) {
+      Method* method = methods->at(j);
+      <span class="fragment highlight-current-border" data-fragment-index="4">method->init_intrinsic_id()</span>;
+              </code>
+            </pre>
+
+            <p class="fragment" data-fragment-index="5" style="text-align:left">During class linking: <code>share/oops/method.cpp</code></p>
+
+            <pre class="big noshadow fragment" data-fragment-index="5" data-trim="true">
+              <code class="c++" data-trim="true" data-noescape="true">
+void Method::link_method(const methodHandle&amp; h_method) {
+  MethodKind <span class="fragment highlight-current-border" data-fragment-index="6">kind = AbstractInterpreter::method_kind(h_method)</span>;                
+  address <span class="fragment highlight-current-border" data-fragment-index="7">entry = Interpreter::entry_for_kind(kind)</span>;
+  <span class="fragment highlight-current-border" data-fragment-index="8">set_interpreter_entry(entry)</span>;
+              </code>
+            </pre>
+
+          </section>
+
+          <section>
+            <h1><code style="font-size: smaller;">-XX:+PrintInterpreter</code> Demo</h1>
           </section>
 
         </section>
@@ -1127,31 +1215,27 @@ vmSymbols::SID Method::klass_id_for_intrinsics(const Klass* holder) {
 
             <h2>Implementing a C2-JIT Intrinsic</h2>
 
-            <p style="text-align:left">Intrinsify: <code>java.util.Random.nextInt()</code> (by using Intel's <code>rdrand</code> instruction)</p>
+            <p style="text-align:center">Intrinsify: <b><em><code>java.util.Random.nextInt()</code></em></b> (by using Intel's <b><em><code>rdrand</code></em></b> instruction)</p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="java" text-trim="true">
-<![CDATA[
+              <code class="java" data-trim="true" data-noescape="true">
 public class Random implements java.io.Serializable {
   ...
-  @HotSpotIntrinsicCandidate                                                   
+  <span class="fragment highlight-current-border" data-fragment-index="1">@HotSpotIntrinsicCandidate</span>                                                   
   public int nextInt() {
     return next(32);
   }
-]]>
               </code>
             </pre>
 
-            <p class="fragment" data-fragment-index="1" style="text-align:left">Define in: <code>src/share/vm/classfile/vmSymbols.hpp</code></p>
+            <p class="fragment" data-fragment-index="2" style="text-align:center">Define in: <code>share/classfile/vmSymbols.hpp</code></p>
 
-            <pre class="big noshadow fragment" data-fragment-index="1" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
-do_class(     java_util_Random, "java/util/Random")                          \
-do_intrinsic(_nextInt,          java_util_Random, nextInt_name, ni_sign, F_R)\
- do_name(     nextInt_name,     "nextInt")                                   \
- do_signature(ni_sign,          "()I")                                       \
-]]>
+            <pre class="big noshadow fragment" data-fragment-index="2" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+do_class(      java_util_Random, "java/util/Random")                          \
+ do_name(      nextInt_name,     "nextInt")                                   \
+ do_signature( ni_sign,          "()I")                                       \
+do_intrinsic(  <span class="fragment highlight-current-border" data-fragment-index="3">_nextInt</span>,         java_util_Random, nextInt_name, ni_sign, F_R)\
               </code>
             </pre>
 
@@ -1161,32 +1245,28 @@ do_intrinsic(_nextInt,          java_util_Random, nextInt_name, ni_sign, F_R)\
 
             <h2>Implementing a C2-JIT Intrinsic</h2>
 
-            <p style="text-align:left">Detect <code>rdrand</code> instruction in: <code>src/cpu/x86/vm/vm_version_x86.hpp</code></p>
+            <p style="text-align:center">Detect <code>rdrand</code> instruction in: <code>cpu/x86/vm_version_x86.hpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
+              <code class="cpp" data-trim="true" data-noescape="true">
 class VM_Version {
   static uint64_t feature_flags() {
     if (_cpuid_info.std_cpuid1_ecx.bits.rdrand != 0)
       result |= CPU_RDRAND;
-
-  static bool supports_rdrand() { return (_features & CPU_RDRAND) != 0; }
-]]>
+    ...
+  static bool <span class="fragment highlight-current-border" data-fragment-index="1">supports_rdrand()</span> { return (_features &amp; CPU_RDRAND) != 0; }
               </code>
             </pre>
 
-            <p class="fragment" data-fragment-index="1" style="text-align:left">Implement <code>rdrand</code> in: <code>src/cpu/x86/vm/assembler_x86.hpp</code></p>
+            <p class="fragment" data-fragment-index="2" style="text-align:center">Implement <code>rdrand</code> in: <code>cpu/x86/assembler_x86.hpp</code></p>
 
-            <pre class="big noshadow fragment" data-fragment-index="1" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
-void Assembler::rdrandl(Register dst) {
+            <pre class="big noshadow fragment" data-fragment-index="2" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+void <span class="fragment highlight-current-border" data-fragment-index="3">Assembler::rdrandl</span>(Register dst) {
   int encode = prefix_and_encode(dst->encoding());                       
-  emit_int8(0x0F);
-  emit_int8((unsigned char)0xC7);
-  emit_int8((unsigned char)(0xF0 | encode));
-]]>
+  <span class="fragment highlight-current-border     border-no-bottom" data-fragment-index="4">emit_int8</span>(0x0F);
+  <span class="fragment highlight-current-border border-no-bottom-top" data-fragment-index="4">emit_int8</span>((unsigned char)0xC7);
+  <span class="fragment highlight-current-border        border-no-top" data-fragment-index="4">emit_int8</span>((unsigned char)(0xF0 | encode));
               </code>
             </pre>
 
@@ -1196,17 +1276,20 @@ void Assembler::rdrandl(Register dst) {
 
             <h2>Implementing a C2-JIT Intrinsic</h2>
 
-            <p style="text-align:left">Implement new IR-node in: <code>src/share/vm/opto/intrinsicnode.hpp</code></p>
+            <p style="text-align:center">Implement new IR-node in: <code>share/opto/intrinsicnode.hpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
-class RandINode : public Node {
+              <code class="cpp" data-trim="true" data-noescape="true">
+class <span class="fragment highlight-current-border">RandINode</span> : public Node {
 public:
   RandINode(Node *c) : Node(c) {}
-  const Type *bottom_type() const { return TypeInt::INT; }               
-  virtual uint ideal_reg() const { return Op_RegI; }
-]]>
+  virtual int <span class="fragment highlight-current-border">Opcode()</span> const;
+  const Type *bottom_type() const {
+    return <span class="fragment highlight-current-border">TypeInt::INT</span>;
+  }
+  virtual uint ideal_reg() const {
+    return <span class="fragment highlight-current-border">Op_RegI</span>;
+  }<span class="fragment"></span>
               </code>
             </pre>
 
@@ -1216,32 +1299,28 @@ public:
 
             <h2>Implementing a C2-JIT Intrinsic</h2>
 
-            <p style="text-align:left">And corresponding Machine-node and match rule in: <code>src/cpu/x86/vm/x86.ad</code></p>
+            <p style="text-align:center">Implement corresponding MachineNode and match rule in: <code>cpu/x86/x86.ad</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
-instruct randI(rRegI dst) %{
-  match(Set dst (RandI));
-  format %{ "RANDI    $dst\t# int" %}                              
+              <code class="cpp" data-trim="true" data-noescape="true">
+instruct <span class="fragment highlight-current-border">randI</span>(rRegI dst) %{          // generated randINode
+  <span class="fragment highlight-current-border">match(Set dst (RandI))</span>;             // matches   RandINode
+  format %{ <span class="fragment highlight-current-border">"RANDI    $dst  # int"</span> %}                             
   ins_encode %{
-    __ rdrandl($dst$$Register);
+    <span class="fragment highlight-current-border">__ rdrandl($dst$$Register)</span>;
   %}
-]]>
               </code>
             </pre>
 
-            <pre class="big noshadow fragment" data-fragment-index="1" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
-const bool Matcher::match_rule_supported(int opcode) {
+            <pre class="big noshadow fragment" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+const bool <span class="fragment highlight-current-border">Matcher::match_rule_supported(int opcode)</span> {
   if (!has_match_rule(opcode)) return false;
 
   switch (opcode) {
-  case Op_RandI: if (!VM_Version::supports_rdrand()) return false;
+  case Op_RandI: if (!<span class="fragment highlight-current-border">VM_Version::supports_rdrand()</span>) return false;
   ...
-  return true;
-]]>
+  return true;<span class="fragment"></span>
               </code>
             </pre>
 
@@ -1251,31 +1330,27 @@ const bool Matcher::match_rule_supported(int opcode) {
 
             <h2>Implementing a C2-JIT Intrinsic</h2>
 
-            <p style="text-align:left">Use it in: <code>src/share/vm/opto/library_call.cpp</code></p>
+            <p style="text-align:center">Use it in: <code>share/opto/library_call.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
-bool LibraryCallKit::try_to_inline(int predicate) {
+              <code class="cpp" data-trim="true" data-noescape="true">
+bool <span class="fragment highlight-current-border">LibraryCallKit::try_to_inline</span>(int predicate) {
   ...
-  switch (intrinsic_id()) {                                              
-  case vmIntrinsics::_nextInt: return inline_random(intrinsic_id());
-]]>
+  <span class="fragment highlight-current-border">switch (intrinsic_id())</span> {                                              
+  case <span class="fragment highlight-current-border">vmIntrinsics::_nextInt</span>: return <span class="fragment highlight-current-border">inline_random(intrinsic_id()</span>);
               </code>
             </pre>
 
-            <pre class="big noshadow fragment" data-fragment-index="1" data-trim="true">
-              <code class="cpp" text-trim="true">
-<![CDATA[
-bool LibraryCallKit::inline_random(vmIntrinsics::ID id) {
+            <pre class="big noshadow fragment" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+bool <span class="fragment highlight-current-border">LibraryCallKit::inline_random</span>(vmIntrinsics::ID id) {
   Node* n = NULL;
   switch (id) {
-  case vmIntrinsics::_nextInt:
+  case <span class="fragment highlight-current-border">vmIntrinsics::_nextInt</span>:
     if (!Matcher::match_rule_supported(Op_RandI)) return false;          
-    n = new RandINode(control());
+    n = <span class="fragment highlight-current-border">new RandINode(control()</span>);
   ...
-  set_result(_gvn.transform(n));
-]]>
+  <span class="fragment highlight-current-border">set_result(_gvn.transform(n))</span>;
               </code>
             </pre>
           </section>
@@ -1369,25 +1444,23 @@ bool LibraryCallKit::inline_random(vmIntrinsics::ID id) {
             <h2><code style="text-transform: none;">Random.nextInt()</code> - DEMO</h2>
 
             <pre class="big noshadow" data-trim="true">
-              <code class="java" text-trim="true">
-<![CDATA[
+              <code class="java" data-trim="true" data-noescape="true">
 public class Random {
 
-  static final java.util.Random sr = new SecureRandom();
+  static final <span class="fragment highlight-current-border">java.util.Random sr = new SecureRandom()</span>;
 
   static int foo() {
-    return sr.nextInt();
+    return <span class="fragment highlight-current-border">sr.nextInt()</span>;
   }
   public static void main(String[] args) throws Exception {
     int count = Integer.parseInt(args.length > 0 ? args[0] : "10");
     int result = 0;
-    for (int i = 0; i < count; i++) {
-      result += foo();
+    for (int i = 0; i &lt; count; i++) {
+      <span class="fragment highlight-current-border">result += foo()</span>;
     }
     System.out.println(result);
   }
 }
-]]>
               </code>
             </pre>
           </section>
@@ -1404,7 +1477,7 @@ real	0m2.228s
 user	0m2.144s
 sys	0m0.088s</span>
 
-<span class="fragment">$ time java -XX:DisableIntrinsic=_nextInt io.simonis.Random 1000000</span>
+<span class="fragment">$ time java <span class="fragment highlight-current-border">-XX:DisableIntrinsic=_nextInt</span> io.simonis.Random 1000000</span>
 <span class="fragment">695536079
 
 real	0m3.187s
@@ -1420,10 +1493,10 @@ sys	0m0.472s</span>
 $ java -XX:+PrintCompilation -XX:+PrintInlining io.simonis.Random 10000
 <span class="fragment">...
  io.simonis.Random::foo (7 bytes)
-   @ 3   java.util.Random::nextInt (7 bytes)   (intrinsic)</span>
+   @ 3   java.util.Random::nextInt (7 bytes)   <span class="fragment highlight-current-border">(intrinsic)</span></span>
 
-<span class="fragment">$ java -XX:+PrintCompilation -XX:+PrintInlining -XX:DisableIntrinsic=_nextInt \
-                                                     io.simonis.Random 10000</span>
+<span class="fragment">$ java -XX:+PrintCompilation -XX:+PrintInlining \
+                  <span class="fragment highlight-current-border">-XX:DisableIntrinsic=_nextInt</span> io.simonis.Random 10000</span>
 <span class="fragment">...
  io.simonis.Random::foo (7 bytes)
    @ 3 java.util.Random::nextInt (7 bytes) inline (hot)
@@ -1441,23 +1514,23 @@ $ java -XX:+PrintCompilation -XX:+PrintInlining io.simonis.Random 10000
           <section>
             <pre class="big noshadow" data-trim="true">
               <code class="terminal" data-trim="true" data-noescape="true">
-$ java -XX:CompileCommand="option io.simonis.Random::foo PrintOptoAssembly" \
-                                                   io.simonis.Random 10000
+$ java <span class="fragment highlight-current-border">-XX:CompileCommand</span>="<span class="fragment highlight-current-border">option io.simonis.Random::foo PrintOptoAssembly</span>" \
+                                                        io.simonis.Random 10000
 <span class="fragment">000   B1: #     N1 &lt;- BLOCK HEAD IS JUNK   Freq: 1
 000     # stack bang (96 bytes)
         pushq   rbp             # Save rbp
         subq    rsp, #16        # Create frame
 
-00c     <mark>RANDI    RAX</mark>            # int</span>
+00c     <span class="fragment highlight-border">RANDI    RAX</span>            # int</span>
 
-<span class="fragment">$ java -XX:CompileCommand="option io.simonis.Random::foo PrintAssembly" \
-                                                   io.simonis.Random 10000</span>
+<span class="fragment">$ java -XX:CompileCommand="<span class="fragment highlight-current-border">option io.simonis.Random::foo PrintAssembly</span>" \
+                                                        io.simonis.Random 10000</span>
 <span class="fragment"> ;; B1: #       N1 &lt;- BLOCK HEAD IS JUNK   Freq: 1
 8c0: mov    %eax,-0x16000(%rsp)
 8c7: push   %rbp
 8c8: sub    $0x10,%rsp         ;*synchronization entry
                                ; - io.simonis.Random::foo@-1 (line 10)
-8cc: <mark>rdrand %eax</mark>               ;*invokevirtual nextInt {reexecute=0 rethrow=0..
+8cc: <span class="fragment highlight-border">rdrand %eax</span>               ;*invokevirtual nextInt {reexecute=0 rethrow=0..
                                ; - io.simonis.Random::foo@3 (line 10)</span>
               </code>
             </pre>
@@ -1691,7 +1764,7 @@ Node* PhaseMacroExpand::generate_arraycopy(ArrayCopyNode *ac, AllocateArrayNode*
 
           <section style="padding: 0; height: 100%;">
 
-            <p style="text-align:left; margin: 0;"><code>src/share/vm/opto/library_call.cpp</code></p>
+            <p style="text-align:left; margin: 0;"><code>share/opto/library_call.cpp</code></p>
 
             <pre class="big noshadow" style="height:100%; margin: 0;" data-trim="true">
               <code class="cpp" text-trim="true">
@@ -1724,7 +1797,7 @@ bool LibraryCallKit::inline_arraycopy() {
 
           <section style="padding: 0; height: 100%;">
 
-            <p style="text-align:left; margin: 0;"><code>src/share/vm/opto/macro.cpp</code></p>
+            <p style="text-align:left; margin: 0;"><code>share/opto/macro.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
               <code class="cpp" text-trim="true">
@@ -1742,7 +1815,7 @@ void PhaseMacroExpand::process_users_of_allocation(CallNode *alloc) {
               </code>
             </pre>
 
-            <p style="text-align:left"><code>src/share/vm/opto/macroArrayCopy.cpp</code></p>
+            <p style="text-align:left"><code>share/opto/macroArrayCopy.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
               <code class="cpp" text-trim="true">

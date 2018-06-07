@@ -2,3 +2,4 @@ javac -d . ../src/io/simonis/HelloWorld.java
 emacs -nw -r -q ../src/io/simonis/HelloWorld.java
 java -Xint -XX:+GeekOut io.simonis.HelloWorld 
 java -Xint io.simonis.HelloWorld 
+java -Xint -XX:+GeekOut -XX:+PrintInterpreter io.simonis.HelloWorld

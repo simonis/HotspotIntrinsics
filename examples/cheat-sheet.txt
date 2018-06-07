@@ -104,7 +104,7 @@ Loop
 
 -> export _JAVA_OPTIONS='-Xbatch -XX:+UseSerialGC -XX:-TieredCompilation -XX:-UseOnStackReplacement -XX:+UnlockDiagnosticVMOptions -XX:-CheckIntrinsics -XX:-LogVMOutput'
 
--> java -XX:+PrintCompilation -XX:+PrintInlining io.simonis.Loop 0 1 10000000
+-> java -XX:+PrintCompilation -XX:+PrintInlining io.simonis.Loop 10000000
     613    1    b        io.simonis.Loop::compute (29 bytes)
                             @ 9   java.lang.Math::sin (5 bytes)   (intrinsic)
                             @ 13   java.lang.Math::sqrt (5 bytes)   (intrinsic)
@@ -115,7 +115,7 @@ user	0m1.368s
 sys	0m0.064s
 
 
--> java -XX:+PrintCompilation -XX:+PrintInlining -XX:-InlineMathNatives io.simonis.Loop 0 1 10000000
+-> java -XX:+PrintCompilation -XX:+PrintInlining -XX:-InlineMathNatives io.simonis.Loop 10000000
 
     837    1    b        io.simonis.Loop::compute (29 bytes)
                             @ 9   java.lang.Math::sin (5 bytes)   inline (hot)
@@ -169,7 +169,7 @@ user	0m32.703s
 sys	0m0.156s
 
 
--> java -XX:+PrintCompilation -XX:+PrintInlining -XX:-InlineMathNatives io.simonis.Loop 0 1 10000000
+-> java -XX:+PrintCompilation -XX:+PrintInlining -XX:-InlineMathNatives io.simonis.Loop 10000000
 
 real	0m4.645s
 user	0m4.597s
