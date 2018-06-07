@@ -20,6 +20,11 @@ if [ "$1" == "loop_print" ]; then
 else
 if [ "$1" == "loop_with_gc" ]; then
   export _JAVA_OPTIONS='-Xbatch -XX:-UseCompressedOops -XX:+UseSerialGC -XX:-TieredCompilation -XX:-UseOnStackReplacement -XX:+UnlockDiagnosticVMOptions -XX:-LogVMOutput -XX:CICompilerCount=1'
+else
+if [ "$1" == "snippets" ]; then
+export PATH=/share/output-panama-dbg/images/jdk/bin:$PATH
+  export _JAVA_OPTIONS='-Xbatch -XX:-UseCompressedOops -XX:+UseSerialGC -XX:-TieredCompilation -XX:-UseOnStackReplacement -XX:+UnlockDiagnosticVMOptions -XX:-LogVMOutput -XX:CICompilerCount=1'
+fi
 fi
 fi
 fi

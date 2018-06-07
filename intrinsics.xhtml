@@ -1208,7 +1208,6 @@ void Method::link_method(const methodHandle&amp; h_method) {
         </section>
 
 
-
         <section style="height: 100%;">
 
           <section>
@@ -1534,6 +1533,86 @@ $ java <span class="fragment highlight-current-border">-XX:CompileCommand</span>
                                ; - io.simonis.Random::foo@3 (line 10)</span>
               </code>
             </pre>
+          </section>
+
+        </section>
+
+
+        <section style="height: 100%;">
+
+          <section>
+
+            <h2>Implementing a C1-JIT Intrinsic</h2>
+
+            <p style="text-align:center">Define LIR operation code: <code>share/c1/c1_LIR.hpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+enum LIR_Code {
+    begin_op0
+      , ...
+      , <span class="fragment highlight-current-border" data-fragment-index="1">lir_next_int</span>                                                          
+  , end_op0
+  , begin_op1
+              </code>
+            </pre>
+
+            <p class="fragment" data-fragment-index="2" style="text-align:center">Define LIR instruction: <code>share/c1/c1_LIR.hpp</code></p>
+
+            <pre class="big noshadow fragment" data-fragment-index="2" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+class LIR_List: public CompilationResourceObj {
+  ...
+  void <span class="fragment highlight-current-border" data-fragment-index="3">next_int(LIR_Opr result)</span> { append(<span class="fragment highlight-current-border" data-fragment-index="4">new LIR_Op0(lir_next_int, result)</span>); }
+  ...
+};
+              </code>
+            </pre>
+
+          </section>
+
+        </section>
+
+
+        <section style="height: 100%;">
+
+          <section>
+
+            <h2>Project Panama: Machine Code Snippets</h2>
+
+            <h3><b style="color: red;">DISCLAIMER:</b> only an <b><em>implementation detail</em></b> of an <b><em>experimental feature</em></b> <b style="color: red;">!!!</b></h3>
+
+          </section>
+
+          <section style="height: 100%;">
+            <pre class="big noshadow" data-trim="true">
+              <code class="java" data-trim="true" data-noescape="true">
+import java.lang.invoke.<span class="fragment highlight-current-border">MethodHandle</span>;
+import <span class="fragment highlight-current-border">jdk.vm.ci.panama.MachineCodeSnippet</span>;
+...
+public class RandomSnippet {
+
+  static final <span class="fragment highlight-current-border">MethodHandle rdrand</span> = <span class="fragment highlight-current-border">MachineCodeSnippet.builder("rdrand")</span>
+    .<span class="fragment highlight-current-border">returns(int.class, rax)</span>
+    .<span class="fragment highlight-current-border">kills(rax)</span>
+    .<span class="fragment highlight-current-border">code(0x0F, 0xC7, 0xF0)</span>   // rdrand eax
+    .make();
+
+  private static int <span class="fragment highlight-current-border">rdrand()</span> {
+    try {
+      return (int)<span class="fragment highlight-current-border">rdrand.invokeExact()</span>;
+    } catch (Throwable e) { throw new Error(e); }
+  }
+
+  static int foo() {
+    return <span class="fragment highlight-current-border">rdrand()</span>;
+  }
+              </code>
+            </pre>
+          </section>
+
+          <section>
+            <h1>Machine Code Snippets Demo</h1>
           </section>
 
         </section>
