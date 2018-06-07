@@ -1,0 +1,2 @@
+java -XX:+GeekOut -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y io.simonis.HelloWorld 
+java -XX:-GeekOut -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y io.simonis.HelloWorld 

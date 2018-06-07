@@ -1,9 +1,11 @@
 
-export PS1="\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n\$ "
+export PS1="\[\e]0;\w\a\]\n\[\e[32m\]\u@\h:\[\033[01;34m\]\w\[\033[00m\]\n\$ "
 
 CWD=`pwd`
 
 export PATH=/share/output-jdk-dbg/images/jdk/bin:$PATH
+
+export RLWRAP_HOME=$CWD
 
 export _JAVA_OPTIONS='-Xbatch -XX:-UseCompressedOops -XX:+UseSerialGC -XX:-TieredCompilation -XX:-UseOnStackReplacement -XX:+UnlockDiagnosticVMOptions -XX:-CheckIntrinsics -XX:-LogVMOutput -XX:CICompilerCount=1'
 

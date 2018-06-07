@@ -1,1 +1,1 @@
-jdb -attach 8000
+rlwrap jdb -attach 8000
