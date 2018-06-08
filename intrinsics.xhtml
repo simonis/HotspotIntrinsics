@@ -141,6 +141,11 @@ code.terminal .hljs-title {
     border-width: 2px;
     background-color: #ffffff;
   }
+  td.indent_level_13 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #ffffff;
+  }
   td.functionCall {
 //    font-weight: bold;
     color: darkblue;
@@ -1329,6 +1334,28 @@ const bool <span class="fragment highlight-current-border">Matcher::match_rule_s
 
             <h2>Implementing a C2-JIT Intrinsic</h2>
 
+            <p style="text-align:center">Enable the intrinsic in the compiler: <code>share/opto/c2compiler.cpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+bool <span class="fragment highlight-current-border">C2Compiler::is_intrinsic_supported</span>(methodHandle method, bool is_virtual) {
+  vmIntrinsics::ID <span class="fragment highlight-current-border">id = method-&gt;intrinsic_id()</span>;
+
+  switch (id) {
+  ...
+  case <span class="fragment highlight-current-border">vmIntrinsics::_nextInt</span>:
+    if (<span class="fragment highlight-current-border">Matcher::match_rule_supported(Op_RandI)</span>) return true;
+    break;
+  ...<span class="fragment"></span>
+              </code>
+            </pre>
+
+          </section>
+
+          <section>
+
+            <h2>Implementing a C2-JIT Intrinsic</h2>
+
             <p style="text-align:center">Use it in: <code>share/opto/library_call.cpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
@@ -1347,7 +1374,7 @@ bool <span class="fragment highlight-current-border">LibraryCallKit::inline_rand
   switch (id) {
   case <span class="fragment highlight-current-border">vmIntrinsics::_nextInt</span>:
     if (!Matcher::match_rule_supported(Op_RandI)) return false;          
-    n = <span class="fragment highlight-current-border">new RandINode(control()</span>);
+    n = <span class="fragment highlight-current-border">new RandINode(control())</span>;
   ...
   <span class="fragment highlight-current-border">set_result(_gvn.transform(n))</span>;
               </code>
@@ -1356,84 +1383,105 @@ bool <span class="fragment highlight-current-border">LibraryCallKit::inline_rand
 
           <section>
 
-            <h2>Implementing a C2-JIT Intrinsic</h2>
-
-<table class="calling_hirarchy">
+<table class="calling_hirarchy" style="font-size: 70%;">
   <tr>
-    <td colspan="13" class="functionCall  indent_level_0">
-      <code>CompileBroker::compiler_thread_loop()</code>
+    <td colspan="14" class="functionCall  indent_level_0">
+      <span class="fragment highlight-current-border"><code>CompileBroker::compiler_thread_loop()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="16">&nbsp;</td>
+    <td colspan="13" class="functionCall  indent_level_1">
+    <span class="fragment highlight-current-border"><code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="15">&nbsp;</td>
+    <td colspan="12" class="functionCall  indent_level_2">
+    <span class="fragment highlight-current-border"><code>C2Compiler::compile_method(target=0x7fffc4299130)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="14">&nbsp;</td>
+    <td colspan="11" class="functionCall  indent_level_3">
+    <span class="fragment highlight-current-border"><code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="13">&nbsp;</td>
+    <td colspan="10" class="functionCall  indent_level_4">
+    <span class="fragment highlight-current-border"><code>ParseGenerator::generate()</code></span>
     </td>
   </tr>
   <tr>
     <td rowspan="12">&nbsp;</td>
-    <td colspan="12" class="functionCall  indent_level_1">
-    <code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code>
+    <td colspan="9" class="functionCall  indent_level_5">
+    <span class="fragment highlight-current-border"><code>Parse::Parse(caller=0x7fffc440de00, method=0x7fffc4299130)</code></span>
     </td>
   </tr>
   <tr>
     <td rowspan="11">&nbsp;</td>
-    <td colspan="11" class="functionCall  indent_level_2">
-    <code>C2Compiler::compile_method(target=0x7fffc4299130)</code>
+    <td colspan="8" class="functionCall  indent_level_6">
+    <span class="fragment highlight-current-border"><code>Parse::do_all_blocks()</code></span>
     </td>
   </tr>
   <tr>
     <td rowspan="10">&nbsp;</td>
-    <td colspan="10" class="functionCall  indent_level_3">
-    <code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code>
+    <td colspan="7" class="functionCall  indent_level_7">
+    <span class="fragment highlight-current-border"><code>Parse::do_one_block()</code></span>
     </td>
   </tr>
   <tr>
     <td rowspan="9">&nbsp;</td>
-    <td colspan="9" class="functionCall  indent_level_4">
-    <code>ParseGenerator::generate()</code>
+    <td colspan="6" class="functionCall  indent_level_8">
+    <span class="fragment highlight-current-border"><code>Parse::do_one_bytecode()</code></span>
     </td>
   </tr>
   <tr>
     <td rowspan="8">&nbsp;</td>
-    <td colspan="8" class="functionCall  indent_level_5">
-    <code>Parse::Parse(caller=0x7fffc440de00, parse_method=0x7fffc4299130)</code>
+    <td colspan="5" class="functionCall  indent_level_9">
+    <span class="fragment highlight-current-border"><code>Parse::do_call()</code></span>
     </td>
   </tr>
   <tr>
     <td rowspan="7">&nbsp;</td>
-    <td colspan="7" class="functionCall  indent_level_6">
-    <code>Parse::do_all_blocks()</code>
-    </td>
-  </tr>
-  <tr>
-    <td rowspan="6">&nbsp;</td>
-    <td colspan="6" class="functionCall  indent_level_7">
-    <code>Parse::do_one_block()</code>
-    </td>
-  </tr>
-  <tr>
-    <td rowspan="5">&nbsp;</td>
-    <td colspan="5" class="functionCall  indent_level_8">
-    <code>Parse::do_one_bytecode()</code>
-    </td>
-  </tr>
-  <tr>
-    <td rowspan="4">&nbsp;</td>
-    <td colspan="4" class="functionCall  indent_level_9">
-    <code>Parse::do_call()</code>
+    <td colspan="4" class="functionCall  indent_level_10">
+    <span class="fragment highlight-current-border"><code>Compile::call_generator(ciMethod*, ...)</code></span>
     </td>
   </tr>
   <tr>
     <td rowspan="3">&nbsp;</td>
-    <td colspan="3" class="functionCall  indent_level_10">
-    <code>LibraryIntrinsic::generate()</code>
+    <td colspan="3" class="functionCall  indent_level_11">
+      <span class="fragment highlight-current-border"><code>Compile::find_intrinsic(ciMethod*, ...)</code></span>
     </td>
   </tr>
   <tr>
     <td rowspan="2">&nbsp;</td>
-    <td colspan="2" class="functionCall  indent_level_11">
-    <code>LibraryCallKit::try_to_inline(id=vmIntrinsics::_nextInt)</code>
+    <td colspan="2" class="functionCall  indent_level_12">
+      <span class="fragment highlight-current-border"><code>Compile::make_vm_intrinsic(ciMethod*, ...)</code></span>
     </td>
   </tr>
   <tr>
     <td rowspan="1">&nbsp;</td>
-    <td colspan="1" class="functionCall  indent_level_12">
-    <code>LibraryCallKit::inline_random()</code>
+    <td colspan="1" class="functionCall  indent_level_13">
+      <span class="fragment highlight-current-border"><code>C2Compiler::is_intrinsic_supported(methodHandle)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="4" class="functionCall  indent_level_10">
+      <span class="fragment highlight-current-border"><code>LibraryIntrinsic::generate()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="2">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_11">
+    <span class="fragment highlight-current-border"><code>LibraryCallKit::try_to_inline(id=vmIntrinsics::_nextInt)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="1">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_12">
+    <span class="fragment highlight-current-border"><code>LibraryCallKit::inline_random()</code></span>
     </td>
   </tr>
 </table>
@@ -1499,11 +1547,11 @@ $ java -XX:+PrintCompilation -XX:+PrintInlining io.simonis.Random 10000
 <span class="fragment">...
  io.simonis.Random::foo (7 bytes)
    @ 3 java.util.Random::nextInt (7 bytes) inline (hot)
-     @ 3 java.security.SecureRandom::next (61 bytes) inline (hot)
-       @ 17 java.security.SecureRandom::nextBytes (9 bytes) inline (hot)
-         @ 5 java.security.SecureRandomSpi::engineNextBytes (0 bytes) virtual call
+     @ 3 java.security.SecureRandom::next (61 bytes) <span class="fragment highlight-current-border">inline (hot)</span>
+       @ 17 java.security.SecureRandom::nextBytes (9 bytes) <span class="fragment highlight-current-border">inline (hot)</span>
+         @ 5 java.security.SecureRandomSpi::engineNextBytes <span class="fragment highlight-current-border">(0 bytes) virtual call</span>
 ...
- sun.security.provider.NativePRNG::engineNextBytes (8 bytes)
+ sun.security.provider.<span class="fragment highlight-current-border">NativePRNG::engineNextBytes</span> (8 bytes)
    @ 4 sun.security.provider.NativePRNG$RandomIO::access$400 (6 bytes) inline (hot)
      @ 2 sun.security.provider.NativePRNG$RandomIO::implNextBytes (162 bytes) already compiled into a big method</span>
               </code>
@@ -1544,7 +1592,7 @@ $ java <span class="fragment highlight-current-border">-XX:CompileCommand</span>
 
             <h2>Implementing a C1-JIT Intrinsic</h2>
 
-            <p style="text-align:center">Define LIR operation code: <code>share/c1/c1_LIR.hpp</code></p>
+            <p style="text-align:center">Define code for LIR operation : <code>share/c1/c1_LIR.hpp</code></p>
 
             <pre class="big noshadow" data-trim="true">
               <code class="cpp" data-trim="true" data-noescape="true">
@@ -1563,12 +1611,99 @@ enum LIR_Code {
               <code class="cpp" data-trim="true" data-noescape="true">
 class LIR_List: public CompilationResourceObj {
   ...
-  void <span class="fragment highlight-current-border" data-fragment-index="3">next_int(LIR_Opr result)</span> { append(<span class="fragment highlight-current-border" data-fragment-index="4">new LIR_Op0(lir_next_int, result)</span>); }
+  void <span class="fragment highlight-current-border" data-fragment-index="3">next_int(LIR_Opr result)</span> { append(<span class="fragment highlight-current-border" data-fragment-index="4">new LIR_Op0(<span class="fragment highlight-current-border" data-fragment-index="5">lir_next_int</span>, result)</span>); }
   ...
-};
+};<span class="fragment" data-fragment-index="6"></span>
               </code>
             </pre>
 
+          </section>
+
+          <section>
+
+            <h2>Implementing a C1-JIT Intrinsic</h2>
+
+            <p style="text-align:center">Define generic LIR assembler operation: <code>share/c1/c1_LIRAssembler.cpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+void <span class="fragment highlight-current-border" data-fragment-index="1">LIR_Assembler::emit_op0</span>(LIR_Op0* op) {
+  switch (op->code()) {
+    ...
+    case <span class="fragment highlight-current-border" data-fragment-index="2">lir_next_int</span>:
+      <span class="fragment highlight-current-border" data-fragment-index="3">next_int</span>(op->result_opr());                  
+              </code>
+            </pre>
+
+            <p class="fragment" data-fragment-index="4" style="text-align:center">And implement it for x86: <code>cpu/x86/c1_LIRAssembler_x86.cpp</code></p>
+
+            <pre class="big noshadow fragment" data-fragment-index="4" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+void <span class="fragment highlight-current-border" data-fragment-index="5">LIR_Assembler::next_int</span>(LIR_Opr result_reg) {
+  __ <span class="fragment highlight-current-border" data-fragment-index="6">rdrandl</span>(result_reg->as_register());
+}<span class="fragment" data-fragment-index="7"></span>
+              </code>
+            </pre>
+
+          </section>
+
+          <section>
+
+            <h2>Implementing a C1-JIT Intrinsic</h2>
+
+            <p style="text-align:center">Enable intrinisic in C1 Compiler: <code>share/c1/c1_Compiler.cpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+bool <span class="fragment highlight-current-border" data-fragment-index="1">Compiler::is_intrinsic_supported</span>(methodHandle method) {
+  switch (method->intrinsic_id()) {
+  ...
+  case <span class="fragment highlight-current-border" data-fragment-index="2">vmIntrinsics::_nextInt</span>:
+    if (<span class="fragment highlight-current-border" data-fragment-index="3">VM_Version::supports_rdrand()</span>) return true;
+              </code>
+            </pre>
+
+            <p class="fragment" data-fragment-index="4" style="text-align:center">And generate the intrinsic: <code>share/c1/c1_LIRGenerator.cpp</code></p>
+
+            <pre class="big noshadow fragment" data-fragment-index="4" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+void <span class="fragment highlight-current-border" data-fragment-index="5">LIRGenerator::do_Intrinsic</span>(Intrinsic* x) {
+  switch (x->id()) {
+  case <span class="fragment highlight-current-border" data-fragment-index="6">vmIntrinsics::_nextInt</span>:
+    LIRGenerator* lir_gen = gen();
+    LIR_List*     lir_list = lir_gen->lir();                
+    <span class="fragment highlight-current-border" data-fragment-index="7">lir_list->next_int</span>(rlock_result(x));<span class="fragment" data-fragment-index="8"></span>
+              </code>
+            </pre>
+
+          </section>
+
+          <section>
+
+            <h2>Implementing a C1-JIT Intrinsic</h2>
+
+            <p style="text-align:center">Handle the intrinsic in the visitor: <code>share/c1/c1_LIR.cpp</code></p>
+
+            <pre class="big noshadow" data-trim="true">
+              <code class="cpp" data-trim="true" data-noescape="true">
+void <span class="fragment highlight-current-border">LIR_OpVisitState::visit</span>(LIR_Op* op) {
+  set_op(op);
+
+  switch (<span class="fragment highlight-current-border">op-&gt;code()</span>) {
+    ...
+    case <span class="fragment highlight-current-border">lir_next_int</span>:
+    {
+      if (op->_info != NULL)           do_info(op->_info);
+      if (<span class="fragment highlight-current-border">op-&gt;_result-&gt;is_valid()</span>)     <span class="fragment highlight-current-border">do_output(op-&gt;_result)</span>;
+      break;
+    }
+              </code>
+            </pre>
+
+          </section>
+
+          <section>
+            <h1>C1 &amp; C2 Intrinsics Demo</h1>
           </section>
 
         </section>
@@ -1614,6 +1749,14 @@ public class RandomSnippet {
           <section>
             <h1>Machine Code Snippets Demo</h1>
           </section>
+
+        </section>
+
+        <section>
+
+          <h3 style="text-transform: none;"><a href="https://github.com/simonis/GeekOut2018">https://github.com/simonis/GeekOut2018</a></h3>
+
+          <h3 style="text-transform: none;"><a href="https://simonis.github.io/GeekOut2018">https://simonis.github.io/GeekOut2018</a></h3>
 
         </section>
 
@@ -1915,14 +2058,6 @@ Node* PhaseMacroExpand::generate_arraycopy(ArrayCopyNode *ac, AllocateArrayNode*
             <h3 style="text-transform: none;"><a href="https://bugs.openjdk.java.net/browse/JDK-8159611">https://bugs.openjdk.java.net/browse/JDK-8159611</a></h3>
             <img class="plain" data-src="images/8159611_ArrayCopy.png" alt="JDK-8159611: C2: ArrayCopy elimination skips required parameter checks"/>
           </section>
-
-        </section>
-
-        <section>
-
-          <h3 style="text-transform: none;"><a href="https://github.com/simonis/GeekOut2018">https://github.com/simonis/GeekOut2018</a></h3>
-
-          <h3 style="text-transform: none;"><a href="https://simonis.github.io/GeekOut2018">https://simonis.github.io/GeekOut2018</a></h3>
 
         </section>
 

@@ -1,4 +1,10 @@
-/usr/local/bin/groovy ../../../make_calling_hirarchy_new.groovy C2_Intrinsics.txt
+Copy Call Hierarchy from Eclipse:
+=================================
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=305471
+
+You just have to right-click on an entry of the Call Hierarchy and select "Copy Expanded Hierarchy" from the context menu. It will copy all the hierarchy below your selection into the clipboard.
+
+/usr/local/bin/groovy make_calling_hirarchy_new.groovy C2_Intrinsics.txt
 
 
   table.calling_hirarchy {

@@ -12,6 +12,10 @@ export _JAVA_OPTIONS='-Xbatch -XX:-UseCompressedOops -XX:+UseSerialGC -XX:-Tiere
 if [ "$1" == "random_print" ]; then
   export LD_LIBRARY_PATH=/share/OpenJDK/hsdis
 else
+if [ "$1" == "random_tiered" ]; then
+  export _JAVA_OPTIONS='-Xbatch -XX:-UseCompressedOops -XX:+UseSerialGC -XX:+TieredCompilation -XX:-UseOnStackReplacement -XX:+UnlockDiagnosticVMOptions -XX:-CheckIntrinsics -XX:-LogVMOutput -XX:CICompilerCount=2'
+  export LD_LIBRARY_PATH=/share/OpenJDK/hsdis
+else
 if [ "$1" == "loop" ]; then
   export _JAVA_OPTIONS='-Xbatch -XX:-UseCompressedOops -XX:+UseSerialGC -XX:-TieredCompilation -XX:-UseOnStackReplacement -XX:+UnlockDiagnosticVMOptions -XX:-LogVMOutput -XX:CICompilerCount=1'
 else
@@ -24,6 +28,7 @@ else
 if [ "$1" == "snippets" ]; then
 export PATH=/share/output-panama-dbg/images/jdk/bin:$PATH
   export _JAVA_OPTIONS='-Xbatch -XX:-UseCompressedOops -XX:+UseSerialGC -XX:-TieredCompilation -XX:-UseOnStackReplacement -XX:+UnlockDiagnosticVMOptions -XX:-LogVMOutput -XX:CICompilerCount=1'
+fi
 fi
 fi
 fi
