@@ -76,6 +76,10 @@ code.terminal .hljs-title {
 //    font-family: monospace;
   }
 
+  table.calling_hirarchy td.fixed {
+    width: 1ex;
+  }
+
   td.indent_level_0 {
     border-style: solid;
     border-width: 2px;
@@ -142,6 +146,31 @@ code.terminal .hljs-title {
     background-color: #ffffff;
   }
   td.indent_level_13 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #ffffff;
+  }
+  td.indent_level_14 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #ffffff;
+  }
+  td.indent_level_15 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #ffffff;
+  }
+  td.indent_level_16 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #ffffff;
+  }
+  td.indent_level_17 {
+    border-style: solid;
+    border-width: 2px;
+    background-color: #ffffff;
+  }
+  td.indent_level_18 {
     border-style: solid;
     border-width: 2px;
     background-color: #ffffff;
@@ -337,7 +366,7 @@ code.terminal .hljs-title {
       <!-- Any section element inside of this container is displayed as a slide -->
       <div class="slides">
 
-        <section>
+        <section class="center">
           <h1>HotSpot Intrinsics<br/></h1>
           <p>
             <small>Volker Simonis, SAP / <a href="mailto:volker.simonis@gmail.com">volker.simonis@gmail.com</a> / <a href="https://twitter.com/volker_simonis">@volker_simonis</a></small>
@@ -345,7 +374,7 @@ code.terminal .hljs-title {
         </section>
 
 
-        <section>
+        <section class="center">
 
           <h3 style="text-transform: none;"><a href="https://github.com/simonis/GeekOut2018">https://github.com/simonis/GeekOut2018</a></h3>
 
@@ -354,7 +383,7 @@ code.terminal .hljs-title {
         </section>
 
 
-        <section>
+        <section class="center">
 
           <h2>Intrinsics</h2>
 
@@ -482,7 +511,7 @@ $</span> <span class="fragment">java <span class="fragment highlight-current-bor
 
         <section style="height: 100%;">
 
-          <section>
+          <section class="center">
             <h2>Observability - Bytecode Instrumentation</h2>
 
             <ul>
@@ -667,7 +696,7 @@ Hello GeekOut!
 
         <section style="height: 100%;">
 
-          <section>
+          <section class="center">
             <h2>Observability - JVMTI Agents</h2>
 
             <ul>
@@ -785,7 +814,7 @@ Hello GeekOut!
             </pre>
           </section>
 
-          <section>
+          <section class="center">
             <h1><code>jdb</code> Demo</h1>
           </section>
         </section>
@@ -836,7 +865,7 @@ public static void main(String[] args) throws Exception {
             </pre>
           </section>
 
-          <section>
+          <section class="center">
             <h1>Math Intrinsics Demo</h1>
           </section>
 
@@ -865,7 +894,7 @@ public static void main(String[] args) throws Exception {
             </pre>
           </section>
 
-          <section>
+          <section class="center">
             <h1>Safepoint Demo</h1>
           </section>
 
@@ -984,7 +1013,7 @@ but the method is not annotated with @HotSpotIntrinsicCandidate. Exiting.
           </section>
 
 
-          <section>
+          <section class="center">
 
             <h2>Native (JNI) vs. Intrinsic methods</h2>
 
@@ -1206,7 +1235,7 @@ void Method::link_method(const methodHandle&amp; h_method) {
 
           </section>
 
-          <section>
+          <section class="center">
             <h1><code style="font-size: smaller;">-XX:+PrintInterpreter</code> Demo</h1>
           </section>
 
@@ -1382,89 +1411,176 @@ bool <span class="fragment highlight-current-border">LibraryCallKit::inline_rand
           </section>
 
           <section>
-
 <table class="calling_hirarchy" style="font-size: 70%;">
   <tr>
-    <td colspan="14" class="functionCall  indent_level_0">
-      <span class="fragment highlight-current-border"><code>CompileBroker::compiler_thread_loop()</code></span>
+    <td colspan="16" class="functionCall  indent_level_0">
+      <span class="fragment highlight-current-border"><code style="white-space: pre-wrap;">CompileBroker::compiler_thread_loop()                                   </code></span>
     </td>
   </tr>
   <tr>
-    <td rowspan="16">&nbsp;</td>
-    <td colspan="13" class="functionCall  indent_level_1">
+    <td class="fixed" rowspan="15">&nbsp;</td>
+    <td colspan="15" class="functionCall  indent_level_1">
     <span class="fragment highlight-current-border"><code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code></span>
     </td>
   </tr>
   <tr>
-    <td rowspan="15">&nbsp;</td>
-    <td colspan="12" class="functionCall  indent_level_2">
+    <td class="fixed" rowspan="14">&nbsp;</td>
+    <td colspan="14" class="functionCall  indent_level_2">
     <span class="fragment highlight-current-border"><code>C2Compiler::compile_method(target=0x7fffc4299130)</code></span>
     </td>
   </tr>
   <tr>
-    <td rowspan="14">&nbsp;</td>
-    <td colspan="11" class="functionCall  indent_level_3">
+    <td class="fixed" rowspan="13">&nbsp;</td>
+    <td colspan="13" class="functionCall  indent_level_3">
     <span class="fragment highlight-current-border"><code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code></span>
     </td>
   </tr>
   <tr>
-    <td rowspan="13">&nbsp;</td>
-    <td colspan="10" class="functionCall  indent_level_4">
+    <td class="fixed" rowspan="12">&nbsp;</td>
+    <td colspan="12" class="functionCall  indent_level_4">
     <span class="fragment highlight-current-border"><code>ParseGenerator::generate()</code></span>
     </td>
   </tr>
   <tr>
-    <td rowspan="12">&nbsp;</td>
-    <td colspan="9" class="functionCall  indent_level_5">
+    <td class="fixed" rowspan="11">&nbsp;</td>
+    <td colspan="11" class="functionCall  indent_level_5">
     <span class="fragment highlight-current-border"><code>Parse::Parse(caller=0x7fffc440de00, method=0x7fffc4299130)</code></span>
     </td>
   </tr>
   <tr>
-    <td rowspan="11">&nbsp;</td>
-    <td colspan="8" class="functionCall  indent_level_6">
+    <td class="fixed" rowspan="10">&nbsp;</td>
+    <td colspan="10" class="functionCall  indent_level_6">
     <span class="fragment highlight-current-border"><code>Parse::do_all_blocks()</code></span>
     </td>
   </tr>
   <tr>
-    <td rowspan="10">&nbsp;</td>
-    <td colspan="7" class="functionCall  indent_level_7">
+    <td class="fixed" rowspan="9">&nbsp;</td>
+    <td colspan="9" class="functionCall  indent_level_7">
     <span class="fragment highlight-current-border"><code>Parse::do_one_block()</code></span>
     </td>
   </tr>
   <tr>
-    <td rowspan="9">&nbsp;</td>
-    <td colspan="6" class="functionCall  indent_level_8">
+    <td class="fixed" rowspan="8">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_8">
     <span class="fragment highlight-current-border"><code>Parse::do_one_bytecode()</code></span>
     </td>
   </tr>
   <tr>
-    <td rowspan="8">&nbsp;</td>
-    <td colspan="5" class="functionCall  indent_level_9">
+    <td class="fixed" rowspan="7">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_9">
     <span class="fragment highlight-current-border"><code>Parse::do_call()</code></span>
     </td>
   </tr>
   <tr>
-    <td rowspan="7">&nbsp;</td>
-    <td colspan="4" class="functionCall  indent_level_10">
+    <td class="fixed" rowspan="6">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_10">
     <span class="fragment highlight-current-border"><code>Compile::call_generator(ciMethod*, ...)</code></span>
     </td>
   </tr>
   <tr>
-    <td rowspan="3">&nbsp;</td>
+    <td class="fixed" rowspan="5">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_11">
+    <span class="fragment highlight-current-border"><code>Compile::find_intrinsic(ciMethod*, ...)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="4">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_12">
+    <span class="fragment highlight-current-border"><code>Compile::make_vm_intrinsic(ciMethod*, ...)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="3">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_13">
+    <span class="fragment highlight-current-border"><code>C2Compiler::is_intrinsic_supported(methodHandle)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="2">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_14">
+    <span class="fragment highlight-current-border"><code>Matcher::match_rule_supported(Op_RandI)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="1" class="functionCall  indent_level_15">
+    <span class="fragment highlight-current-border"><code>VM_Version::supports_rdrand ()</code></span>
+    </td>
+  </tr>
+</table>
+          </section>
+
+          <section>
+<table class="calling_hirarchy" style="font-size: 70%;">
+  <tr>
+    <td colspan="14" class="functionCall  indent_level_0">
+      <code style="white-space: pre-wrap;">CompileBroker::compiler_thread_loop()                                   </code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="16">&nbsp;</td>
+    <td colspan="13" class="functionCall  indent_level_1">
+    <code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="15">&nbsp;</td>
+    <td colspan="12" class="functionCall  indent_level_2">
+    <code>C2Compiler::compile_method(target=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="14">&nbsp;</td>
+    <td colspan="11" class="functionCall  indent_level_3">
+    <code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="13">&nbsp;</td>
+    <td colspan="10" class="functionCall  indent_level_4">
+    <code>ParseGenerator::generate()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="12">&nbsp;</td>
+    <td colspan="9" class="functionCall  indent_level_5">
+    <code>Parse::Parse(caller=0x7fffc440de00, method=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="11">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_6">
+    <code>Parse::do_all_blocks()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="10">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_7">
+    <code>Parse::do_one_block()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="9">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_8">
+    <code>Parse::do_one_bytecode()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="8">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_9">
+    <code>Parse::do_call()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="7">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_10">
+    <mark><code>Compile::call_generator(ciMethod*, ...)</code></mark>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
     <td colspan="3" class="functionCall  indent_level_11">
-      <span class="fragment highlight-current-border"><code>Compile::find_intrinsic(ciMethod*, ...)</code></span>
-    </td>
-  </tr>
-  <tr>
-    <td rowspan="2">&nbsp;</td>
-    <td colspan="2" class="functionCall  indent_level_12">
-      <span class="fragment highlight-current-border"><code>Compile::make_vm_intrinsic(ciMethod*, ...)</code></span>
-    </td>
-  </tr>
-  <tr>
-    <td rowspan="1">&nbsp;</td>
-    <td colspan="1" class="functionCall  indent_level_13">
-      <span class="fragment highlight-current-border"><code>C2Compiler::is_intrinsic_supported(methodHandle)</code></span>
+      <code>...</code>
     </td>
   </tr>
   <tr>
@@ -1473,15 +1589,130 @@ bool <span class="fragment highlight-current-border">LibraryCallKit::inline_rand
     </td>
   </tr>
   <tr>
-    <td rowspan="2">&nbsp;</td>
+    <td class="fixed" rowspan="4">&nbsp;</td>
     <td colspan="3" class="functionCall  indent_level_11">
-    <span class="fragment highlight-current-border"><code>LibraryCallKit::try_to_inline(id=vmIntrinsics::_nextInt)</code></span>
+    <span class="fragment highlight-current-border"><code>LibraryCallKit::try_to_inline(vmIntrinsics::_nextInt)</code></span>
     </td>
   </tr>
   <tr>
-    <td rowspan="1">&nbsp;</td>
+    <td class="fixed" rowspan="3">&nbsp;</td>
     <td colspan="2" class="functionCall  indent_level_12">
     <span class="fragment highlight-current-border"><code>LibraryCallKit::inline_random()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="2">&nbsp;</td>
+    <td colspan="1" class="functionCall  indent_level_13">
+    <span class="fragment highlight-current-border"><code>n = new RandINode(control())</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="1" class="functionCall  indent_level_13">
+      <span class="fragment highlight-current-border"><code>LibraryCallKit::set_result(n)</code></span>
+    </td>
+  </tr>
+</table>
+          </section>
+
+          <section>
+<table class="calling_hirarchy" style="font-size: 70%;">
+  <tr>
+    <td colspan="11" class="functionCall  indent_level_0">
+      <code style="white-space: pre-wrap;">CompileBroker::compiler_thread_loop()                                   </code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="16">&nbsp;</td>
+    <td colspan="10" class="functionCall  indent_level_1">
+    <code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="15">&nbsp;</td>
+    <td colspan="9" class="functionCall  indent_level_2">
+    <code>C2Compiler::compile_method(target=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="14">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_3">
+    <code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="13">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_4">
+    <mark><code>ParseGenerator::generate()</code></mark>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_5">
+      <code>...</code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="7" class="functionCall  indent_level_4">
+      <span class="fragment highlight-current-border"><code>Compile::Code_Gen()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="10">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_5">
+    <span class="fragment highlight-current-border"><code>Matcher::match()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="5">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_6">
+      <span class="fragment highlight-current-border"><code>Matcher::xform(RandINode n)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="4">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_7">
+      <span class="fragment highlight-current-border"><code>Matcher::match_tree(RandINode n)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="3">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_8">
+      <span class="fragment highlight-current-border"><code>Matcher::ReduceInst(MachOpcodes randI_rule)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="2">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_9">
+      <span class="fragment highlight-current-border"><code>State::MachNodeGenerator(MachOpcodes randI_rule)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="1" class="functionCall  indent_level_10">
+      <span class="fragment highlight-current-border"><code>return new randINode()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="6" class="functionCall  indent_level_5">
+      <span class="fragment highlight-current-border"><code>Compile::Output()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="3">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_6">
+    <span class="fragment highlight-current-border"><code>Compile::fill_buffer(CodeBuffer)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="2">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_7">
+    <span class="fragment highlight-current-border"><code>randINode::emit(CodeBuffer)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_8">
+    <span class="fragment highlight-current-border"><code>Assembler::rdrandl()</code></span>
     </td>
   </tr>
 </table>
@@ -1585,6 +1816,113 @@ $ java <span class="fragment highlight-current-border">-XX:CompileCommand</span>
 
         </section>
 
+<!--
+
+
+#0  randINode::randINode (this=0x7fff9c0f6e00) at ad_x86.hpp:50136
+#1  0x00007ffff56ed440 in State::MachNodeGenerator (this=0x7fffa8042b10, opcode=1691) at ad_x86_gen.cpp:7161
+#2  0x00007ffff6119acf in Matcher::ReduceInst (this=0x7fffc64c3e70, s=0x7fffa8042b10, rule=1691, mem=@0x7fffc64c2e50: 0x1) at /share/OpenJDK/jdk/src/hotspot/share/opto/matcher.cpp:1647
+#3  0x00007ffff6118f67 in Matcher::match_tree (this=0x7fffc64c3e70, n=0x7fff9c0e34c0) at /share/OpenJDK/jdk/src/hotspot/share/opto/matcher.cpp:1396
+#4  0x00007ffff61171cf in Matcher::xform (this=0x7fffc64c3e70, n=0x7fff9c0e34c0, max_stack=11) at /share/OpenJDK/jdk/src/hotspot/share/opto/matcher.cpp:999
+#5  0x00007ffff6112cb2 in Matcher::match (this=0x7fffc64c3e70) at /share/OpenJDK/jdk/src/hotspot/share/opto/matcher.cpp:341
+#6  0x00007ffff5a5efb4 in Compile::Code_Gen (this=0x7fffc64c5ae0) at /share/OpenJDK/jdk/src/hotspot/share/opto/compile.cpp:2413
+#7  0x00007ffff5a577da in Compile::Compile (this=0x7fffc64c5ae0, ci_env=0x7fffc64c6880, compiler=0x7ffff0266c50, target=0x7fff9c030550, osr_bci=-1, subsume_loads=true, do_escape_analysis=true, eliminate_boxing=true, 
+    directive=0x7fffa803aa90) at /share/OpenJDK/jdk/src/hotspot/share/opto/compile.cpp:908
+#8  0x00007ffff5905b95 in C2Compiler::compile_method (this=0x7ffff0266c50, env=0x7fffc64c6880, target=0x7fff9c030550, entry_bci=-1, directive=0x7fffa803aa90) at /share/OpenJDK/jdk/src/hotspot/share/opto/c2compiler.cpp:109
+#9  0x00007ffff5a74733 in CompileBroker::invoke_compiler_on_method (task=0x7ffff028c600) at /share/OpenJDK/jdk/src/hotspot/share/compiler/compileBroker.cpp:2102
+#10 0x00007ffff5a73512 in CompileBroker::compiler_thread_loop () at /share/OpenJDK/jdk/src/hotspot/share/compiler/compileBroker.cpp:1802
+
+#0  VM_Version::supports_rdrand () at /share/OpenJDK/jdk/src/hotspot/cpu/x86/vm_version_x86.hpp:804
+#1  0x00007ffff57a623b in Assembler::rdrandl (this=0x7fffc64c2b20, dst=0x0) at /share/OpenJDK/jdk/src/hotspot/cpu/x86/assembler_x86.cpp:3936
+#2  0x00007ffff55cae91 in randINode::emit (this=0x7fff9c0f6e00, cbuf=..., ra_=0x7fffc64c32b0) at /share/OpenJDK/jdk/src/hotspot/cpu/x86/x86.ad:10504
+#3  0x00007ffff5a562de in Compile::scratch_emit_size (this=0x7fffc64c5ae0, n=0x7fff9c0f6e00) at /share/OpenJDK/jdk/src/hotspot/share/opto/compile.cpp:609
+#4  0x00007ffff6075f50 in MachNode::emit_size (this=0x7fff9c0f6e00, ra_=0x7fffc64c32b0) at /share/OpenJDK/jdk/src/hotspot/share/opto/machnode.cpp:155
+#5  0x00007ffff6075ebb in MachNode::size (this=0x7fff9c0f6e00, ra_=0x7fffc64c32b0) at /share/OpenJDK/jdk/src/hotspot/share/opto/machnode.cpp:147
+#6  0x00007ffff6221035 in Compile::shorten_branches (this=0x7fffc64c5ae0, blk_starts=0x7fff9c0d3750, code_size=@0x7fffc64c2fd4: 0, reloc_size=@0x7fffc64c2fd8: 1, stub_size=@0x7fffc64c2fdc: 0)
+    at /share/OpenJDK/jdk/src/hotspot/share/opto/output.cpp:332
+#7  0x00007ffff62240c8 in Compile::init_buffer (this=0x7fffc64c5ae0, blk_starts=0x7fff9c0d3750) at /share/OpenJDK/jdk/src/hotspot/share/opto/output.cpp:1028
+#8  0x00007ffff62205de in Compile::Output (this=0x7fffc64c5ae0) at /share/OpenJDK/jdk/src/hotspot/share/opto/output.cpp:121
+#9  0x00007ffff5a5f3c6 in Compile::Code_Gen (this=0x7fffc64c5ae0) at /share/OpenJDK/jdk/src/hotspot/share/opto/compile.cpp:2488
+#10 0x00007ffff5a577da in Compile::Compile (this=0x7fffc64c5ae0, ci_env=0x7fffc64c6880, compiler=0x7ffff0266c50, target=0x7fff9c030550, osr_bci=-1, subsume_loads=true, do_escape_analysis=true, eliminate_boxing=true, 
+    directive=0x7fffa803aa90) at /share/OpenJDK/jdk/src/hotspot/share/opto/compile.cpp:908
+#11 0x00007ffff5905b95 in C2Compiler::compile_method (this=0x7ffff0266c50, env=0x7fffc64c6880, target=0x7fff9c030550, entry_bci=-1, directive=0x7fffa803aa90) at /share/OpenJDK/jdk/src/hotspot/share/opto/c2compiler.cpp:109
+#12 0x00007ffff5a74733 in CompileBroker::invoke_compiler_on_method (task=0x7ffff028c600) at /share/OpenJDK/jdk/src/hotspot/share/compiler/compileBroker.cpp:2102
+#13 0x00007ffff5a73512 in CompileBroker::compiler_thread_loop () at /share/OpenJDK/jdk/src/hotspot/share/compiler/compileBroker.cpp:1802
+
+
+#0  VM_Version::supports_rdrand () at /share/OpenJDK/jdk/src/hotspot/cpu/x86/vm_version_x86.hpp:804
+#1  0x00007ffff57a623b in Assembler::rdrandl (this=0x7fffc64c2d70, dst=0x0) at /share/OpenJDK/jdk/src/hotspot/cpu/x86/assembler_x86.cpp:3936
+#2  0x00007ffff55cae91 in randINode::emit (this=0x7fff9c0f6e00, cbuf=..., ra_=0x7fffc64c32b0) at /share/OpenJDK/jdk/src/hotspot/cpu/x86/x86.ad:10504
+#3  0x00007ffff6225880 in Compile::fill_buffer (this=0x7fffc64c5ae0, cb=0x7fffc64c6438, blk_starts=0x7fff9c0d3750) at /share/OpenJDK/jdk/src/hotspot/share/opto/output.cpp:1391
+#4  0x00007ffff62207d1 in Compile::Output (this=0x7fffc64c5ae0) at /share/OpenJDK/jdk/src/hotspot/share/opto/output.cpp:155
+#5  0x00007ffff5a5f3c6 in Compile::Code_Gen (this=0x7fffc64c5ae0) at /share/OpenJDK/jdk/src/hotspot/share/opto/compile.cpp:2488
+#6  0x00007ffff5a577da in Compile::Compile (this=0x7fffc64c5ae0, ci_env=0x7fffc64c6880, compiler=0x7ffff0266c50, target=0x7fff9c030550, osr_bci=-1, subsume_loads=true, do_escape_analysis=true, eliminate_boxing=true, 
+    directive=0x7fffa803aa90) at /share/OpenJDK/jdk/src/hotspot/share/opto/compile.cpp:908
+#7  0x00007ffff5905b95 in C2Compiler::compile_method (this=0x7ffff0266c50, env=0x7fffc64c6880, target=0x7fff9c030550, entry_bci=-1, directive=0x7fffa803aa90) at /share/OpenJDK/jdk/src/hotspot/share/opto/c2compiler.cpp:109
+#8  0x00007ffff5a74733 in CompileBroker::invoke_compiler_on_method (task=0x7ffff028c600) at /share/OpenJDK/jdk/src/hotspot/share/compiler/compileBroker.cpp:2102
+#9  0x00007ffff5a73512 in CompileBroker::compiler_thread_loop () at /share/OpenJDK/jdk/src/hotspot/share/compiler/compileBroker.cpp:1802
+
+#0  VM_Version::supports_rdrand () at /share/OpenJDK/jdk/src/hotspot/cpu/x86/vm_version_x86.hpp:804
+#1  0x00007ffff5829d2c in Compiler::is_intrinsic_supported (this=0x7ffff0266bb0, method=...) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compiler.cpp:141
+#2  0x00007ffff582a242 in AbstractCompiler::is_intrinsic_available (this=0x7ffff0266bb0, method=..., directive=0x7fff9c1d9750) at /share/OpenJDK/jdk/src/hotspot/share/compiler/abstractCompiler.hpp:134
+#3  0x00007ffff583fd45 in GraphBuilder::try_inline_intrinsics (this=0x7fffc63c5000, callee=0x7fff9c128e40, ignore_return=false) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_GraphBuilder.cpp:3582
+#4  0x00007ffff583f136 in GraphBuilder::try_inline (this=0x7fffc63c5000, callee=0x7fff9c128e40, holder_known=true, ignore_return=false, bc=Bytecodes::_invokespecial, receiver=0x0)
+    at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_GraphBuilder.cpp:3415
+#5  0x00007ffff5837f66 in GraphBuilder::invoke (this=0x7fffc63c5000, code=Bytecodes::_invokespecial) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_GraphBuilder.cpp:2025
+#6  0x00007ffff583ce0c in GraphBuilder::iterate_bytecodes_for_block (this=0x7fffc63c5000, bci=0) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_GraphBuilder.cpp:2870
+#7  0x00007ffff583ab58 in GraphBuilder::connect_to_end (this=0x7fffc63c5000, beg=0x7fff9c11a570) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_GraphBuilder.cpp:2627
+#8  0x00007ffff583d76a in GraphBuilder::iterate_all_blocks (this=0x7fffc63c5000, start_in_current_block_for_inlining=false) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_GraphBuilder.cpp:2953
+#9  0x00007ffff583ec66 in GraphBuilder::GraphBuilder (this=0x7fffc63c5000, compilation=0x7fffc63c54c0, scope=0x7fff9c11a170) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_GraphBuilder.cpp:3316
+#10 0x00007ffff584f358 in IRScope::build_graph (this=0x7fff9c11a170, compilation=0x7fffc63c54c0, osr_bci=-1) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_IR.cpp:127
+#11 0x00007ffff584f5b4 in IRScope::IRScope (this=0x7fff9c11a170, compilation=0x7fffc63c54c0, caller=0x0, caller_bci=-1, method=0x7fff9c127410, osr_bci=-1, create_graph=true)
+    at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_IR.cpp:158
+#12 0x00007ffff584fbdc in IR::IR (this=0x7fff9c11a140, compilation=0x7fffc63c54c0, method=0x7fff9c127410, osr_bci=-1) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_IR.cpp:269
+#13 0x00007ffff5824b11 in Compilation::build_hir (this=0x7fffc63c54c0) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compilation.cpp:154
+#14 0x00007ffff58258c2 in Compilation::compile_java_method (this=0x7fffc63c54c0) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compilation.cpp:387
+#15 0x00007ffff5825d53 in Compilation::compile_method (this=0x7fffc63c54c0) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compilation.cpp:460
+#16 0x00007ffff582659d in Compilation::Compilation (this=0x7fffc63c54c0, compiler=0x7ffff0266bb0, env=0x7fffc63c5980, method=0x7fff9c127410, osr_bci=-1, buffer_blob=0x7fffd8991610, directive=0x7fff9c1d9750)
+    at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compilation.cpp:584
+#17 0x00007ffff5829e33 in Compiler::compile_method (this=0x7ffff0266bb0, env=0x7fffc63c5980, method=0x7fff9c127410, entry_bci=-1, directive=0x7fff9c1d9750) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compiler.cpp:254
+#18 0x00007ffff5a74733 in CompileBroker::invoke_compiler_on_method (task=0x7ffff028c600) at /share/OpenJDK/jdk/src/hotspot/share/compiler/compileBroker.cpp:2102
+#19 0x00007ffff5a73512 in CompileBroker::compiler_thread_loop () at /share/OpenJDK/jdk/src/hotspot/share/compiler/compileBroker.cpp:1802
+
+
+
+
+#0  LIR_Op0::LIR_Op0 (this=0x7fff9c1479a0, code=lir_next_int, result=0x8fd00b, info=0x0) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_LIR.hpp:1318
+#1  0x00007ffff58a2722 in LIR_List::next_int (this=0x7fff9c15d680, result=0x8fd00b) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_LIR.hpp:2075
+#2  0x00007ffff589cdd1 in LIRGenerator::do_Intrinsic (this=0x7fffc63c4ea0, x=0x7fff9c15b8d0) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_LIRGenerator.cpp:3053
+#3  0x00007ffff58488c8 in Intrinsic::visit (this=0x7fff9c15b8d0, v=0x7fffc63c4ea0) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Instruction.hpp:1532
+#4  0x00007ffff588f3ae in LIRGenerator::do_root (this=0x7fffc63c4ea0, instr=0x7fff9c15b8d0) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_LIRGenerator.cpp:377
+#5  0x00007ffff588f238 in LIRGenerator::block_do (this=0x7fffc63c4ea0, block=0x7fff9c15ae60) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_LIRGenerator.cpp:358
+#6  0x00007ffff585aeeb in BlockList::iterate_forward (this=0x7fff9c15c770, closure=0x7fffc63c4ea8) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Instruction.cpp:914
+#7  0x00007ffff5853bfd in IR::iterate_linear_scan_order (this=0x7fff9c15aa30, closure=0x7fffc63c4ea8) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_IR.cpp:1210
+#8  0x00007ffff5825141 in Compilation::emit_lir (this=0x7fffc63c5340) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compilation.cpp:259
+#9  0x00007ffff58259a4 in Compilation::compile_java_method (this=0x7fffc63c5340) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compilation.cpp:398
+#10 0x00007ffff5825d53 in Compilation::compile_method (this=0x7fffc63c5340) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compilation.cpp:460
+#11 0x00007ffff582659d in Compilation::Compilation (this=0x7fffc63c5340, compiler=0x7ffff0266bb0, env=0x7fffc63c5800, method=0x7fff9c0c69a0, osr_bci=-1, buffer_blob=0x7fffd8997590, directive=0x7fff9c1c0e10)
+    at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compilation.cpp:584
+#12 0x00007ffff5829e33 in Compiler::compile_method (this=0x7ffff0266bb0, env=0x7fffc63c5800, method=0x7fff9c0c69a0, entry_bci=-1, directive=0x7fff9c1c0e10) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compiler.cpp:254
+#13 0x00007ffff5a74733 in CompileBroker::invoke_compiler_on_method (task=0x7ffff028c600) at /share/OpenJDK/jdk/src/hotspot/share/compiler/compileBroker.cpp:2102
+#14 0x00007ffff5a73512 in CompileBroker::compiler_thread_loop () at /share/OpenJDK/jdk/src/hotspot/share/compiler/compileBroker.cpp:1802
+
+#0  Assembler::rdrandl (this=0x7fff9c165fd0, dst=0x0) at /share/OpenJDK/jdk/src/hotspot/cpu/x86/assembler_x86.cpp:3936
+#1  0x00007ffff588afd1 in LIR_Assembler::next_int (this=0x7fffc63c5170, result_reg=0xc00b) at /share/OpenJDK/jdk/src/hotspot/cpu/x86/c1_LIRAssembler_x86.cpp:3962
+#2  0x00007ffff5870870 in LIR_Assembler::emit_op0 (this=0x7fffc63c5170, op=0x7fff9c160260) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_LIRAssembler.cpp:688
+#3  0x00007ffff5866b69 in LIR_Op0::emit_code (this=0x7fff9c160260, masm=0x7fffc63c5170) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_LIR.cpp:1002
+#4  0x00007ffff586f567 in LIR_Assembler::emit_lir_list (this=0x7fffc63c5170, list=0x7fff9c11cd90) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_LIRAssembler.cpp:292
+#5  0x00007ffff586f30b in LIR_Assembler::emit_block (this=0x7fffc63c5170, block=0x7fff9c11a570) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_LIRAssembler.cpp:257
+#6  0x00007ffff586f063 in LIR_Assembler::emit_code (this=0x7fffc63c5170, hir=0x7fff9c11be80) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_LIRAssembler.cpp:216
+#7  0x00007ffff582569b in Compilation::emit_code_body (this=0x7fffc63c54c0) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compilation.cpp:352
+#8  0x00007ffff58259ea in Compilation::compile_java_method (this=0x7fffc63c54c0) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compilation.cpp:404
+#9  0x00007ffff5825d53 in Compilation::compile_method (this=0x7fffc63c54c0) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compilation.cpp:460
+#10 0x00007ffff582659d in Compilation::Compilation (this=0x7fffc63c54c0, compiler=0x7ffff0266bb0, env=0x7fffc63c5980, method=0x7fff9c127410, osr_bci=-1, buffer_blob=0x7fffd8991610, directive=0x7fff9c1d9750)
+    at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compilation.cpp:584
+#11 0x00007ffff5829e33 in Compiler::compile_method (this=0x7ffff0266bb0, env=0x7fffc63c5980, method=0x7fff9c127410, entry_bci=-1, directive=0x7fff9c1d9750) at /share/OpenJDK/jdk/src/hotspot/share/c1/c1_Compiler.cpp:254
+#12 0x00007ffff5a74733 in CompileBroker::invoke_compiler_on_method (task=0x7ffff028c600) at /share/OpenJDK/jdk/src/hotspot/share/compiler/compileBroker.cpp:2102
+#13 0x00007ffff5a73512 in CompileBroker::compiler_thread_loop () at /share/OpenJDK/jdk/src/hotspot/share/compiler/compileBroker.cpp:1802
+
+-->
 
         <section style="height: 100%;">
 
@@ -1703,6 +2041,338 @@ void <span class="fragment highlight-current-border">LIR_OpVisitState::visit</sp
           </section>
 
           <section>
+<table class="calling_hirarchy" style="font-size: 50%;">
+  <tr>
+    <td colspan="19" class="functionCall  indent_level_0">
+      <span class="fragment highlight-current-border"><code style="white-space: pre-wrap;">CompileBroker::invoke_compiler_on_method()                                                                 </code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="20">&nbsp;</td>
+    <td colspan="18" class="functionCall  indent_level_1">
+    <span class="fragment highlight-current-border"><code>Compiler::compile_method(method=0x7fff9c127410)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="19">&nbsp;</td>
+    <td colspan="17" class="functionCall  indent_level_2">
+    <span class="fragment highlight-current-border"><code>Compilation::Compilation(compiler=0x7ffff0266bb0, ciMethod=0x7fff9c127410)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="18">&nbsp;</td>
+    <td colspan="16" class="functionCall  indent_level_3">
+    <span class="fragment highlight-current-border"><code>Compilation::compile_method()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="17">&nbsp;</td>
+    <td colspan="15" class="functionCall  indent_level_4">
+    <span class="fragment highlight-current-border"><code>Compilation::compile_java_method()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="16">&nbsp;</td>
+    <td colspan="14" class="functionCall  indent_level_5">
+    <span class="fragment highlight-current-border"><code>Compilation::build_hir()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="15">&nbsp;</td>
+    <td colspan="13" class="functionCall  indent_level_6">
+    <span class="fragment highlight-current-border"><code>IR::IR(method=0x7fff9c127410)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="14">&nbsp;</td>
+    <td colspan="12" class="functionCall  indent_level_7">
+    <span class="fragment highlight-current-border"><code>IRScope::IRScope(ciMethod=0x7fff9c127410)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="13">&nbsp;</td>
+    <td colspan="11" class="functionCall  indent_level_8">
+    <span class="fragment highlight-current-border"><code>IRScope::build_graph()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="12">&nbsp;</td>
+    <td colspan="10" class="functionCall  indent_level_9">
+    <span class="fragment highlight-current-border"><code>GraphBuilder::GraphBuilder()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="11">&nbsp;</td>
+    <td colspan="9" class="functionCall  indent_level_10">
+    <span class="fragment highlight-current-border"><code>GraphBuilder::iterate_all_blocks</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="10">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_11">
+    <span class="fragment highlight-current-border"><code>GraphBuilder::connect_to_end()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="9">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_12">
+    <span class="fragment highlight-current-border"><code>GraphBuilder::iterate_bytecodes_for_block()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="8">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_13">
+    <span class="fragment highlight-current-border"><code>GraphBuilder::invoke(Bytecodes::_invokespecial)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="7">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_14">
+    <span class="fragment highlight-current-border"><code>GraphBuilder::try_inline(ciMethod=0x7fff9c128e40, Bytecodes::_invokespecial)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="6">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_15">
+    <span class="fragment highlight-current-border"><code>GraphBuilder::try_inline_intrinsics(ciMethod=0x7fff9c128e40)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="5">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_16">
+    <span class="fragment highlight-current-border"><code>AbstractCompiler::is_intrinsic_available(methodHandle=0x7fffc63c4b80)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="2">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_17">
+      <span class="fragment highlight-current-border"><code>Compiler::is_intrinsic_supported(methodHandle=0x7fffc63c4b80)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="1" class="functionCall  indent_level_18">
+      <span class="fragment highlight-current-border"><code>VM_Version::supports_rdrand()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3" class="functionCall  indent_level_16">
+      <span class="fragment highlight-current-border"><code>GraphBuilder::build_graph_for_intrinsic(ciMethod=0x7fff9c128e40)</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_17">
+    <span class="fragment highlight-current-border"><code>new Intrinsic(id=vmIntrinsics::_nextInt)</code></span>
+    </td>
+  </tr>
+</table>
+          </section>
+
+          <section>
+<table class="calling_hirarchy" style="font-size: 50%;">
+  <tr>
+    <td colspan="14" class="functionCall  indent_level_0">
+      <code style="white-space: pre-wrap;">CompileBroker::invoke_compiler_on_method()                                                                 </code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="15">&nbsp;</td>
+    <td colspan="13" class="functionCall  indent_level_1">
+    <code>Compiler::compile_method(method=0x7fff9c127410)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="14">&nbsp;</td>
+    <td colspan="12" class="functionCall  indent_level_2">
+    <code>Compilation::Compilation(compiler=0x7ffff0266bb0, ciMethod=0x7fff9c127410)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="13">&nbsp;</td>
+    <td colspan="11" class="functionCall  indent_level_3">
+    <code>Compilation::compile_method()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="12">&nbsp;</td>
+    <td colspan="10" class="functionCall  indent_level_4">
+    <code>Compilation::compile_java_method()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="11">&nbsp;</td>
+    <td colspan="9" class="functionCall  indent_level_5">
+    <mark><code>Compilation::build_hir()</code></mark>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_6">
+      <code>...</code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="9" class="functionCall  indent_level_5">
+      <span class="fragment highlight-current-border"><code>Compilation::emit_lir()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="8">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_6">
+    <span class="fragment highlight-current-border"><code>IR::iterate_linear_scan_order()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="7">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_7">
+    <span class="fragment highlight-current-border"><code>BlockList::iterate_forward()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="6">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_8">
+    <span class="fragment highlight-current-border"><code>LIRGenerator::block_do()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="5">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_9">
+    <span class="fragment highlight-current-border"><code>LIRGenerator::do_root()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="4">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_10">
+    <span class="fragment highlight-current-border"><code>Intrinsic::visit()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="3">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_11">
+    <span class="fragment highlight-current-border"><code>LIRGenerator::do_Intrinsic()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="2">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_12">
+    <span class="fragment highlight-current-border"><code>LIR_List::next_int()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="1" class="functionCall  indent_level_13">
+    <span class="fragment highlight-current-border"><code>new LIR_Op0(LIR_Code lir_next_int)</code></span>
+    </td>
+  </tr>
+</table>
+          </section>
+
+          <section>
+<table class="calling_hirarchy" style="font-size: 50%;">
+  <tr>
+    <td colspan="13" class="functionCall  indent_level_0">
+      <code style="white-space: pre-wrap;">CompileBroker::invoke_compiler_on_method()                                                                 </code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="16">&nbsp;</td>
+    <td colspan="12" class="functionCall  indent_level_1">
+    <code>Compiler::compile_method(method=0x7fff9c127410)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="15">&nbsp;</td>
+    <td colspan="11" class="functionCall  indent_level_2">
+    <code>Compilation::Compilation(compiler=0x7ffff0266bb0, ciMethod=0x7fff9c127410)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="14">&nbsp;</td>
+    <td colspan="10" class="functionCall  indent_level_3">
+    <code>Compilation::compile_method()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="13">&nbsp;</td>
+    <td colspan="9" class="functionCall  indent_level_4">
+    <code>Compilation::compile_java_method()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="12">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_5">
+    <code>Compilation::build_hir()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_6">
+      <code>...</code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="8" class="functionCall  indent_level_5">
+      <mark><code>Compilation::emit_lir()</code></mark>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_6">
+      <code>...</code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="8" class="functionCall  indent_level_5">
+      <span class="fragment highlight-current-border"><code>Compilation::emit_code_body()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="7">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_6">
+    <span class="fragment highlight-current-border"><code>LIR_Assembler::emit_code()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="6">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_7">
+    <span class="fragment highlight-current-border"><code>LIR_Assembler::emit_block()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="5">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_8">
+    <span class="fragment highlight-current-border"><code>LIR_Assembler::emit_lir_list()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="4">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_9">
+    <span class="fragment highlight-current-border"><code>LIR_Op0::emit_code()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="3">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_10">
+    <span class="fragment highlight-current-border"><code>LIR_Assembler::emit_op0()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="2">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_11">
+    <span class="fragment highlight-current-border"><code>LIR_Assembler::next_int()</code></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="1" class="functionCall  indent_level_12">
+    <span class="fragment highlight-current-border"><code>Assembler::rdrandl()</code></span>
+    </td>
+  </tr>
+</table>
+          </section>
+
+          <section class="center">
             <h1>C1 &amp; C2 Intrinsics Demo</h1>
           </section>
 
@@ -1711,7 +2381,7 @@ void <span class="fragment highlight-current-border">LIR_OpVisitState::visit</sp
 
         <section style="height: 100%;">
 
-          <section>
+          <section class="center">
 
             <h2>Project Panama: Machine Code Snippets</h2>
 
@@ -1746,13 +2416,13 @@ public class RandomSnippet {
             </pre>
           </section>
 
-          <section>
+          <section class="center">
             <h1>Machine Code Snippets Demo</h1>
           </section>
 
         </section>
 
-        <section>
+        <section class="center">
 
           <h3 style="text-transform: none;"><a href="https://github.com/simonis/GeekOut2018">https://github.com/simonis/GeekOut2018</a></h3>
 
@@ -1762,7 +2432,7 @@ public class RandomSnippet {
 
         <section style="height: 100%;">
 
-          <section>
+          <section class="center">
             <h2 style="text-transform: none;"><code>System.arraycopy() - Bug</code></h2>
 <!--
             <p style="text-align:center">..if any of the following is true, an IndexOutOfBoundsException is thrown..</p>
@@ -1838,64 +2508,64 @@ JavaObject NoEscape(NoEscape) <mark>40 AllocateArray</mark> = ArrayCopy::arrayco
           </section>
 
           <section style="padding: 0; height: 100%;">
-<table class="calling_hirarchy">
+<table class="calling_hirarchy" style="font-size: 70%;">
   <tr>
     <td colspan="10" class="functionCall  indent_level_3">
-      <code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code>
+      <code style="white-space: pre-wrap;">Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code>
     </td>
   </tr>
   <tr>
-    <td rowspan="16">&nbsp;</td>
+    <td class="fixed" rowspan="16">&nbsp;</td>
     <td colspan="9" class="functionCall  indent_level_4">
     <code>ParseGenerator::generate()</code>
     </td>
   </tr>
   <tr>
-    <td rowspan="8">&nbsp;</td>
+    <td class="fixed" rowspan="8">&nbsp;</td>
     <td colspan="8" class="functionCall  indent_level_5">
       <code>Parse::Parse(caller=0x7fffc440de00, parse_method=0x7fffc4299130)</code>
     </td>
   </tr>
   <tr>
-    <td rowspan="7">&nbsp;</td>
+    <td class="fixed" rowspan="7">&nbsp;</td>
     <td colspan="7" class="functionCall  indent_level_6">
       <code>Parse::do_all_blocks()</code>
     </td>
   </tr>
   <tr>
-    <td rowspan="6">&nbsp;</td>
+    <td class="fixed" rowspan="6">&nbsp;</td>
     <td colspan="6" class="functionCall  indent_level_7">
       <code>Parse::do_one_block()</code>
     </td>
   </tr>
   <tr>
-    <td rowspan="5">&nbsp;</td>
+    <td class="fixed" rowspan="5">&nbsp;</td>
     <td colspan="5" class="functionCall  indent_level_8">
       <code>Parse::do_one_bytecode()</code>
     </td>
   </tr>
   <tr>
-    <td rowspan="4">&nbsp;</td>
+    <td class="fixed" rowspan="4">&nbsp;</td>
     <td colspan="4" class="functionCall  indent_level_9">
       <code>Parse::do_call()</code>
     </td>
   </tr>
   <tr>
-    <td rowspan="3">&nbsp;</td>
+    <td class="fixed" rowspan="3">&nbsp;</td>
     <td colspan="3" class="functionCall  indent_level_10">
       <code>LibraryIntrinsic::generate()</code>
     </td>
   </tr>
   <tr>
-    <td rowspan="2">&nbsp;</td>
+    <td class="fixed" rowspan="2">&nbsp;</td>
     <td colspan="2" class="functionCall  indent_level_11">
       <code>LibraryCallKit::try_to_inline(id=vmIntrinsics::_arraycopy)</code>
     </td>
   </tr>
   <tr>
-    <td rowspan="1">&nbsp;</td>
+    <td class="fixed" rowspan="1">&nbsp;</td>
     <td colspan="1" class="functionCall  indent_level_12">
-      <code><mark>LibraryCallKit::inline_arraycopy()</mark></code>
+      <mark><code>LibraryCallKit::inline_arraycopy()</code></mark>
     </td>
   </tr>
   <tr>
@@ -1904,21 +2574,21 @@ JavaObject NoEscape(NoEscape) <mark>40 AllocateArray</mark> = ArrayCopy::arrayco
     </td>
   </tr>
   <tr>
-    <td rowspan="6">&nbsp;</td>
+    <td class="fixed" rowspan="6">&nbsp;</td>
     <td colspan="8" class="functionCall  indent_level_5">
     <code>PhaseMacroExpand::eliminate_macro_nodes()</code>
     </td>
   </tr>
   <tr>
-    <td rowspan="2">&nbsp;</td>
+    <td class="fixed" rowspan="2">&nbsp;</td>
     <td colspan="7" class="functionCall  indent_level_6">
       <code>PhaseMacroExpand::eliminate_allocate_node(AllocateNode*, ...)</code>
     </td>
   </tr>
   <tr>
-    <td rowspan="1">&nbsp;</td>
+    <td class="fixed" rowspan="1">&nbsp;</td>
     <td colspan="6" class="functionCall  indent_level_7">
-      <code><mark>PhaseMacroExpand::process_users_of_allocation()</mark></code>
+      <mark><code>PhaseMacroExpand::process_users_of_allocation()</code></mark>
     </td>
   </tr>
   <tr>
@@ -1927,15 +2597,15 @@ JavaObject NoEscape(NoEscape) <mark>40 AllocateArray</mark> = ArrayCopy::arrayco
     </td>
   </tr>
   <tr>
-    <td rowspan="2">&nbsp;</td>
+    <td class="fixed" rowspan="2">&nbsp;</td>
     <td colspan="7" class="functionCall  indent_level_6">
     <code>PhaseMacroExpand::expand_arraycopy_node(ArrayCopyNode*)</code>
     </td>
   </tr>
   <tr>
-    <td rowspan="1">&nbsp;</td>
+    <td class="fixed" rowspan="1">&nbsp;</td>
     <td colspan="6" class="functionCall  indent_level_7">
-    <code><mark>PhaseMacroExpand::generate_arraycopy(ArrayCopyNode*, AllocateNode*, ...)</mark></code>
+    <mark><code>PhaseMacroExpand::generate_arraycopy(ArrayCopyNode*, AllocateNode*, ...)</code></mark>
     </td>
   </tr>
 </table>
@@ -2085,7 +2755,7 @@ Node* PhaseMacroExpand::generate_arraycopy(ArrayCopyNode *ac, AllocateArrayNode*
         controls: true,
         progress: true,
         history: true,
-        center: true,
+        center: false,
         slideNumber: true,
 
         transition: 'none', // none/fade/slide/convex/concave/zoom

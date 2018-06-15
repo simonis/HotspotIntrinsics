@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><table class="calling_hirarchy" style="font-size: 100%;">
+  <tr>
+    <td colspan="14" class="functionCall  indent_level_0">
+      <code style="white-space: pre-wrap;">CompileBroker::compiler_thread_loop()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="16">&nbsp;</td>
+    <td colspan="13" class="functionCall  indent_level_1">
+    <code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="15">&nbsp;</td>
+    <td colspan="12" class="functionCall  indent_level_2">
+    <code>C2Compiler::compile_method(target=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="14">&nbsp;</td>
+    <td colspan="11" class="functionCall  indent_level_3">
+    <code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="13">&nbsp;</td>
+    <td colspan="10" class="functionCall  indent_level_4">
+    <code>ParseGenerator::generate()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="12">&nbsp;</td>
+    <td colspan="9" class="functionCall  indent_level_5">
+    <code>Parse::Parse(caller=0x7fffc440de00, method=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="11">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_6">
+    <code>Parse::do_all_blocks()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="10">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_7">
+    <code>Parse::do_one_block()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="9">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_8">
+    <code>Parse::do_one_bytecode()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="8">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_9">
+    <code>Parse::do_call()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="7">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_10">
+    <code>Compile::call_generator(ciMethod*, ...)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_11">
+      <code>...</code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="4" class="functionCall  indent_level_10">
+      <code>LibraryIntrinsic::generate()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="4">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_11">
+    <code>LibraryCallKit::try_to_inline(vmIntrinsics::_nextInt)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="3">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_12">
+    <code>LibraryCallKit::inline_random()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="2">&nbsp;</td>
+    <td colspan="1" class="functionCall  indent_level_13">
+    <code>n = new RandINode(control())</code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="1" class="functionCall  indent_level_13">
+      <code>LibraryCallKit::set_result(n)</code>
+    </td>
+  </tr>
+</table>

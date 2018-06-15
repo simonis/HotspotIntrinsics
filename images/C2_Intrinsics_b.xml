@@ -1,0 +1,19 @@
+<calling_hirarchy>
+<call level='0' type='functionCall '><code style="white-space: pre-wrap;">CompileBroker::compiler_thread_loop()</code></call>
+<call level='1' type='functionCall '><code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code></call>
+<call level='2' type='functionCall '><code>C2Compiler::compile_method(target=0x7fffc4299130)</code></call>
+<call level='3' type='functionCall '><code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code></call>
+<call level='4' type='functionCall '><code>ParseGenerator::generate()</code></call>
+<call level='5' type='functionCall '><code>...</code></call>
+<call level='4' type='functionCall '><code>Compile::Code_Gen()</code></call>
+<call level='5' type='functionCall '><code>Matcher::match()</code></call>
+<call level='6' type='functionCall '><code>Matcher::xform(RandINode n)</code></call>
+<call level='7' type='functionCall '><code>Matcher::match_tree(RandINode n)</code></call>
+<call level='8' type='functionCall '><code>Matcher::ReduceInst(MachOpcodes randI_rule)</code></call>
+<call level='9' type='functionCall '><code>State::MachNodeGenerator(MachOpcodes randI_rule)</code></call>
+<call level='10' type='functionCall '><code>return new randINode()</code></call>
+<call level='5' type='functionCall '><code>Compile::Output()</code></call>
+<call level='6' type='functionCall '><code>Compile::fill_buffer(CodeBuffer)</code></call>
+<call level='7' type='functionCall '><code>randINode::emit(CodeBuffer)</code></call>
+<call level='8' type='functionCall '><code>Assembler::rdrandl()</code></call>
+</calling_hirarchy>

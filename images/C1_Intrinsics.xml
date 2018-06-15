@@ -1,0 +1,23 @@
+<calling_hirarchy>
+<call level='0' type='functionCall '><code style="white-space: pre-wrap;">CompileBroker::invoke_compiler_on_method()</code></call>
+<call level='1' type='functionCall '><code>Compiler::compile_method(method=0x7fff9c127410)</code></call>
+<call level='2' type='functionCall '><code>Compilation::Compilation(compiler=0x7ffff0266bb0, ciMethod=0x7fff9c127410)</code></call>
+<call level='3' type='functionCall '><code>Compilation::compile_method()</code></call>
+<call level='4' type='functionCall '><code>Compilation::compile_java_method()</code></call>
+<call level='5' type='functionCall '><code>Compilation::build_hir()</code></call>
+<call level='6' type='functionCall '><code>IR::IR(method=0x7fff9c127410)</code></call>
+<call level='7' type='functionCall '><code>IRScope::IRScope(ciMethod=0x7fff9c127410)</code></call>
+<call level='8' type='functionCall '><code>IRScope::build_graph()</code></call>
+<call level='9' type='functionCall '><code>GraphBuilder::GraphBuilder()</code></call>
+<call level='10' type='functionCall '><code>GraphBuilder::iterate_all_blocks</code></call>
+<call level='11' type='functionCall '><code>GraphBuilder::connect_to_end()</code></call>
+<call level='12' type='functionCall '><code>GraphBuilder::iterate_bytecodes_for_block()</code></call>
+<call level='13' type='functionCall '><code>GraphBuilder::invoke(Bytecodes::_invokespecial)</code></call>
+<call level='14' type='functionCall '><code>GraphBuilder::try_inline(ciMethod=0x7fff9c128e40, Bytecodes::_invokespecial)</code></call>
+<call level='15' type='functionCall '><code>GraphBuilder::try_inline_intrinsics(ciMethod=0x7fff9c128e40)</code></call>
+<call level='16' type='functionCall '><code>AbstractCompiler::is_intrinsic_available(methodHandle=0x7fffc63c4b80)</code></call>
+<call level='17' type='functionCall '><code>Compiler::is_intrinsic_supported(methodHandle=0x7fffc63c4b80)</code></call>
+<call level='18' type='functionCall '><code>VM_Version::supports_rdrand()</code></call>
+<call level='16' type='functionCall '><code>GraphBuilder::build_graph_for_intrinsic(ciMethod=0x7fff9c128e40)</code></call>
+<call level='17' type='functionCall '><code>new Intrinsic(id=vmIntrinsics::_nextInt)</code></call>
+</calling_hirarchy>

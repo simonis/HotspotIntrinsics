@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><table class="calling_hirarchy" style="font-size: 100%;">
+  <tr>
+    <td colspan="11" class="functionCall  indent_level_0">
+      <code style="white-space: pre-wrap;">CompileBroker::compiler_thread_loop()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="16">&nbsp;</td>
+    <td colspan="10" class="functionCall  indent_level_1">
+    <code>CompileBroker::invoke_compiler_on_method(task=0x7ffff01da940)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="15">&nbsp;</td>
+    <td colspan="9" class="functionCall  indent_level_2">
+    <code>C2Compiler::compile_method(target=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="14">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_3">
+    <code>Compile::Compile(compiler=0x7ffff01a0a60, target=0x7fffc4299130)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="13">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_4">
+    <code>ParseGenerator::generate()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_5">
+      <code>...</code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="7" class="functionCall  indent_level_4">
+      <code>Compile::Code_Gen()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="10">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_5">
+    <code>Matcher::match()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="5">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_6">
+      <code>Matcher::xform(RandINode n)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="4">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_7">
+      <code>Matcher::match_tree(RandINode n)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="3">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_8">
+      <code>Matcher::ReduceInst(MachOpcodes randI_rule)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="2">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_9">
+      <code>State::MachNodeGenerator(MachOpcodes randI_rule)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="1" class="functionCall  indent_level_10">
+      <code>return new randINode()</code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="6" class="functionCall  indent_level_5">
+      <code>Compile::Output()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="3">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_6">
+    <code>Compile::fill_buffer(CodeBuffer)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="2">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_7">
+    <code>randINode::emit(CodeBuffer)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_8">
+    <code>Assembler::rdrandl()</code>
+    </td>
+  </tr>
+</table>

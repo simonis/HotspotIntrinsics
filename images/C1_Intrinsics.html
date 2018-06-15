@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><table class="calling_hirarchy" style="font-size: 100%;">
+  <tr>
+    <td colspan="19" class="functionCall  indent_level_0">
+      <code style="white-space: pre-wrap;">CompileBroker::invoke_compiler_on_method()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="20">&nbsp;</td>
+    <td colspan="18" class="functionCall  indent_level_1">
+    <code>Compiler::compile_method(method=0x7fff9c127410)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="19">&nbsp;</td>
+    <td colspan="17" class="functionCall  indent_level_2">
+    <code>Compilation::Compilation(compiler=0x7ffff0266bb0, ciMethod=0x7fff9c127410)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="18">&nbsp;</td>
+    <td colspan="16" class="functionCall  indent_level_3">
+    <code>Compilation::compile_method()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="17">&nbsp;</td>
+    <td colspan="15" class="functionCall  indent_level_4">
+    <code>Compilation::compile_java_method()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="16">&nbsp;</td>
+    <td colspan="14" class="functionCall  indent_level_5">
+    <code>Compilation::build_hir()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="15">&nbsp;</td>
+    <td colspan="13" class="functionCall  indent_level_6">
+    <code>IR::IR(method=0x7fff9c127410)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="14">&nbsp;</td>
+    <td colspan="12" class="functionCall  indent_level_7">
+    <code>IRScope::IRScope(ciMethod=0x7fff9c127410)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="13">&nbsp;</td>
+    <td colspan="11" class="functionCall  indent_level_8">
+    <code>IRScope::build_graph()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="12">&nbsp;</td>
+    <td colspan="10" class="functionCall  indent_level_9">
+    <code>GraphBuilder::GraphBuilder()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="11">&nbsp;</td>
+    <td colspan="9" class="functionCall  indent_level_10">
+    <code>GraphBuilder::iterate_all_blocks</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="10">&nbsp;</td>
+    <td colspan="8" class="functionCall  indent_level_11">
+    <code>GraphBuilder::connect_to_end()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="9">&nbsp;</td>
+    <td colspan="7" class="functionCall  indent_level_12">
+    <code>GraphBuilder::iterate_bytecodes_for_block()</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="8">&nbsp;</td>
+    <td colspan="6" class="functionCall  indent_level_13">
+    <code>GraphBuilder::invoke(Bytecodes::_invokespecial)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="7">&nbsp;</td>
+    <td colspan="5" class="functionCall  indent_level_14">
+    <code>GraphBuilder::try_inline(ciMethod=0x7fff9c128e40, Bytecodes::_invokespecial)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="6">&nbsp;</td>
+    <td colspan="4" class="functionCall  indent_level_15">
+    <code>GraphBuilder::try_inline_intrinsics(ciMethod=0x7fff9c128e40)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="5">&nbsp;</td>
+    <td colspan="3" class="functionCall  indent_level_16">
+    <code>AbstractCompiler::is_intrinsic_available(methodHandle=0x7fffc63c4b80)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="2">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_17">
+      <code>Compiler::is_intrinsic_supported(methodHandle=0x7fffc63c4b80)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="1" class="functionCall  indent_level_18">
+      <code>VM_Version::supports_rdrand()</code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3" class="functionCall  indent_level_16">
+      <code>GraphBuilder::build_graph_for_intrinsic(ciMethod=0x7fff9c128e40)</code>
+    </td>
+  </tr>
+  <tr>
+    <td class="fixed" rowspan="1">&nbsp;</td>
+    <td colspan="2" class="functionCall  indent_level_17">
+    <code>new Intrinsic(id=vmIntrinsics::_nextInt)</code>
+    </td>
+  </tr>
+</table>

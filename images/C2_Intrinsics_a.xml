@@ -10,9 +10,10 @@
 <call level='8' type='functionCall '><code>Parse::do_one_bytecode()</code></call>
 <call level='9' type='functionCall '><code>Parse::do_call()</code></call>
 <call level='10' type='functionCall '><code>Compile::call_generator(ciMethod*, ...)</code></call>
-<call level='11' type='functionCall '><code>Compile::find_intrinsic(ciMethod*, ...)</code></call>
-<call level='12' type='functionCall '><code>Compile::make_vm_intrinsic(ciMethod*, ...)</code></call>
-<call level='13' type='functionCall '><code>C2Compiler::is_intrinsic_supported(methodHandle)</code></call>
-<call level='14' type='functionCall '><code>Matcher::match_rule_supported(Op_RandI)</code></call>
-<call level='15' type='functionCall '><code>VM_Version::supports_rdrand ()</code></call>
+<call level='11' type='functionCall '><code>...</code></call>
+<call level='10' type='functionCall '><code>LibraryIntrinsic::generate()</code></call>
+<call level='11' type='functionCall '><code>LibraryCallKit::try_to_inline(vmIntrinsics::_nextInt)</code></call>
+<call level='12' type='functionCall '><code>LibraryCallKit::inline_random()</code></call>
+<call level='13' type='functionCall '><code>n = new RandINode(control())</code></call>
+<call level='13' type='functionCall '><code>LibraryCallKit::set_result(n)</code></call>
 </calling_hirarchy>

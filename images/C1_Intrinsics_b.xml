@@ -1,0 +1,19 @@
+<calling_hirarchy>
+<call level='0' type='functionCall '><code style="white-space: pre-wrap;">CompileBroker::invoke_compiler_on_method()</code></call>
+<call level='1' type='functionCall '><code>Compiler::compile_method(method=0x7fff9c127410)</code></call>
+<call level='2' type='functionCall '><code>Compilation::Compilation(compiler=0x7ffff0266bb0, ciMethod=0x7fff9c127410)</code></call>
+<call level='3' type='functionCall '><code>Compilation::compile_method()</code></call>
+<call level='4' type='functionCall '><code>Compilation::compile_java_method()</code></call>
+<call level='5' type='functionCall '><code>Compilation::build_hir()</code></call>
+<call level='6' type='functionCall '><code>...</code></call>
+<call level='5' type='functionCall '><code>Compilation::emit_lir()</code></call>
+<call level='6' type='functionCall '><code>...</code></call>
+<call level='5' type='functionCall '><code>Compilation::emit_code_body()</code></call>
+<call level='6' type='functionCall '><code>LIR_Assembler::emit_code()</code></call>
+<call level='7' type='functionCall '><code>LIR_Assembler::emit_block()</code></call>
+<call level='8' type='functionCall '><code>LIR_Assembler::emit_lir_list()</code></call>
+<call level='9' type='functionCall '><code>LIR_Op0::emit_code()</code></call>
+<call level='10' type='functionCall '><code>LIR_Assembler::emit_op0()</code></call>
+<call level='11' type='functionCall '><code>LIR_Assembler::next_int()</code></call>
+<call level='12' type='functionCall '><code>Assembler::rdrandl()</code></call>
+</calling_hirarchy>

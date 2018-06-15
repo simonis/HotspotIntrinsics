@@ -42,7 +42,7 @@
 </xsl:template>
 
 <xsl:template match="calling_hirarchy">
-  <table class="calling_hirarchy"><xsl:text>&#x0a;</xsl:text>
+  <table class="calling_hirarchy" style="font-size: 100%;"><xsl:text>&#x0a;</xsl:text>
     <xsl:variable name="maxIndent" select="max(call/@level)"/>
     <xsl:for-each select="call">
       <xsl:variable name="type" select="@type"/>
@@ -73,7 +73,7 @@
                 <tr>
               <xsl:text>&#x0a;</xsl:text>
                 <xsl:text>    </xsl:text>
-	          <td rowspan="{last() - position() - count($following_siblings_with_smaller_level[1]/following-sibling::call)}">
+	          <td class="fixed" rowspan="{last() - position() - count($following_siblings_with_smaller_level[1]/following-sibling::call)}">
                   <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                   </td>	  
                 <xsl:text>&#x0a;</xsl:text>
@@ -95,7 +95,7 @@
                 <tr>
               <xsl:text>&#x0a;</xsl:text>
                 <xsl:text>    </xsl:text>
-	          <td rowspan="{last() - position() + 1}">
+	          <td class="fixed" rowspan="{last() - position() + 1}">
                     <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                   </td>	  
                 <xsl:text>&#x0a;</xsl:text>

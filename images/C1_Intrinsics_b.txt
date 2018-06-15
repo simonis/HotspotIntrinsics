@@ -1,0 +1,17 @@
+f CompileBroker::invoke_compiler_on_method()
+f   Compiler::compile_method(method=0x7fff9c127410)
+f     Compilation::Compilation(compiler=0x7ffff0266bb0, ciMethod=0x7fff9c127410)
+f       Compilation::compile_method()
+f         Compilation::compile_java_method()
+f           Compilation::build_hir()
+f             ...
+f           Compilation::emit_lir()
+f             ...
+f           Compilation::emit_code_body()
+f             LIR_Assembler::emit_code()
+f               LIR_Assembler::emit_block()
+f                 LIR_Assembler::emit_lir_list()
+f                   LIR_Op0::emit_code()
+f                     LIR_Assembler::emit_op0()
+f                       LIR_Assembler::next_int()
+f                         Assembler::rdrandl()
