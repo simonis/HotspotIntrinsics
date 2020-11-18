@@ -14,6 +14,8 @@
 
 [JBreak 2016, Novosibirsk, Russia](https://2016.jbreak.ru/): [slides](https://rawgit.com/simonis/JBreak2016/b3cc658/jbreak2016.xhtml), [video](https://www.youtube.com/watch?v=Ku4CMKcPbh0))
 
+<!---
 [//]: # https://rawgit.com serves pages from http://raw.githubusercontent.com
 [//]: # where the URL has the following meaning ("branch-name" can also be a git hash):
 [//]: # raw.githubusercontent.com/username/repo-name/branch-name/path
+--->
